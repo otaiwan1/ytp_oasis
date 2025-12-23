@@ -3,10 +3,11 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.edge.service import Service # 記得匯入 Service
 
 def login(driver, username, password):
     # Note: If the 'state' token in this URL expires, switch to the main login URL.
-    login_url = "https://pre-login-app-prod-ap-northeast-1.iterocloud.com/pre-login"
+    login_url = "https://www.myitero.com/"
     
     print(f"Navigating to: {login_url}")
     driver.get(login_url)
@@ -34,8 +35,9 @@ def login(driver, username, password):
         ))
         conti.click()
 
+        time.sleep(3)
         # 2. Find Password field using XPath
-        pass_field = driver.find_element(By.XPATH, "//input[@type='password']")
+        pass_field = driver.find_element(By.XPATH, "/html/body/div/div[2]/main/section/div/div/div/form/div[2]/div/div[2]/div[1]/input")
         
         pass_field.clear()
         pass_field.send_keys(password)
@@ -44,7 +46,7 @@ def login(driver, username, password):
         # 3. Find Login Button using XPath
         # 使用 WebDriverWait 確保按鈕可點擊 (element_to_be_clickable) 會比單純 find_element 更穩定
         login_btn = wait.until(EC.element_to_be_clickable(
-            (By.XPATH, "//button[contains(text(), 'Log In') or contains(text(), 'Login')]")
+            (By.XPATH, "/html/body/div/div[2]/main/section/div/div/div/form/div[4]/button")
         ))
         
         login_btn.click()
@@ -87,9 +89,10 @@ if __name__ == "__main__":
         # 2. 設定 Edge Driver
         # Selenium 4 以上版本通常不需要手動指定路徑，只要電腦有安裝 Edge 即可
         options = webdriver.EdgeOptions()
+        service = Service(executable_path="msedgedriver.exe")
         # options.add_argument("--headless") # 如果不想看到視窗彈出，可取消此註解
         
-        driver = webdriver.Edge(options=options)
+        driver = webdriver.Edge(options=options, service=service)
 
         try:
             # 3. 呼叫登入函式
