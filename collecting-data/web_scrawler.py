@@ -17,7 +17,7 @@ def login(driver, username, password):
         # Strategy: Look for an input tag where the 'name' attribute is 'username' or similar
         print("Waiting for username field...")
         # UPDATE THIS STRING: Check if the site uses @name='userName', @name='email', or something else.
-        user_field = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@name='userName']"))) 
+        user_field = wait.until(EC.presence_of_element_located((By.XPATH, "//input[@name='sabrinachou520@gmail.com']"))) 
         
         user_field.clear()
         user_field.send_keys(username)
