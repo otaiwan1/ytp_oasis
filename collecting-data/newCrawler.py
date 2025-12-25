@@ -42,6 +42,10 @@ def getElement(xpath):
     wait = WebDriverWait(driver, 10)
     return wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
 
+def getElementsLen(xpath):
+    wait = WebDriverWait(driver, 10)
+    return len(wait.until(EC.presence_of_all_elements_located((By.XPATH, xpath))))
+
 def login(username, password):
     loginUrl = "https://www.myitero.com/"
     print(f"Navigating to: {loginUrl}")
@@ -143,8 +147,7 @@ def getPatientIds():
 
         while True:
             # A. 抓取目前所有的 tr (用來判斷是否到底)
-            rows = driver.find_elements(By.XPATH, f"{tbodyXpath}/tr")
-            currentRowCount = len(rows)
+            currentRowCount = getElementsLen(f"{tbodyXpath}/tr")
             
             print(f"Current rows loaded: {currentRowCount}")
 
@@ -190,10 +193,6 @@ def getPatientIds():
                 
         results = list(found_ids)
         print(f"Total unique IDs extracted from network logs: {len(results)}")
-        
-        # Debug: 印出前 10 個 ID
-        for i, pid in enumerate(results[:10]):
-            print(f"ID {i+1}: {pid}")
             
         return results
 
@@ -201,22 +200,43 @@ def getPatientIds():
         print(f"Error getting data: {e}")
         return results
 
+def downloadAllPatients(Ids):
+    # Ids = [Ids[0], Ids[1], Ids[2]]
+    ans = 0
+    totalIds = len(Ids)
+    for idcnt, id in enumerate(Ids, 1):
+        try:
+            driver.get(f"https://bff.cloud.myitero.com/doctors/patients/{id}/?isEvxEnabled=false")
+
+            # wait until the first element appears
+            getElement("/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[1]")
+            rows = getElementsLen("/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr")
+            print(rows)
+            cnt = 0
+            for i in range(1, rows + 1):
+                txt = getElement(f"/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[{i}]/td[3]/span").text
+                if txt == "Completed": cnt += 1
+                print(f"no {idcnt}/{totalIds}: row {i}, {txt}")
+            if cnt >= 2: ans += 1
+        except Exception:
+            print(Exception)
+    
+    print("Good", ans)
+    
 
 """
-/html/body/main/eup-orders/div/div/div/eup-tbl[2]/div/table/tbody/tr[1]/th
-/html/body/main/eup-orders/div/div/div/eup-tbl[2]/div/table/tbody/tr[1]
-/html/body/main/eup-orders/div/div/div/eup-tbl[2]/div/table/tbody/tr[2]
-/html/body/main/eup-patients/div/div/div/eup-tbl/div/table/tbody/tr[1]
-//*[@id="deliveredRow_0"]
-//*[@id="deliveredRow_1"]
-
+/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody
+/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[1]
+/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr/td[3]/span
+/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[1]/td[3]/span
+/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[2]/td[3]/span
 """
-
 if __name__ == "__main__":
     username, password = getCredentials()
     login(username, password)
     
-    getPatientIds()
+    patientsIds = getPatientIds()
+    downloadAllPatients(patientsIds)
     
     input("Press Enter to close browser...")
             
