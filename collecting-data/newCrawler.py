@@ -1,23 +1,28 @@
 import time
+import re
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.edge.service import Service
+from selenium.webdriver.firefox.service import Service 
 
-# init driver
-options = webdriver.EdgeOptions()
-service = Service(executable_path="msedgedriver.exe")
-driver = webdriver.Edge(options=options, service=service)
-print("Driver initialized successfully.")
+# Init driver (Global)
+# 1. 使用 FirefoxOptions
+options = webdriver.FirefoxOptions()
 
-def get_credentials(filepath="secret.txt"):
+# 2. 設定 geckodriver 路徑 (假設檔名為 geckodriver.exe)
+service = Service(executable_path="geckodriver.exe")
+
+# 3. 初始化 Firefox Driver
+driver = webdriver.Firefox(options=options, service=service)
+print("Firefox Driver initialized successfully.")
+
+def getCredentials(filePath="secret.txt"):
     try:
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filePath, "r", encoding="utf-8") as f:
             lines = f.read().splitlines()
             if len(lines) >= 2:
                 username = lines[0].strip()
-                # 保留你原本的 parsing 邏輯
                 if '=' in username:
                     username = username[username.find('=') + 1:]
                 
@@ -27,61 +32,192 @@ def get_credentials(filepath="secret.txt"):
                     
                 return username, password
             else:
-                print("錯誤: secret.txt 內容不足兩行")
+                print("Error: secret.txt content is insufficient.")
                 return None, None
     except FileNotFoundError:
-        print(f"錯誤: 找不到檔案 {filepath}")
+        print(f"Error: File {filePath} not found.")
         return None, None
 
-def get_element(xpath: str):
+def getElement(xpath):
     wait = WebDriverWait(driver, 10)
-    return wait.until(EC.presence_of_element_located(
-            (By.XPATH, "/html/body/app-root/div/div[2]/div[1]/div/app-pre-login-form/div/form/fieldset/input")
-        ))
+    return wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
 
 def login(username, password):
-    # 這裡直接使用全域變數 driver，不用再透過參數傳入
-    
-    login_url = "https://www.myitero.com/"
-    print(f"Navigating to: {login_url}")
-    driver.get(login_url)
+    loginUrl = "https://www.myitero.com/"
+    print(f"Navigating to: {loginUrl}")
+    driver.get(loginUrl)
 
     try:
         print("Waiting for username field...")
         
-        # 建議：絕對路徑 XPath (/html/body...) 很脆弱，網頁改版容易壞
-        # 如果未來失敗，請改用相對路徑 (例如 //input[@type='email'])
-        user_field = get_element("/html/body/app-root/div/div[2]/div[1]/div/app-pre-login-form/div/form/fieldset/input")
-        
-        user_field.clear()
-        user_field.send_keys(username)
+        # 1. 輸入帳號
+        userField = getElement("/html/body/app-root/div/div[2]/div[1]/div/app-pre-login-form/div/form/fieldset/input")
+        userField.clear()
+        userField.send_keys(username)
         print(f"Username entered: {username}")
 
-        conti = get_element("/html/body/app-root/div/div[2]/div[1]/div/app-pre-login-form/div/form/button")
-        conti.click()
+        # 2. 點擊繼續
+        continueBtn = getElement("/html/body/app-root/div/div[2]/div[1]/div/app-pre-login-form/div/form/button")
+        continueBtn.click()
 
-        # 等待密碼欄位出現
+        # 等待頁面切換動畫
         time.sleep(3) 
-        pass_field = get_element("/html/body/div/div[2]/main/section/div/div/div/form/div[2]/div/div[2]/div[1]/input")
         
-        pass_field.clear()
-        pass_field.send_keys(password)
+        # 3. 輸入密碼
+        passField = getElement("/html/body/div/div[2]/main/section/div/div/div/form/div[2]/div/div[2]/div[1]/input")
+        passField.clear()
+        passField.send_keys(password)
         print("Password entered.")
 
-        login_btn = get_element("/html/body/div/div[2]/main/section/div/div/div/form/div[4]/button")
-        login_btn.click()
+        # 4. 點擊登入
+        loginBtn = getElement("/html/body/div/div[2]/main/section/div/div/div/form/div[4]/button")
+        loginBtn.click()
         print("Login button clicked.")
         
     except Exception as e:
         print(f"Login failed: {e}")
 
-def get_data():
-    pass
+    
+
+import json
+
+def getPatientIds():
+    """
+    透過攔截 Network Request (Fetch/XHR) 來取得資料
+    """
+    
+    # 1. Inject Interceptor Script
+    # 這段 JS 會攔截所有的 fetch 和 XHR 請求，並將回應存入 window.capturedData
+    interceptor_script = """
+    window.capturedData = [];
+    
+    // Intercept Fetch
+    const originalFetch = window.fetch;
+    window.fetch = async (...args) => {
+        const response = await originalFetch(...args);
+        const clone = response.clone();
+        try {
+            const data = await clone.json();
+            window.capturedData.push({url: args[0], data: data});
+        } catch(e) {}
+        return response;
+    };
+
+    // Intercept XHR
+    const originalXhrOpen = XMLHttpRequest.prototype.open;
+    XMLHttpRequest.prototype.open = function(method, url) {
+        this.addEventListener('load', function() {
+            try {
+                const data = JSON.parse(this.responseText);
+                window.capturedData.push({url: url, data: data});
+            } catch(e) {}
+        });
+        originalXhrOpen.apply(this, arguments);
+    };
+    """
+    driver.execute_script(interceptor_script)
+    print("Network interceptor injected.")
+
+    # 2. 導航到 Patients 頁面 (觸發 API 請求)
+    patients = getElement("/html/body/main/eup-home/div/div/div[2]/a[2]")
+    patients.click()
+
+    print("Starting data extraction with auto-scroll...")
+    results = []
+    
+    try:
+        # 定義容器 XPath
+        containerXpath = "//eup-tbl/div" 
+        tbodyXpath = f"{containerXpath}/table/tbody"
+        
+        # 等待表格出現
+        wait = WebDriverWait(driver, 20)
+        wait.until(EC.presence_of_element_located((By.XPATH, f"{tbodyXpath}/tr")))
+
+        # 取得捲動容器元素
+        scrollableDiv = driver.find_element(By.XPATH, containerXpath)
+        
+        lastRowCount = 0
+        retryCount = 0
+        maxRetries = 3 
+
+        while True:
+            # A. 抓取目前所有的 tr (用來判斷是否到底)
+            rows = driver.find_elements(By.XPATH, f"{tbodyXpath}/tr")
+            currentRowCount = len(rows)
+            
+            print(f"Current rows loaded: {currentRowCount}")
+
+            # B. 判斷是否已經到底
+            if currentRowCount == lastRowCount:
+                retryCount += 1
+                print(f"Data count didn't increase. Retry {retryCount}/{maxRetries}...")
+                
+                if retryCount >= maxRetries:
+                    print("Reached end of list (or data stopped loading).")
+                    break
+            else:
+                retryCount = 0
+                lastRowCount = currentRowCount
+            
+            # C. 執行 JavaScript 捲動
+            driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight", scrollableDiv)
+            
+            # D. 等待新資料載入
+            time.sleep(2.5)
+
+        # --- 迴圈結束後，檢查攔截到的資料 ---
+        print("Analyzing captured network data...")
+        
+        # 從瀏覽器取回 capturedData
+        captured_data = driver.execute_script("return window.capturedData;")
+        
+        # 尋找包含 ID 的資料
+        # 我們不知道 API 的確切格式，所以搜尋所有回應中的 UUID
+        uuid_pattern = re.compile(r'[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}', re.IGNORECASE)
+        
+        found_ids = set()
+        
+        for item in captured_data:
+            # 將資料轉為字串以便搜尋
+            json_str = json.dumps(item['data'])
+            
+            # 搜尋 UUID
+            matches = uuid_pattern.findall(json_str)
+            for match in matches:
+                # 過濾掉一些非 Patient ID 的 UUID (如果有已知的不相關 UUID 可以加在這裡)
+                found_ids.add(match)
+                
+        results = list(found_ids)
+        print(f"Total unique IDs extracted from network logs: {len(results)}")
+        
+        # Debug: 印出前 10 個 ID
+        for i, pid in enumerate(results[:10]):
+            print(f"ID {i+1}: {pid}")
+            
+        return results
+
+    except Exception as e:
+        print(f"Error getting data: {e}")
+        return results
+
+
+"""
+/html/body/main/eup-orders/div/div/div/eup-tbl[2]/div/table/tbody/tr[1]/th
+/html/body/main/eup-orders/div/div/div/eup-tbl[2]/div/table/tbody/tr[1]
+/html/body/main/eup-orders/div/div/div/eup-tbl[2]/div/table/tbody/tr[2]
+/html/body/main/eup-patients/div/div/div/eup-tbl/div/table/tbody/tr[1]
+//*[@id="deliveredRow_0"]
+//*[@id="deliveredRow_1"]
+
+"""
 
 if __name__ == "__main__":
-    user, pwd = get_credentials()
-    login(user, pwd)
-            
-    input("按 Enter 鍵結束程式並關閉瀏覽器...")
+    username, password = getCredentials()
+    login(username, password)
+    
+    getPatientIds()
+    
+    input("Press Enter to close browser...")
             
     driver.quit()
