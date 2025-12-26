@@ -1,4 +1,5 @@
 *.DS_Store
+normalization/data_part_1
 venv/
 .env
 .vscode
