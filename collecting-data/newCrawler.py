@@ -5,15 +5,19 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.firefox.service import Service 
+from shutil import move
+from os import makedirs
 
 # Init driver (Global)
-# 1. 使用 FirefoxOptions
 options = webdriver.FirefoxOptions()
 
-# 2. 設定 geckodriver 路徑 (假設檔名為 geckodriver.exe)
 service = Service(executable_path="geckodriver.exe")
+downloadDir = r"P:\Code\\ytp_oasis\collecting-data\downloaded"
+options.set_preference("browser.download.folderList", 2) # 0:桌面, 1:預設, 2:自定義
+options.set_preference("browser.download.dir", downloadDir)
+options.set_preference("browser.download.useDownloadDir", True)
+options.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/zip")
 
-# 3. 初始化 Firefox Driver
 driver = webdriver.Firefox(options=options, service=service)
 print("Firefox Driver initialized successfully.")
 
@@ -46,6 +50,15 @@ def getElementsLen(xpath):
     wait = WebDriverWait(driver, 10)
     return len(wait.until(EC.presence_of_all_elements_located((By.XPATH, xpath))))
 
+def tryClick(button, attempts = 5):
+    for i in range(attempts):
+        try:
+            button.click()
+            return
+        except: time.sleep(3)
+    assert 0
+
+
 def login(username, password):
     loginUrl = "https://www.myitero.com/"
     print(f"Navigating to: {loginUrl}")
@@ -77,6 +90,7 @@ def login(username, password):
         loginBtn = getElement("/html/body/div/div[2]/main/section/div/div/div/form/div[4]/button")
         loginBtn.click()
         print("Login button clicked.")
+        time.sleep(2)
         
     except Exception as e:
         print(f"Login failed: {e}")
@@ -151,6 +165,9 @@ def getPatientIds():
             
             print(f"Current rows loaded: {currentRowCount}")
 
+            # DEBUG
+            # if currentRowCount >= 50: break
+
             # B. 判斷是否已經到底
             if currentRowCount == lastRowCount:
                 retryCount += 1
@@ -202,7 +219,6 @@ def getPatientIds():
 
 def downloadAllPatients(Ids):
     # Ids = [Ids[0], Ids[1], Ids[2]]
-    ans = 0
     totalIds = len(Ids)
     for idcnt, id in enumerate(Ids, 1):
         try:
@@ -212,24 +228,130 @@ def downloadAllPatients(Ids):
             getElement("/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[1]")
             rows = getElementsLen("/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr")
             print(rows)
-            cnt = 0
+            
+            try:
+                nores = getElement(f"/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr/th").text
+                if nores == "No matches were found": continue
+            except: pass
+            
+            goodRows = []
             for i in range(1, rows + 1):
                 txt = getElement(f"/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[{i}]/td[3]/span").text
-                if txt == "Completed": cnt += 1
+                if txt == "Completed": 
+                    goodRows.append(i)
                 print(f"no {idcnt}/{totalIds}: row {i}, {txt}")
-            if cnt >= 2: ans += 1
-        except Exception:
-            print(Exception)
+
+            def downloadRow(curRow):
+                driver.get(f"https://bff.cloud.myitero.com/doctors/patients/{id}/?isEvxEnabled=false")
+                time.sleep(3)
+                row = getElement(f"/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[{curRow}]/th")
+                expId = row.text
+
+                tryClick(row)
+                print(f"no {idcnt}/{totalIds}: trying to download row {curRow}")
+                time.sleep(0.5)
+
+                expButton = getElement(f"/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[{curRow + 2}]/th/button[3]")
+                if expButton.text == "Viewer": expButton = getElement(f"/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[{curRow + 2}]/th/button[4]")
+                tryClick(expButton)
+                # print("pressed exp")
+                time.sleep(0.5)
+
+                dropButton = getElement(f"/html/body/main/eup-patientsorders/div/eup-orthocadexport/div/div/div/div/form/div[1]/div/div/a")
+                tryClick(dropButton)
+                # print("pressed drop")
+                time.sleep(0.5)
+
+                openShell = getElement(f"/html/body/main/eup-patientsorders/div/eup-orthocadexport/div/div/div/div/form/div[1]/div/div/ul/li[1]")
+                openShell.click()
+                # print("pressed openshell")
+                time.sleep(0.5)
+
+                showName = getElement(f"/html/body/main/eup-patientsorders/div/eup-orthocadexport/div/div/div/div/form/div[4]/tlk-checkbox/label/div[2]/div[1]")
+                showName.click()
+                # print("pressed show name")
+                time.sleep(0.5)
+            
+                checkExpButton = getElement(f"/html/body/main/eup-patientsorders/div/eup-orthocadexport/div/div/div/div/form/div[5]/button[2]")
+                checkExpButton.click()  
+                # print("exp!!!!")          
+
+                time.sleep(5)
+
+                for _ in range(10):
+                    try:
+                        print(f"no {idcnt}/{totalIds}: Retrying")
+                        preDown = getElement(f"/html/body/main/eup-patientsorders/eup-sticky-header/div/header/div[2]/div/div[3]/eup-download-notification/div/div")
+                        tryClick(preDown, 3)
+                        time.sleep(0.5)
+                        cancelDown = getElement(f"/html/body/main/eup-patientsorders/eup-sticky-header/div/header/div[2]/div/div[3]/eup-download-notification/div/eup-export-downloads-progress-list/div/div/div/div[2]/div[3]")
+                        tryClick(cancelDown, 3)
+                        # print("Cancelled")
+                        time.sleep(0.5)
+
+                        driver.get(f"https://bff.cloud.myitero.com/doctors/patients/{id}/?selectedrow={curRow - 1}")
+                        
+                        time.sleep(3)
+                        expButton = getElement(f"/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[{curRow + 2}]/th/button[3]")
+                        if expButton.text == "Viewer": expButton = getElement(f"/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[{curRow + 2}]/th/button[4]")
+                        tryClick(expButton)
+                        # print("re-exp")
+                        time.sleep(0.5)
+
+                        dropButton = getElement(f"/html/body/main/eup-patientsorders/div/eup-orthocadexport/div/div/div/div/form/div[1]/div/div/a")
+                        tryClick(dropButton)
+                        # print("re-drop")
+                        time.sleep(0.5)
+
+                        openShell = getElement(f"/html/body/main/eup-patientsorders/div/eup-orthocadexport/div/div/div/div/form/div[1]/div/div/ul/li[1]")
+                        openShell.click()
+                        # print("re-openshell")
+                        time.sleep(0.5)
+
+                        showName = getElement(f"/html/body/main/eup-patientsorders/div/eup-orthocadexport/div/div/div/div/form/div[4]/tlk-checkbox/label/div[2]/div[1]")
+                        showName.click()
+                        # print("re-show name")
+                        time.sleep(0.5)
+
+                        checkExpButton = getElement(f"/html/body/main/eup-patientsorders/div/eup-orthocadexport/div/div/div/div/form/div[5]/button[2]")
+                        checkExpButton.click()  
+                        # print("re exppp")
+                        time.sleep(5)
+                    except Exception as e: 
+                        # print(f"err {e}")
+                        # time.sleep(3)
+                        break
+
+
+                try:
+                    makedirs(f"{downloadDir}\\{id}", exist_ok = True)
+                    move(f"{downloadDir}\\OrthoCAD_Export_{expId}.zip", f"{downloadDir}\\{id}")
+                    print(f"no {idcnt}/{totalIds}: Download Completed at {downloadDir}\\{id}\\OrthoCAD_Export_{expId}.zip")
+                except Exception as e:
+                    print(f"{e}\nfailure")
+                    exit(0)
+                time.sleep(3)
+            
+            for goodRow in goodRows:
+                downloadRow(goodRow)
+            
+
+        except Exception as e:
+            print(f"bad {e}")
+            exit(0)
+            time.sleep(3)
     
-    print("Good", ans)
     
 
 """
-/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody
-/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[1]
-/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr/td[3]/span
-/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[1]/td[3]/span
-/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[2]/td[3]/span
+/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[7]/th/button[3]
+/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[5]
+/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[7]/th/button[3]
+/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[4]
+/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[6]/th/button[3]
+/html/body/main/eup-patientsorders/eup-sticky-header/div/header/div[2]/div/div[3]
+/html/body/main/eup-patientsorders/eup-sticky-header/div/header/div[2]/div/div[3]/eup-download-notification
+/html/body/main/eup-patientsorders/eup-sticky-header/div/header/div[2]/div/div[3]/eup-download-notification/div/div/div[2]
 """
 if __name__ == "__main__":
     username, password = getCredentials()
