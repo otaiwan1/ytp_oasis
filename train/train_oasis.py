@@ -3,9 +3,11 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
+import os
 
 # --- CONFIGURATION ---
-DATASET_PATH = "./../normalization/teeth3ds_dataset.npy" # Run Step 1 script on Teeth3DS to get this!
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+DATASET_PATH = os.path.join(SCRIPT_DIR, "../normalization/teeth3ds_dataset.npy") # Run Step 1 script on Teeth3DS to get this!
 BATCH_SIZE = 32
 LEARNING_RATE = 0.001
 EPOCHS = 20
