@@ -1,4 +1,9 @@
 *.DS_Store
+normalization/data_part_1
 venv/
 .env
 .vscode
+.python-version
+pyproject.toml
+uv.lock
+.venv
