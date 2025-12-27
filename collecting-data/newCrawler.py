@@ -253,6 +253,7 @@ def downloadAllPatients(Ids):
 
                 expButton = getElement(f"/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[{curRow + 2}]/th/button[3]")
                 if expButton.text == "Viewer": expButton = getElement(f"/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[{curRow + 2}]/th/button[4]")
+                if expButton.text != "Export": return
                 tryClick(expButton)
                 # print("pressed exp")
                 time.sleep(0.5)
