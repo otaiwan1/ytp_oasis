@@ -12,7 +12,7 @@ from os import makedirs
 options = webdriver.FirefoxOptions()
 
 service = Service(executable_path="geckodriver.exe")
-downloadDir = r"P:\Code\\ytp_oasis\collecting-data\downloaded"
+downloadDir = r"C:\Users\11311\OneDrive\Desktop\downloaded"
 options.set_preference("browser.download.folderList", 2) # 0:桌面, 1:預設, 2:自定義
 options.set_preference("browser.download.dir", downloadDir)
 options.set_preference("browser.download.useDownloadDir", True)
@@ -22,25 +22,17 @@ driver = webdriver.Firefox(options=options, service=service)
 print("Firefox Driver initialized successfully.")
 
 def getCredentials(filePath="secret.txt"):
-    try:
-        with open(filePath, "r", encoding="utf-8") as f:
-            lines = f.read().splitlines()
-            if len(lines) >= 2:
-                username = lines[0].strip()
-                if '=' in username:
-                    username = username[username.find('=') + 1:]
-                
-                password = lines[1].strip()
-                if '=' in password:
-                    password = password[password.find('=') + 1:]
-                    
-                return username, password
-            else:
-                print("Error: secret.txt content is insufficient.")
-                return None, None
-    except FileNotFoundError:
-        print(f"Error: File {filePath} not found.")
-        return None, None
+    with open(filePath, "r", encoding="utf-8") as f:
+        lines = f.read().splitlines()
+        username = lines[0].strip()
+        if '=' in username:
+            username = username[username.find('=') + 1:]
+        
+        password = lines[1].strip()
+        if '=' in password:
+            password = password[password.find('=') + 1:]
+            
+    return username, password
 
 def getElement(xpath):
     wait = WebDriverWait(driver, 10)
@@ -59,7 +51,8 @@ def tryClick(button, attempts = 5):
     assert 0
 
 
-def login(username, password):
+def login():
+    username, password = getCredentials()
     loginUrl = "https://www.myitero.com/"
     print(f"Navigating to: {loginUrl}")
     driver.get(loginUrl)
@@ -217,6 +210,14 @@ def getPatientIds():
         print(f"Error getting data: {e}")
         return results
 
+def ERR(idcnt, id, e):
+    print(f"{e}\nERROR")
+    with open("err.txt", "a", encoding = "utf-8") as file:
+        file.write(f"{idcnt}:{id}\n{e}\n")
+    driver.delete_all_cookies()
+    login()
+    time.sleep(3)
+
 def downloadAllPatients(Ids):
     # Ids = [Ids[0], Ids[1], Ids[2]]
     totalIds = len(Ids)
@@ -243,7 +244,6 @@ def downloadAllPatients(Ids):
 
             def downloadRow(curRow):
                 driver.get(f"https://bff.cloud.myitero.com/doctors/patients/{id}/?isEvxEnabled=false")
-                time.sleep(3)
                 row = getElement(f"/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[{curRow}]/th")
                 expId = row.text
 
@@ -276,7 +276,7 @@ def downloadAllPatients(Ids):
                 checkExpButton.click()  
                 # print("exp!!!!")          
 
-                time.sleep(5)
+                time.sleep(2)
 
                 for _ in range(10):
                     try:
@@ -328,18 +328,14 @@ def downloadAllPatients(Ids):
                     move(f"{downloadDir}\\OrthoCAD_Export_{expId}.zip", f"{downloadDir}\\{id}")
                     print(f"no {idcnt}/{totalIds}: Download Completed at {downloadDir}\\{id}\\OrthoCAD_Export_{expId}.zip")
                 except Exception as e:
-                    print(f"{e}\nfailure")
-                    exit(0)
-                time.sleep(3)
+                    ERR(idcnt, id, e)
             
             for goodRow in goodRows:
                 downloadRow(goodRow)
             
 
         except Exception as e:
-            print(f"bad {e}")
-            exit(0)
-            time.sleep(3)
+            ERR(idcnt, id, e)
     
     
 
@@ -354,8 +350,7 @@ def downloadAllPatients(Ids):
 /html/body/main/eup-patientsorders/eup-sticky-header/div/header/div[2]/div/div[3]/eup-download-notification/div/div/div[2]
 """
 if __name__ == "__main__":
-    username, password = getCredentials()
-    login(username, password)
+    login()
     
     patientsIds = getPatientIds()
     downloadAllPatients(patientsIds)
