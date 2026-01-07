@@ -10,15 +10,16 @@ from os import makedirs
 
 # Init driver (Global)
 options = webdriver.FirefoxOptions()
+options.add_argument("--headless")
 
-service = Service(executable_path="geckodriver.exe")
-downloadDir = r"C:\Users\11311\OneDrive\Desktop\downloaded"
+# service = Service(executable_path="geckodriver.exe")
+downloadDir = "/tmp2/b14902031/ytp_oasis/collecting-data/data"
 options.set_preference("browser.download.folderList", 2) # 0:桌面, 1:預設, 2:自定義
 options.set_preference("browser.download.dir", downloadDir)
 options.set_preference("browser.download.useDownloadDir", True)
 options.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/zip")
 
-driver = webdriver.Firefox(options=options, service=service)
+driver = webdriver.Firefox(options=options)
 print("Firefox Driver initialized successfully.")
 
 def getCredentials(filePath="secret.txt"):
@@ -35,6 +36,7 @@ def getCredentials(filePath="secret.txt"):
     return username, password
 
 def getElement(xpath):
+    print("getting element")
     wait = WebDriverWait(driver, 10)
     return wait.until(EC.presence_of_element_located((By.XPATH, xpath)))
 
@@ -159,7 +161,7 @@ def getPatientIds():
             print(f"Current rows loaded: {currentRowCount}")
 
             # DEBUG
-            # if currentRowCount >= 50: break
+            if currentRowCount >= 50: break
 
             # B. 判斷是否已經到底
             if currentRowCount == lastRowCount:
@@ -219,7 +221,8 @@ def ERR(idcnt, id, e):
     time.sleep(3)
 
 def downloadAllPatients(Ids):
-    # Ids = [Ids[0], Ids[1], Ids[2]]
+    # DEBUG
+    Ids = [Ids[0], Ids[1], Ids[2]]
     totalIds = len(Ids)
     for idcnt, id in enumerate(Ids, 1):
         try:
@@ -243,39 +246,39 @@ def downloadAllPatients(Ids):
                 print(f"no {idcnt}/{totalIds}: row {i}, {txt}")
 
             def downloadRow(curRow):
+                print(f"no {idcnt}/{totalIds}: trying to download row {curRow}")
                 driver.get(f"https://bff.cloud.myitero.com/doctors/patients/{id}/?isEvxEnabled=false")
                 row = getElement(f"/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[{curRow}]/th")
                 expId = row.text
-
+                print("FLAG 1")
                 tryClick(row)
-                print(f"no {idcnt}/{totalIds}: trying to download row {curRow}")
                 time.sleep(0.5)
-
+                print("FLAG 2")
                 expButton = getElement(f"/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[{curRow + 2}]/th/button[3]")
                 if expButton.text == "Viewer": expButton = getElement(f"/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[{curRow + 2}]/th/button[4]")
                 if expButton.text != "Export": return
                 tryClick(expButton)
-                # print("pressed exp")
+                print("pressed exp")
                 time.sleep(0.5)
 
                 dropButton = getElement(f"/html/body/main/eup-patientsorders/div/eup-orthocadexport/div/div/div/div/form/div[1]/div/div/a")
                 tryClick(dropButton)
-                # print("pressed drop")
+                print("pressed drop")
                 time.sleep(0.5)
 
                 openShell = getElement(f"/html/body/main/eup-patientsorders/div/eup-orthocadexport/div/div/div/div/form/div[1]/div/div/ul/li[1]")
                 openShell.click()
-                # print("pressed openshell")
+                print("pressed openshell")
                 time.sleep(0.5)
 
                 showName = getElement(f"/html/body/main/eup-patientsorders/div/eup-orthocadexport/div/div/div/div/form/div[4]/tlk-checkbox/label/div[2]/div[1]")
                 showName.click()
-                # print("pressed show name")
+                print("pressed show name")
                 time.sleep(0.5)
             
                 checkExpButton = getElement(f"/html/body/main/eup-patientsorders/div/eup-orthocadexport/div/div/div/div/form/div[5]/button[2]")
                 checkExpButton.click()  
-                # print("exp!!!!")          
+                print("exp!!!!")          
 
                 time.sleep(2)
 
@@ -287,7 +290,7 @@ def downloadAllPatients(Ids):
                         time.sleep(0.5)
                         cancelDown = getElement(f"/html/body/main/eup-patientsorders/eup-sticky-header/div/header/div[2]/div/div[3]/eup-download-notification/div/eup-export-downloads-progress-list/div/div/div/div[2]/div[3]")
                         tryClick(cancelDown, 3)
-                        # print("Cancelled")
+                        print("Cancelled")
                         time.sleep(0.5)
 
                         driver.get(f"https://bff.cloud.myitero.com/doctors/patients/{id}/?selectedrow={curRow - 1}")
@@ -296,38 +299,38 @@ def downloadAllPatients(Ids):
                         expButton = getElement(f"/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[{curRow + 2}]/th/button[3]")
                         if expButton.text == "Viewer": expButton = getElement(f"/html/body/main/eup-patientsorders/div/div/main/div/eup-tbl/div/table/tbody/tr[{curRow + 2}]/th/button[4]")
                         tryClick(expButton)
-                        # print("re-exp")
+                        print("re-exp")
                         time.sleep(0.5)
 
                         dropButton = getElement(f"/html/body/main/eup-patientsorders/div/eup-orthocadexport/div/div/div/div/form/div[1]/div/div/a")
                         tryClick(dropButton)
-                        # print("re-drop")
+                        print("re-drop")
                         time.sleep(0.5)
 
                         openShell = getElement(f"/html/body/main/eup-patientsorders/div/eup-orthocadexport/div/div/div/div/form/div[1]/div/div/ul/li[1]")
                         openShell.click()
-                        # print("re-openshell")
+                        print("re-openshell")
                         time.sleep(0.5)
 
                         showName = getElement(f"/html/body/main/eup-patientsorders/div/eup-orthocadexport/div/div/div/div/form/div[4]/tlk-checkbox/label/div[2]/div[1]")
                         showName.click()
-                        # print("re-show name")
+                        print("re-show name")
                         time.sleep(0.5)
 
                         checkExpButton = getElement(f"/html/body/main/eup-patientsorders/div/eup-orthocadexport/div/div/div/div/form/div[5]/button[2]")
                         checkExpButton.click()  
-                        # print("re exppp")
+                        print("re exppp")
                         time.sleep(5)
                     except Exception as e: 
-                        # print(f"err {e}")
-                        # time.sleep(3)
+                        print(f"{e}\nERR")
+                        time.sleep(3)
                         break
 
 
                 try:
-                    makedirs(f"{downloadDir}\\{id}", exist_ok = True)
-                    move(f"{downloadDir}\\OrthoCAD_Export_{expId}.zip", f"{downloadDir}\\{id}")
-                    print(f"no {idcnt}/{totalIds}: Download Completed at {downloadDir}\\{id}\\OrthoCAD_Export_{expId}.zip")
+                    makedirs(f"{downloadDir}/{id}", exist_ok = True)
+                    move(f"{downloadDir}/OrthoCAD_Export_{expId}.zip", f"{downloadDir}/{id}")
+                    print(f"no {idcnt}/{totalIds}: Download Completed at {downloadDir}/{id}/OrthoCAD_Export_{expId}.zip")
                 except Exception as e:
                     ERR(idcnt, id, e)
             
@@ -351,11 +354,17 @@ def downloadAllPatients(Ids):
 /html/body/main/eup-patientsorders/eup-sticky-header/div/header/div[2]/div/div[3]/eup-download-notification/div/div/div[2]
 """
 if __name__ == "__main__":
-    login()
-    
-    patientsIds = getPatientIds()
-    downloadAllPatients(patientsIds)
-    
-    input("Press Enter to close browser...")
-            
-    driver.quit()
+    try:
+        login()
+        
+        patientsIds = getPatientIds()
+        downloadAllPatients(patientsIds)
+        
+        input("Press Enter to close browser...")
+    except KeyboardInterrupt:
+        print("Interrupted by user.")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+    finally:
+        print("Closing driver...")
+        driver.quit()
