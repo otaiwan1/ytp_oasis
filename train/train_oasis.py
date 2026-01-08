@@ -3,138 +3,224 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
-import os
 
 # --- CONFIGURATION ---
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DATASET_PATH = os.path.join(SCRIPT_DIR, "../normalization/teeth3ds_dataset.npy") # Run Step 1 script on Teeth3DS to get this!
-BATCH_SIZE = 32
-LEARNING_RATE = 0.001
+DATASET_FILE = "../normalization/teeth3ds_dataset.npy"  # The file you created in Step 1
+BATCH_SIZE = 16    # Lower this to 8 or 4 if you run out of GPU memory
 EPOCHS = 20
-EMBEDDING_DIM = 512 # Size of the "fingerprint" vector
+LR = 0.001
+TEMPERATURE = 0.1  # The "temperature" for NT-Xent loss
+K_NEIGHBORS = 20   # How many neighbors EdgeConv looks at
 
-# --- 1. THE MODEL (PointNet Encoder) ---
-# This acts as the "Eyes" of the system. It takes 4096 points and outputs a 512D vector.
-class PointNetEncoder(nn.Module):
-    def __init__(self):
-        super(PointNetEncoder, self).__init__()
-        # Input: (Batch, 3, 4096) -> Output: (Batch, 64, 4096)
-        self.conv1 = nn.Conv1d(3, 64, 1)
-        self.conv2 = nn.Conv1d(64, 128, 1)
-        self.conv3 = nn.Conv1d(128, 1024, 1)
-        
-        self.bn1 = nn.BatchNorm1d(64)
-        self.bn2 = nn.BatchNorm1d(128)
-        self.bn3 = nn.BatchNorm1d(1024)
-        
-        # Mapping to the final embedding vector (The "Fingerprint")
-        self.fc1 = nn.Linear(1024, 512)
-        self.fc2 = nn.Linear(512, EMBEDDING_DIM)
-        self.bn4 = nn.BatchNorm1d(512)
-
-    def forward(self, x):
-        # x shape: [Batch, 4096, 3] -> Permute to [Batch, 3, 4096] for Conv1d
-        x = x.transpose(2, 1)
-        
-        # Layer 1-3: Learn features for each point
-        x = torch.relu(self.bn1(self.conv1(x)))
-        x = torch.relu(self.bn2(self.conv2(x)))
-        x = torch.relu(self.bn3(self.conv3(x)))
-        
-        # Max Pooling: The "Symmetric Function" discussed in the report 
-        # This collapses 4096 point features into 1 global feature
-        x = torch.max(x, 2, keepdim=False)[0]
-        
-        # Fully Connected Layers: Refine the vector
-        x = torch.relu(self.bn4(self.fc1(x)))
-        x = self.fc2(x) # No activation on final layer (this is the embedding)
-        
-        # Normalize the vector to length 1 (Critical for Cosine Similarity!)
-        return torch.nn.functional.normalize(x, p=2, dim=1)
-
-# --- 2. THE DATASET (SimCLR / Triplet Logic) ---
-class DentalDataset(Dataset):
+# --- 1. DATASET WITH AUGMENTATIONS ---
+class SimCLRDataset(Dataset):
     def __init__(self, npy_file):
-        self.data = np.load(npy_file) # Shape (N, 4096, 3)
-        print(f"Loaded dataset with {len(self.data)} scans.")
+        try:
+            self.data = np.load(npy_file)
+            print(f"Loaded dataset: {len(self.data)} scans.")
+        except FileNotFoundError:
+            print(f"ERROR: Could not find {npy_file}. Did you run Step 1?")
+            exit()
 
     def __len__(self):
         return len(self.data)
 
     def augment(self, point_cloud):
-        """Randomly rotate and jitter the scan to create a 'Positive' pair."""
-        # Jitter (Add noise)
-        noise = np.random.normal(0, 0.02, point_cloud.shape)
-        aug_pc = point_cloud + noise
+        """
+        Create a distorted view of the teeth using Jitter, Flip, Shear, and Rotation.
+        """
+        pc = point_cloud.copy()
         
-        # Rotation (Random Z-axis rotation)
+        # A. Random Flip (e.g., flip X axis)
+        if np.random.random() > 0.5:
+            pc[:, 0] = -pc[:, 0]
+            
+        # B. Random Shear (Stretch)
+        shear_matrix = np.eye(3)
+        shear_matrix[0, 1] = np.random.uniform(-0.2, 0.2)
+        pc = np.dot(pc, shear_matrix.T)
+
+        # C. Random Rotation (Z-axis)
         theta = np.random.uniform(0, 2 * np.pi)
-        rotation_matrix = np.array([
+        rot_matrix = np.array([
             [np.cos(theta), -np.sin(theta), 0],
             [np.sin(theta), np.cos(theta), 0],
             [0, 0, 1]
         ])
-        aug_pc = np.dot(aug_pc, rotation_matrix.T)
-        return aug_pc.astype(np.float32)
+        pc = np.dot(pc, rot_matrix.T)
+        
+        # D. Jitter (Noise)
+        noise = np.random.normal(0, 0.02, pc.shape)
+        pc += noise
+        
+        return pc.astype(np.float32)
 
     def __getitem__(self, idx):
-        anchor_pc = self.data[idx]
-        
-        # The "Positive" is an augmented version of the Anchor (Self-Supervised) [cite: 234]
-        positive_pc = self.augment(anchor_pc)
-        
-        # The "Negative" is a random DIFFERENT patient
-        neg_idx = np.random.randint(0, len(self.data))
-        while neg_idx == idx: # Ensure it's not the same patient
-            neg_idx = np.random.randint(0, len(self.data))
-        negative_pc = self.data[neg_idx]
+        # SimCLR needs TWO different views of the SAME patient
+        original = self.data[idx]
+        view1 = self.augment(original)
+        view2 = self.augment(original)
+        return torch.tensor(view1), torch.tensor(view2)
 
-        return torch.tensor(anchor_pc, dtype=torch.float32), \
-               torch.tensor(positive_pc, dtype=torch.float32), \
-               torch.tensor(negative_pc, dtype=torch.float32)
+# --- 2. EDGECONV LAYERS (Manual Implementation) ---
+def knn(x, k):
+    """Finds k-nearest neighbors using Euclidean distance"""
+    inner = -2 * torch.matmul(x.transpose(2, 1), x)
+    xx = torch.sum(x**2, dim=1, keepdim=True)
+    pairwise_distance = -xx - inner - xx.transpose(2, 1)
+    idx = pairwise_distance.topk(k=k, dim=-1)[1]   # (Batch, N, k)
+    return idx
 
-# --- 3. TRAINING LOOP ---
+def get_graph_feature(x, k=20, idx=None):
+    """Constructs the local graph for EdgeConv"""
+    batch_size = x.size(0)
+    num_points = x.size(2)
+    x = x.view(batch_size, -1, num_points)
+    if idx is None:
+        idx = knn(x, k=k)
+    device = x.device
+    idx_base = torch.arange(0, batch_size, device=device).view(-1, 1, 1) * num_points
+    idx = idx + idx_base
+    idx = idx.view(-1)
+    _, num_dims, _ = x.size()
+    x = x.transpose(2, 1).contiguous()
+    feature = x.view(batch_size * num_points, -1)[idx, :]
+    feature = feature.view(batch_size, num_points, k, num_dims) 
+    x = x.view(batch_size, num_points, 1, num_dims).repeat(1, 1, k, 1)
+    feature = torch.cat((feature - x, x), dim=3).permute(0, 3, 1, 2).contiguous()
+    return feature
+
+# --- 3. THE MODEL (Encoder + Projection Head) ---
+class SimCLREncoder(nn.Module):
+    def __init__(self, k=K_NEIGHBORS, emb_dim=512):
+        super(SimCLREncoder, self).__init__()
+        self.k = k
+        
+        # EdgeConv Layer 1
+        self.conv1 = nn.Sequential(
+            nn.Conv2d(6, 64, kernel_size=1, bias=False),
+            nn.BatchNorm2d(64),
+            nn.LeakyReLU(negative_slope=0.2)
+        )
+        
+        # EdgeConv Layer 2
+        self.conv2 = nn.Sequential(
+            nn.Conv2d(64*2, 64, kernel_size=1, bias=False),
+            nn.BatchNorm2d(64),
+            nn.LeakyReLU(negative_slope=0.2)
+        )
+        
+        # Global Features
+        self.conv3 = nn.Sequential(
+            nn.Conv1d(128, 512, kernel_size=1, bias=False),
+            nn.BatchNorm1d(512),
+            nn.LeakyReLU(negative_slope=0.2)
+        )
+        
+        # Output Head (The Search Vector)
+        self.fc_backbone = nn.Linear(512, emb_dim)
+        
+        # Projection Head (Only for Training!)
+        self.projection_head = nn.Sequential(
+            nn.Linear(emb_dim, 256),
+            nn.ReLU(),
+            nn.Linear(256, 32) 
+        )
+
+    def forward(self, x):
+        # x: [Batch, 3, 4096]
+        
+        # Layer 1
+        x = get_graph_feature(x, k=self.k)
+        x = self.conv1(x)
+        x1 = x.max(dim=-1, keepdim=False)[0] 
+        
+        # Layer 2
+        x = get_graph_feature(x1, k=self.k)
+        x = self.conv2(x)
+        x2 = x.max(dim=-1, keepdim=False)[0]
+        
+        # Concatenate & Global Pool
+        x_combined = torch.cat((x1, x2), dim=1)
+        x_out = self.conv3(x_combined)
+        x_out = x_out.max(dim=2)[0]
+        
+        # Get Vectors
+        representation = self.fc_backbone(x_out) # Save this later
+        projection = self.projection_head(representation) # Use this now
+        
+        return representation, projection
+
+# --- 4. NT-Xent LOSS FUNCTION ---
+class NTXentLoss(nn.Module):
+    def __init__(self, temperature=0.1):
+        super(NTXentLoss, self).__init__()
+        self.temperature = temperature
+        self.criterion = nn.CrossEntropyLoss(reduction="sum")
+
+    def forward(self, z_i, z_j):
+        batch_size = z_i.shape[0]
+        features = torch.cat((z_i, z_j), dim=0)
+        features = nn.functional.normalize(features, dim=1)
+        similarity_matrix = torch.matmul(features, features.T) / self.temperature
+        
+        labels = torch.cat([
+            torch.arange(batch_size, 2 * batch_size, device=z_i.device),
+            torch.arange(0, batch_size, device=z_i.device)
+        ], dim=0)
+        
+        mask = torch.eye(labels.shape[0], dtype=torch.bool).to(z_i.device)
+        similarity_matrix.masked_fill_(mask, -9e15)
+        
+        loss = self.criterion(similarity_matrix, labels)
+        return loss / (2 * batch_size)
+
+# --- 5. TRAINING LOOP ---
 def train():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"Training on: {device}")
-
-    # Initialize components
-    dataset = DentalDataset(DATASET_PATH)
-    dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
+    print(f"Starting Training on device: {device}")
     
-    model = PointNetEncoder().to(device)
-    optimizer = optim.Adam(model.parameters(), lr=LEARNING_RATE)
+    # Setup
+    dataset = SimCLRDataset(DATASET_FILE)
+    dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
     
-    # Triplet Loss: Pushes Positive closer, Negative further away 
-    criterion = nn.TripletMarginLoss(margin=1.0, p=2)
+    model = SimCLREncoder().to(device)
+    optimizer = optim.Adam(model.parameters(), lr=LR)
+    loss_func = NTXentLoss(temperature=TEMPERATURE)
 
     model.train()
+    print("------------------------------------------------")
+    
     for epoch in range(EPOCHS):
         total_loss = 0
-        for anchors, positives, negatives in dataloader:
-            anchors, positives, negatives = anchors.to(device), positives.to(device), negatives.to(device)
+        for i, (view1, view2) in enumerate(dataloader):
+            # Move to GPU and fix shape [Batch, 3, N]
+            view1 = view1.transpose(2, 1).to(device)
+            view2 = view2.transpose(2, 1).to(device)
             
             optimizer.zero_grad()
             
-            # Forward pass: Get vectors for all 3 versions
-            anchor_vec = model(anchors)
-            pos_vec = model(positives)
-            neg_vec = model(negatives)
+            # Forward Pass (Get the 32-dim projections)
+            _, proj1 = model(view1)
+            _, proj2 = model(view2)
             
-            # Compute Loss
-            loss = criterion(anchor_vec, pos_vec, neg_vec)
+            # Calculate Loss
+            loss = loss_func(proj1, proj2)
             
-            # Backward pass
             loss.backward()
             optimizer.step()
-            
             total_loss += loss.item()
             
-        print(f"Epoch {epoch+1}/{EPOCHS} | Loss: {total_loss/len(dataloader):.4f}")
+            if i % 10 == 0:
+                print(f"  Epoch {epoch+1} | Batch {i} | Loss: {loss.item():.4f}")
 
-    # Save the trained brain
-    torch.save(model.state_dict(), "oasis_model_v1.pth")
-    print("Training Complete! Model saved as 'oasis_model_v1.pth'")
+        avg_loss = total_loss / len(dataloader)
+        print(f"Epoch {epoch+1} Complete! Average Loss: {avg_loss:.4f}")
+        print("------------------------------------------------")
+
+    # Save the model
+    torch.save(model.state_dict(), "oasis_simclr_edgeconv.pth")
+    print("DONE! Model saved to 'oasis_simclr_edgeconv.pth'")
 
 if __name__ == "__main__":
     train()

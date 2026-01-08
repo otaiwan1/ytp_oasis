@@ -7,7 +7,7 @@ def get_knn(x, k):
     Calculates the k-nearest neighbors for a point cloud.
     Args:
         x: (batch_size, num_dims, num_points) - Input features/coords
-            batch: number of objects; dimension (channels): 3 -> 64 -> 1024...; points: number of points in the cloud
+            batch: number of objects; dimension (channels): 3 -> 64...; points: number of points in the cloud
         k: int - Number of neighbors
     Returns:
         idx: (batch_size, num_points, k) - Indices of the nearest neighbors
