@@ -1,4 +1,6 @@
 *.DS_Store
+collecting-data/scanfiles
+collecting-data/stlFiles
 normalization/data_part_1
 venv/
 .env
