@@ -7,7 +7,7 @@ from tqdm import tqdm
 # --- CONFIGURATION ---
 # Point this to the root folder where your data is stored.
 # It will recursively find files in subfolders (e.g., Upper/015WXFRN/...).
-SOURCE_FOLDER = "./data_part_1" 
+SOURCE_FOLDER = "../collecting-data/stlFiles" 
 
 # This is the "Textbook" file we are creating.
 OUTPUT_FILENAME = "teeth3ds_dataset.npy"
