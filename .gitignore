@@ -2,6 +2,7 @@
 collecting-data/scanfiles
 collecting-data/stlFiles
 normalization/data_part_1
+normalization/teeth3ds_dataset.npy
 venv/
 .env
 .vscode
