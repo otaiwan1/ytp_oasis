@@ -1,6 +1,10 @@
+import open3d as o3d
+
+import os
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
 import torch
 import numpy as np
-import open3d as o3d
 import pandas as pd
 import random
 import os
@@ -34,7 +38,7 @@ except ImportError as e:
 
 # --- 3. CONFIGURATION ---
 # Using the filenames from your tree structure
-MODEL_PATH = TRAIN_DIR / "oasis_model_v1_cuda.pth"
+MODEL_PATH = TRAIN_DIR / "oasis_simclr_edgeconv.pth"
 DATASET_PATH = DATA_DIR / "teeth3ds_dataset.npy"
 REPORT_SAVE_PATH = current_folder / "oasis_validation_report.csv"
 
