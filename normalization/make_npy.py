@@ -2,97 +2,150 @@ import os
 import numpy as np
 import trimesh
 import open3d as o3d
+import torch
+import torch.multiprocessing as mp
+from concurrent.futures import ProcessPoolExecutor, as_completed
 from tqdm import tqdm
 
 # --- CONFIGURATION ---
-# Point this to the root folder where your data is stored.
-# It will recursively find files in subfolders (e.g., Upper/015WXFRN/...).
 SOURCE_FOLDER = "../collecting-data/stlFiles" 
-
-# This is the "Textbook" file we are creating.
 OUTPUT_FILENAME = "teeth3ds_dataset.npy"
+NUM_POINTS = 2048
+# Increase this if you want safer sample before FPS
+INITIAL_SAMPLE = 50000 
 
-# The fixed number of points every patient must have.
-NUM_POINTS = 4096
-
-def get_normalized_pcd(file_path):
+# --- GPU KERNEL ---
+def farthest_point_sample_gpu(xyz, npoint):
     """
-    1. Loads the 3D mesh.
-    2. Centers it at (0,0,0).
-    3. Rotates it to face "forward" (PCA).
-    4. Turns it into a cloud of 4,096 points.
+    Input:
+        xyz: pointcloud data, [N, 3] (Tensor on GPU)
+        npoint: number of samples
+    Return:
+        centroids: sampled pointcloud, [npoint, 3] (Tensor on GPU)
+    """
+    N, C = xyz.shape
+    device = xyz.device
+    
+    centroids = torch.zeros((npoint, C), device=device)
+    # Using float32 max value for safety
+    distance = torch.ones(N, device=device) * 1e10
+    farthest = torch.randint(0, N, (1,), dtype=torch.long, device=device).item()
+    
+    for i in range(npoint):
+        centroids[i] = xyz[farthest]
+        centroid = xyz[farthest, :].view(1, 3)
+        # Calculate distance
+        dist = torch.sum((xyz - centroid) ** 2, -1)
+        # Update distance mask
+        mask = dist < distance
+        distance[mask] = dist[mask]
+        farthest = torch.argmax(distance).item()
+        
+    return centroids
+
+# --- CPU WORKER ---
+def preprocess_mesh_cpu(file_path):
+    """
+    Pure CPU Function:
+    1. Load Mesh from Disk (I/O)
+    2. Center & Align (Geometry Math)
+    3. Uniform Sample (Geometry Math)
+    
+    Returns:
+        np.array (10000, 3) or None
     """
     try:
-        # force='mesh' merges multi-part files into one single dental arch
+        # 1. Load
+        # force='mesh' prevents creating Scenes for single objects
         mesh = trimesh.load(file_path, force='mesh')
         
-        # --- A. Center the Mesh ---
+        # 2. Center
         mesh.vertices -= mesh.center_mass
         
-        # --- B. PCA Alignment (Fix Rotation) ---
-        # Calculate the "principal axes" (length, width, height)
+        # 3. PCA Alignment
         inertia = mesh.moment_inertia
         eigenvalues, eigenvectors = np.linalg.eigh(inertia)
         
-        # Create a rotation matrix to align these axes with X, Y, Z
         transform_matrix = np.eye(4)
         transform_matrix[:3, :3] = eigenvectors
         mesh.apply_transform(np.linalg.inv(transform_matrix))
         
-        # --- C. Sampling (Mesh -> Points) ---
-        # 1. Sample 10,000 points randomly first (fast)
-        points_uniform = mesh.sample(10000)
+        # 4. Initial Uniform Sampling (Heavy CPU OP)
+        points_uniform = mesh.sample(INITIAL_SAMPLE)
         
-        # 2. Use Farthest Point Sampling (FPS) to pick the BEST 4,096 points
-        # FPS ensures we capture the sharp cusps of teeth, not just flat gums.
-        pcd = o3d.geometry.PointCloud()
-        pcd.points = o3d.utility.Vector3dVector(points_uniform)
-        pcd_final = pcd.farthest_point_down_sample(NUM_POINTS)
-        
-        return np.asarray(pcd_final.points)
+        return points_uniform.astype(np.float32)
         
     except Exception as e:
-        # If a file is corrupt, print a warning but keep going
-        # print(f"Skipping {file_path}: {e}")
+        # print(f"Error {file_path}: {e}")
         return None
 
 def process_batch():
-    all_points = []
-    file_list = []
-    
     # 1. FIND FILES
+    file_list = []
     print(f"Scanning '{SOURCE_FOLDER}' for .obj and .stl files...")
     for root, dirs, files in os.walk(SOURCE_FOLDER):
         for file in files:
-            # Look for both .obj (Teeth3DS) and .stl (Your future data)
             if file.lower().endswith(('.obj', '.stl')):
-                full_path = os.path.join(root, file)
-                file_list.append(full_path)
+                file_list.append(os.path.join(root, file))
     
-    print(f"Found {len(file_list)} files. Starting processing...")
+    total_files = len(file_list)
+    print(f"Found {total_files} files.")
     
-    # 2. PROCESS FILES
-    # tqdm shows a progress bar so you know how long it will take
-    for file_path in tqdm(file_list):
-        pcd_array = get_normalized_pcd(file_path)
+    # 2. MULTIPROCESSING (CPU)
+    # Use 15 cores as requested
+    num_workers = 15
+    print(f"Starting Multiprocessing with {num_workers} CPU cores...")
+    
+    all_final_points = []
+    
+    # We use a context manager for the pool
+    # 'spawn' is safer for PyTorch/CUDA interaction usually, but 'fork' (default on Linux) 
+    # is fine here since we don't touch CUDA in workers.
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
+        # Submit all tasks
+        futures = {executor.submit(preprocess_mesh_cpu, fp): fp for fp in file_list}
         
-        if pcd_array is not None:
-            # Double check we actually got the right shape
-            if pcd_array.shape == (NUM_POINTS, 3):
-                all_points.append(pcd_array)
+        # Iterate as they finish
+        for future in tqdm(as_completed(futures), total=total_files, desc="Processing"):
+            result = future.result()
+            
+            if result is not None:
+                # 3. GPU PROCESSING (Main Process)
+                # Once CPU gives us the ~10k points, we strictly use GPU for FPS
+                if torch.cuda.is_available():
+                    try:
+                        # Move to GPU
+                        pts_tensor = torch.from_numpy(result).float().cuda()
+                        # Run FPS
+                        pts_out = farthest_point_sample_gpu(pts_tensor, NUM_POINTS)
+                        # Back to CPU
+                        all_final_points.append(pts_out.cpu().numpy())
+                    except Exception as e:
+                        print(f"GPU Error: {e}")
+                else:
+                    # Fallback to Open3D if no GPU (Should not happen if you have CUDA)
+                    pcd = o3d.geometry.PointCloud()
+                    pcd.points = o3d.utility.Vector3dVector(result)
+                    pcd_final = pcd.farthest_point_down_sample(NUM_POINTS)
+                    all_final_points.append(np.asarray(pcd_final.points))
 
-    # 3. SAVE RESULT
-    if len(all_points) > 0:
-        final_data = np.array(all_points)
+    # 4. SAVE RESULT
+    if len(all_final_points) > 0:
+        final_data = np.array(all_final_points)
         np.save(OUTPUT_FILENAME, final_data)
         
         print("-" * 30)
         print("SUCCESS!")
         print(f"Saved dataset to: {OUTPUT_FILENAME}")
-        print(f"Total Patients: {final_data.shape[0]}") # e.g., 2000
-        print(f"Points per Patient: {final_data.shape[1]}") # 4096
+        print(f"Total Patients: {final_data.shape[0]}") 
+        print(f"Points per Patient: {final_data.shape[1]}")
     else:
         print("Error: No valid 3D files were processed.")
 
 if __name__ == "__main__":
+    # Ensure correct start method if needed, though default usually works for this setup
+    try:
+        mp.set_start_method('spawn')
+    except RuntimeError:
+        pass
     process_batch()
