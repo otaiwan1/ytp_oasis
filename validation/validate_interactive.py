@@ -61,6 +61,8 @@ def load_model_and_data():
     model = SimCLREncoder().to(device)
     model.load_state_dict(torch.load(MODEL_PATH, map_location=device))
     model.eval()
+
+    print("Finish load_model_and_data()!")
     
     return model, data, device
 
