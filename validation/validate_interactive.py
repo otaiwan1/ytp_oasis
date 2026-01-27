@@ -39,6 +39,7 @@ except ImportError as e:
 # Using the filenames from your tree structure
 MODEL_PATH = TRAIN_DIR / "oasis_simclr_edgeconv.pth"
 DATASET_PATH = DATA_DIR / "teeth3ds_dataset.npy"
+INDEX_PATH = DATA_DIR / "teeth3ds_filenames.json"  # New Index File
 REPORT_SAVE_PATH = current_folder / "oasis_validation_report.csv"
 
 NUM_TEST_CASES = 10
@@ -56,6 +57,16 @@ def load_model_and_data():
 
     print("Loading data...")
     data = np.load(DATASET_PATH)
+    
+    # Load Index Map if available
+    filenames = []
+    if INDEX_PATH.exists():
+        import json
+        with open(INDEX_PATH, 'r') as f:
+            filenames = json.load(f)
+        print(f"Loaded {len(filenames)} filename mappings.")
+    else:
+        print("Warning: No filename index found. You will only see IDs.")
 
     print("Loading model...")
     model = SimCLREncoder().to(device)
@@ -64,7 +75,7 @@ def load_model_and_data():
 
     print("Finish load_model_and_data()!")
     
-    return model, data, device
+    return model, data, filenames, device
 
 def get_vectors(model, data, device):
     """Convert point clouds to searchable vectors"""
@@ -81,24 +92,65 @@ def get_vectors(model, data, device):
             
     return np.vstack(vectors)
 
-def visualize_pair(query_points, match_points, title):
-    pcd_query = o3d.geometry.PointCloud()
-    pcd_query.points = o3d.utility.Vector3dVector(query_points)
-    pcd_query.paint_uniform_color([1, 0, 0]) # Red
+import trimesh
+
+def visualize_pair(query_data, match_data, title, query_name="Query", match_name="Match"):
+    """
+    Visualizes two 3D objects.
+    If 'query_data' is a string, it loads the mesh file (STL/OBJ).
+    If 'query_data' is numpy array, it creates a point cloud.
+    """
+    geometries = []
+
+    # --- Helper to load Mesh or PCD ---
+    def load_geometry(data, color, shift_x=0):
+        geom = None
+        if isinstance(data, str) and os.path.exists(data):
+            # Load Mesh (High Quality)
+            try:
+                mesh = trimesh.load(data, force='mesh')
+                # Trimesh -> Open3D
+                geom = o3d.geometry.TriangleMesh()
+                geom.vertices = o3d.utility.Vector3dVector(mesh.vertices)
+                geom.triangles = o3d.utility.Vector3iVector(mesh.faces)
+                geom.compute_vertex_normals()
+                geom.paint_uniform_color(color)
+            except Exception as e:
+                print(f"Error loading mesh {data}: {e}")
+        
+        # Fallback or if data is Point Cloud
+        if geom is None and isinstance(data, np.ndarray):
+            geom = o3d.geometry.PointCloud()
+            geom.points = o3d.utility.Vector3dVector(data)
+            geom.paint_uniform_color(color)
+            
+        if geom:
+            # Shift position
+            if shift_x != 0:
+                geom.translate((shift_x, 0, 0))
+        return geom
+
+    # 1. Load Query (Red)
+    query_geom = load_geometry(query_data, [1, 0.7, 0.7], shift_x=0) # Light Red
+    if query_geom: geometries.append(query_geom)
     
-    pcd_match = o3d.geometry.PointCloud()
-    pcd_match.points = o3d.utility.Vector3dVector(match_points)
-    pcd_match.paint_uniform_color([0, 1, 0]) # Green
-    
-    # Shift the match to the right
-    width = np.max(query_points[:, 0]) - np.min(query_points[:, 0])
-    pcd_match.translate((width * 1.5, 0, 0))
+    # 2. Load Match (Green)
+    # Estimate width for spacing
+    width = 50.0 # Default fallback width
+    if isinstance(query_data, np.ndarray):
+        width = np.max(query_data[:, 0]) - np.min(query_data[:, 0])
+        
+    match_geom = load_geometry(match_data, [0.7, 1, 0.7], shift_x=width * 1.5) # Light Green
+    if match_geom: geometries.append(match_geom)
     
     print(f"Visualizing: {title}")
-    o3d.visualization.draw_geometries([pcd_query, pcd_match], window_name=title)
+    # Show window with file names
+    print(f"  Left (Red): {query_name}")
+    print(f"  Right (Green): {match_name}")
+    o3d.visualization.draw_geometries(geometries, window_name=title)
 
 def run_validation():
-    model, data, device = load_model_and_data()
+    model, data, filenames, device = load_model_and_data()
     all_vectors = get_vectors(model, data, device)
     
     # Normalize for Cosine Similarity
@@ -120,14 +172,32 @@ def run_validation():
         query_vec = normalized_vectors[query_idx:query_idx+1]
         similarities = np.dot(normalized_vectors, query_vec.T).flatten()
         
-        # Get Top K (excluding self at rank 0)
+        # Get Top K (excluding self at rank 0, usually index 0 is self because dist=1.0)
         sorted_indices = np.argsort(similarities)[::-1]
-        top_indices = sorted_indices[1 : TOP_K+1] 
+        
+        # Filter out self (query_idx) from results
+        top_indices = [idx for idx in sorted_indices if idx != query_idx][:TOP_K]
         
         for rank, match_idx in enumerate(top_indices):
+            score = similarities[match_idx]
+            
+            # Prepare Data for Visualization
+            # If we have filenames, try to load the original STL
+            query_obj = data[query_idx]
+            match_obj = data[match_idx]
+            q_name = f"ID_{query_idx}"
+            m_name = f"ID_{match_idx}"
+            
+            if len(filenames) > 0:
+                # Use raw file path if available
+                query_obj = filenames[query_idx] 
+                match_obj = filenames[match_idx]
+                q_name = os.path.basename(query_obj)
+                m_name = os.path.basename(match_obj)
+
             # Visualize
-            title = f"Rank {rank+1} | Score: {similarities[match_idx]:.2f}"
-            visualize_pair(data[query_idx], data[match_idx], title)
+            title = f"Rank {rank+1} | Score: {score:.4f}"
+            visualize_pair(query_obj, match_obj, title, q_name, m_name)
             
             # Input Grade
             while True:
@@ -140,7 +210,9 @@ def run_validation():
             results_log.append({
                 "Query_ID": query_idx,
                 "Match_ID": match_idx,
-                "Dentist_Grade": grade
+                "Dentist_Grade": grade,
+                "Query_File": q_name,
+                "Match_File": m_name
             })
             
     # Save Report
