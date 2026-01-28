@@ -11,9 +11,9 @@ from tqdm import tqdm
 SOURCE_FOLDER = "../collecting-data/stlFiles" 
 OUTPUT_FILENAME = "teeth3ds_dataset.npy"
 INDEX_FILENAME = "teeth3ds_filenames.json"
-NUM_POINTS = 2048
+NUM_POINTS = 4096
 # Increase this if you want safer sample before FPS
-INITIAL_SAMPLE = 50000 
+INITIAL_SAMPLE = 100000 
 
 # --- GPU KERNEL ---
 def farthest_point_sample_gpu(xyz, npoint):
@@ -97,71 +97,50 @@ def process_batch():
     total_files = len(file_list)
     print(f"Found {total_files} files.")
     
-    # 2. PROCESS IN CHUNKS (Prevents Memory/Tmp Overflow)
+    # 2. PROCESS ALL
     # Use 15 cores as requested
     num_workers = 15
-    CHUNK_SIZE = 100  # Process 100 files at a time
-    print(f"Starting Multiprocessing with {num_workers} CPU cores (Batch Size: {CHUNK_SIZE})...")
+    print(f"Starting Multiprocessing with {num_workers} CPU cores (No Chunking)...")
     
-    all_data_chunks = []
+    all_points = []
     all_filenames = []
     
-    # Split file_list into chunks
-    file_chunks = [file_list[i:i + CHUNK_SIZE] for i in range(0, total_files, CHUNK_SIZE)]
-    
-    for chunk_idx, current_files in enumerate(file_chunks):
-        print(f"\nProcessing Batch {chunk_idx+1}/{len(file_chunks)} ({len(current_files)} files)...")
-        chunk_points = []
-        chunk_filenames = []
+    # Use Context Manager for clean process shutdown
+    with ProcessPoolExecutor(max_workers=num_workers) as executor:
+        # Keep track of which future belongs to which file path
+        future_to_file = {executor.submit(preprocess_mesh_cpu, fp): fp for fp in file_list}
         
-        # Use Context Manager for clean process shutdown/startup per batch
-        with ProcessPoolExecutor(max_workers=num_workers) as executor:
-            # Keep track of which future belongs to which file path
-            future_to_file = {executor.submit(preprocess_mesh_cpu, fp): fp for fp in current_files}
+        for future in tqdm(as_completed(future_to_file), total=total_files, desc="Processing"):
+            result = future.result()
+            file_path = future_to_file[future]
             
-            for future in tqdm(as_completed(future_to_file), total=len(current_files), desc=f"Batch {chunk_idx+1}"):
-                result = future.result()
-                file_path = future_to_file[future]
-                
-                if result is not None:
-                    # 3. GPU PROCESSING (On the fly)
-                    if torch.cuda.is_available():
-                        try:
-                            pts_tensor = torch.from_numpy(result).float().cuda()
-                            pts_out = farthest_point_sample_gpu(pts_tensor, NUM_POINTS)
-                            chunk_points.append(pts_out.cpu().numpy())
-                            chunk_filenames.append(file_path)
-                        except Exception as e:
-                            print(f"GPU Error: {e}")
-                            # Fallback if GPU fails mid-batch
-                            pcd = o3d.geometry.PointCloud()
-                            pcd.points = o3d.utility.Vector3dVector(result)
-                            pcd_final = pcd.farthest_point_down_sample(NUM_POINTS)
-                            chunk_points.append(np.asarray(pcd_final.points))
-                            chunk_filenames.append(file_path)
-                    else:
+            if result is not None:
+                # 3. GPU PROCESSING (On the fly)
+                if torch.cuda.is_available():
+                    try:
+                        pts_tensor = torch.from_numpy(result).float().cuda()
+                        pts_out = farthest_point_sample_gpu(pts_tensor, NUM_POINTS)
+                        all_points.append(pts_out.cpu().numpy())
+                        all_filenames.append(file_path)
+                    except Exception as e:
+                        print(f"GPU Error: {e}")
+                        # Fallback if GPU fails
                         pcd = o3d.geometry.PointCloud()
                         pcd.points = o3d.utility.Vector3dVector(result)
                         pcd_final = pcd.farthest_point_down_sample(NUM_POINTS)
-                        chunk_points.append(np.asarray(pcd_final.points))
-                        chunk_filenames.append(file_path)
-        
-        # Consolidation: Convert list to numpy array immediately to save RAM
-        if len(chunk_points) > 0:
-            chunk_arr = np.array(chunk_points, dtype=np.float32)
-            all_data_chunks.append(chunk_arr)
-            all_filenames.extend(chunk_filenames)
-            
-        # Clean up memory explicitly
-        del chunk_points
-        del chunk_filenames
-        del future_to_file
-        gc.collect()
+                        all_points.append(np.asarray(pcd_final.points))
+                        all_filenames.append(file_path)
+                else:
+                    pcd = o3d.geometry.PointCloud()
+                    pcd.points = o3d.utility.Vector3dVector(result)
+                    pcd_final = pcd.farthest_point_down_sample(NUM_POINTS)
+                    all_points.append(np.asarray(pcd_final.points))
+                    all_filenames.append(file_path)
 
     # 4. SAVE RESULT
-    if len(all_data_chunks) > 0:
-        print("\nConcatenating all batches...")
-        final_data = np.concatenate(all_data_chunks, axis=0)
+    if len(all_points) > 0:
+        print("\nSaving results...")
+        final_data = np.array(all_points, dtype=np.float32)
         np.save(OUTPUT_FILENAME, final_data)
         
         # Save Filenames Index

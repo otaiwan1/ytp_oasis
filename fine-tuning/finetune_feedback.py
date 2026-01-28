@@ -28,7 +28,7 @@ except ImportError:
 
 # --- 2. CONFIGURATION ---
 # Base model from 'train'
-MODEL_PATH = TRAIN_DIR / "oasis_model_v1_cuda.pth"
+MODEL_PATH = TRAIN_DIR / "oasis_simclr_edgeconv.pth"
 # CSV Report from 'validation'
 FEEDBACK_CSV = VALIDATION_DIR / "oasis_validation_report.csv"
 # Data from 'normalization'
