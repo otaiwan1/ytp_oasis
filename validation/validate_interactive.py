@@ -41,6 +41,7 @@ MODEL_PATH = TRAIN_DIR / "oasis_simclr_edgeconv.pth"
 DATASET_PATH = DATA_DIR / "teeth3ds_dataset.npy"
 INDEX_PATH = DATA_DIR / "teeth3ds_filenames.json"  # New Index File
 REPORT_SAVE_PATH = current_folder / "oasis_validation_report.csv"
+VECTOR_CACHE_PATH = current_folder / "oasis_vectors_cache.npy"
 
 NUM_TEST_CASES = 10
 TOP_K = 5
@@ -78,8 +79,23 @@ def load_model_and_data():
     return model, data, filenames, device
 
 def get_vectors(model, data, device):
-    """Convert point clouds to searchable vectors"""
-    print("Indexing database...")
+    """Convert point clouds to searchable vectors (with caching)"""
+    
+    # 1. Check if cache exists and is valid
+    if VECTOR_CACHE_PATH.exists():
+        cache_mtime = VECTOR_CACHE_PATH.stat().st_mtime
+        model_mtime = MODEL_PATH.stat().st_mtime if MODEL_PATH.exists() else 0
+        data_mtime = DATASET_PATH.stat().st_mtime if DATASET_PATH.exists() else 0
+        
+        # If cache is newer than both model and data, load it
+        if cache_mtime > model_mtime and cache_mtime > data_mtime:
+            print(f"[Fast Load] Loading cached vectors from: {VECTOR_CACHE_PATH.name}")
+            return np.load(VECTOR_CACHE_PATH)
+        else:
+            print(f"[Cache Stale] Model or Data has changed. Re-indexing...")
+
+    # 2. Recompute if needed
+    print("Indexing database (Running Inference)...")
     vectors = []
     batch_size = 16
     
@@ -90,7 +106,17 @@ def get_vectors(model, data, device):
             reps, _ = model(tensor) 
             vectors.append(reps.cpu().numpy())
             
-    return np.vstack(vectors)
+            # Simple progress log
+            if i % (batch_size * 10) == 0:
+                print(f"  Processed {i}/{len(data)}...", end="\r")
+    
+    result_vectors = np.vstack(vectors)
+    
+    # 3. Save to cache
+    print(f"\nSaving vectors to cache for next time: {VECTOR_CACHE_PATH.name}")
+    np.save(VECTOR_CACHE_PATH, result_vectors)
+    
+    return result_vectors
 
 import trimesh
 
