@@ -207,7 +207,12 @@ def generate_validation_views(dataset):
     return validation_views
 
 def train():
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    elif torch.backends.mps.is_available():
+        device = torch.device("mps")
+    else:
+        device = torch.device("cpu")
     print(f"Starting Training on device: {device}")
     
     # Setup

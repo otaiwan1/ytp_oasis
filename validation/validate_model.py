@@ -247,7 +247,12 @@ def validate(model_path=None, use_finetuned=False):
         model_path: Path to the model (optional, uses default if None)
         use_finetuned: If True, use the latest fine-tuned model instead of base model
     """
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    elif torch.backends.mps.is_available():
+        device = torch.device("mps")
+    else:
+        device = torch.device("cpu")
     print(f"Running validation on device: {device}")
     
     # --- 1. Determine which model to use ---

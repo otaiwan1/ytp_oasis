@@ -190,7 +190,12 @@ def run_finetuning(base_model=None, report_path=None):
         base_model: Path to base model (None = latest fine-tuned or base model)
         report_path: Path to feedback CSV (None = use all feedback history)
     """
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if torch.cuda.is_available():
+        device = torch.device("cuda")
+    elif torch.backends.mps.is_available():
+        device = torch.device("mps")
+    else:
+        device = torch.device("cpu")
     
     dataset = FeedbackDataset(csv_path=report_path)
     if len(dataset) == 0: return
