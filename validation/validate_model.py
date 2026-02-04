@@ -40,9 +40,11 @@ except ImportError as e:
     sys.exit(1)
 
 # --- 3. CONFIGURATION ---
-# Model path (can use base model or fine-tuned model)
-MODEL_PATH = TRAIN_DIR / "oasis_simclr_edgeconv.pth"
-FINETUNED_MODEL_PATH = project_root / "fine-tuning" / "oasis_finetuned_feedback.pth"
+# Model paths
+BASE_MODEL_PATH = TRAIN_DIR / "oasis_simclr_edgeconv.pth"
+FINETUNE_DIR = project_root / "fine-tuning"
+MODEL_HISTORY_DIR = FINETUNE_DIR / "model_history"
+LATEST_MODEL_INFO = MODEL_HISTORY_DIR / "latest.txt"
 
 # Data paths
 ORIGINAL_DATASET_PATH = DATA_DIR / "teeth3ds_dataset.npy"
@@ -52,6 +54,16 @@ VALIDATION_INDICES_PATH = current_folder / "validation_views_indices.npy"
 # Evaluation settings
 BATCH_SIZE = 32
 TOP_K_VALUES = [1, 3, 5, 10]  # Calculate accuracy for these K values
+
+
+def get_latest_finetuned_model():
+    """Get the path to the latest fine-tuned model, or None if not exists."""
+    if LATEST_MODEL_INFO.exists():
+        with open(LATEST_MODEL_INFO, 'r') as f:
+            latest_path = Path(f.read().strip())
+            if latest_path.exists():
+                return latest_path
+    return None
 
 
 def load_model(model_path, device):
@@ -233,7 +245,7 @@ def validate(model_path=None, use_finetuned=False):
     
     Args:
         model_path: Path to the model (optional, uses default if None)
-        use_finetuned: If True, use the fine-tuned model instead of base model
+        use_finetuned: If True, use the latest fine-tuned model instead of base model
     """
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Running validation on device: {device}")
@@ -241,11 +253,16 @@ def validate(model_path=None, use_finetuned=False):
     # --- 1. Determine which model to use ---
     if model_path is not None:
         model_file = Path(model_path)
-    elif use_finetuned and FINETUNED_MODEL_PATH.exists():
-        model_file = FINETUNED_MODEL_PATH
-        print("Using fine-tuned model")
+        print(f"Using specified model: {model_file}")
+    elif use_finetuned:
+        model_file = get_latest_finetuned_model()
+        if model_file:
+            print(f"Using LATEST fine-tuned model: {model_file.name}")
+        else:
+            print("No fine-tuned model found, falling back to base model")
+            model_file = BASE_MODEL_PATH
     else:
-        model_file = MODEL_PATH
+        model_file = BASE_MODEL_PATH
         print("Using base model")
     
     # --- 2. Load Model ---
@@ -328,43 +345,107 @@ def validate(model_path=None, use_finetuned=False):
     return results
 
 
-def compare_models():
+def compare_models(model1_path=None, model2_path=None):
     """
-    Compare base model vs fine-tuned model performance.
+    Compare two models' performance.
+    
+    Args:
+        model1_path: Path to first model (default: base model)
+        model2_path: Path to second model (default: latest fine-tuned)
     """
+    # Resolve model 1
+    if model1_path is None:
+        model1 = BASE_MODEL_PATH
+        model1_name = "BASE"
+    else:
+        model1 = Path(model1_path)
+        if not model1.exists():
+            # Try model_history directory
+            possible = MODEL_HISTORY_DIR / model1_path
+            if possible.exists():
+                model1 = possible
+            else:
+                print(f"Error: Model not found: {model1_path}")
+                return
+        model1_name = model1.name
+    
+    # Resolve model 2
+    if model2_path is None:
+        model2 = get_latest_finetuned_model()
+        if model2 is None:
+            print("No fine-tuned model found. Cannot compare.")
+            return
+        model2_name = f"LATEST ({model2.name})"
+    else:
+        model2 = Path(model2_path)
+        if not model2.exists():
+            # Try model_history directory
+            possible = MODEL_HISTORY_DIR / model2_path
+            if possible.exists():
+                model2 = possible
+            else:
+                print(f"Error: Model not found: {model2_path}")
+                return
+        model2_name = model2.name
+    
     print("\n" + "=" * 60)
-    print("         COMPARING BASE vs FINE-TUNED MODEL")
+    print("         COMPARING TWO MODELS")
     print("=" * 60)
     
-    print("\n--- BASE MODEL ---")
-    base_results = validate(model_path=MODEL_PATH)
+    print(f"\n--- MODEL 1: {model1_name} ---")
+    results1 = validate(model_path=model1)
     
-    if FINETUNED_MODEL_PATH.exists():
-        print("\n--- FINE-TUNED MODEL ---")
-        finetuned_results = validate(model_path=FINETUNED_MODEL_PATH)
+    print(f"\n--- MODEL 2: {model2_name} ---")
+    results2 = validate(model_path=model2)
+    
+    if results1 and results2:
+        print("\n" + "=" * 60)
+        print("              COMPARISON SUMMARY")
+        print("=" * 60)
+        print(f"\n{'Metric':<15} {'Model 1':<15} {'Model 2':<15} {'Diff':<10}")
+        print("-" * 55)
         
-        if base_results and finetuned_results:
-            print("\n" + "=" * 60)
-            print("              COMPARISON SUMMARY")
-            print("=" * 60)
-            print(f"\n{'Metric':<15} {'Base Model':<15} {'Fine-tuned':<15} {'Diff':<10}")
-            print("-" * 55)
-            
-            for k in TOP_K_VALUES:
-                base_acc = base_results['accuracies'][k]
-                ft_acc = finetuned_results['accuracies'][k]
-                diff = ft_acc - base_acc
-                sign = "+" if diff > 0 else ""
-                print(f"Top-{k:<10} {base_acc:>12.2f}% {ft_acc:>12.2f}% {sign}{diff:>8.2f}%")
-            
-            base_mrr = base_results['mrr']
-            ft_mrr = finetuned_results['mrr']
-            diff = ft_mrr - base_mrr
+        for k in TOP_K_VALUES:
+            acc1 = results1['accuracies'][k]
+            acc2 = results2['accuracies'][k]
+            diff = acc2 - acc1
             sign = "+" if diff > 0 else ""
-            print(f"{'MRR':<15} {base_mrr:>12.4f} {ft_mrr:>12.4f} {sign}{diff:>8.4f}")
+            print(f"Top-{k:<10} {acc1:>12.2f}% {acc2:>12.2f}% {sign}{diff:>8.2f}%")
+        
+        mrr1 = results1['mrr']
+        mrr2 = results2['mrr']
+        diff = mrr2 - mrr1
+        sign = "+" if diff > 0 else ""
+        print(f"{'MRR':<15} {mrr1:>12.4f} {mrr2:>12.4f} {sign}{diff:>8.4f}")
+        
+        print("\n" + "-" * 55)
+        print(f"Model 1: {model1}")
+        print(f"Model 2: {model2}")
     else:
-        print(f"\nFine-tuned model not found at {FINETUNED_MODEL_PATH}")
-        print("Run fine-tuning first to compare models.")
+        print(f"\nComparison failed - one or both validations returned no results.")
+
+
+def list_available_models():
+    """List all available models (base + all fine-tuned versions)."""
+    print("\n" + "=" * 60)
+    print("  AVAILABLE MODELS")
+    print("=" * 60)
+    
+    print(f"\n📦 Base Model:")
+    print(f"   {BASE_MODEL_PATH}")
+    
+    if MODEL_HISTORY_DIR.exists():
+        models = sorted(MODEL_HISTORY_DIR.glob("v*_*.pth"))
+        if models:
+            latest = get_latest_finetuned_model()
+            print(f"\n📦 Fine-tuned Models ({len(models)} versions):")
+            for model_path in models:
+                is_latest = " ← LATEST" if model_path == latest else ""
+                print(f"   {model_path.name}{is_latest}")
+    else:
+        print("\n📦 Fine-tuned Models: None")
+    
+    print("=" * 60)
 
 
 if __name__ == "__main__":
@@ -374,13 +455,28 @@ if __name__ == "__main__":
     parser.add_argument("--model", type=str, default=None, 
                         help="Path to model file (optional)")
     parser.add_argument("--finetuned", action="store_true",
-                        help="Use fine-tuned model instead of base model")
-    parser.add_argument("--compare", action="store_true",
-                        help="Compare base model vs fine-tuned model")
+                        help="Use latest fine-tuned model instead of base model")
+    parser.add_argument("--compare", nargs='*', default=None,
+                        help="Compare two models. Usage: --compare [model1] [model2]. "
+                             "No args = base vs latest. One arg = base vs specified. "
+                             "Two args = model1 vs model2.")
+    parser.add_argument("--list", action="store_true",
+                        help="List all available models")
     
     args = parser.parse_args()
     
-    if args.compare:
-        compare_models()
+    if args.list:
+        list_available_models()
+    elif args.compare is not None:
+        # Parse compare arguments
+        if len(args.compare) == 0:
+            # --compare with no args: base vs latest
+            compare_models(model1_path=None, model2_path=None)
+        elif len(args.compare) == 1:
+            # --compare model1: base vs model1
+            compare_models(model1_path=None, model2_path=args.compare[0])
+        else:
+            # --compare model1 model2
+            compare_models(model1_path=args.compare[0], model2_path=args.compare[1])
     else:
         validate(model_path=args.model, use_finetuned=args.finetuned)

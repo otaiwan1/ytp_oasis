@@ -31,7 +31,14 @@ except ImportError as e:
     sys.exit()
 
 # --- 3. CONFIGURATION ---
-MODEL_PATH = TRAIN_DIR / "oasis_simclr_edgeconv.pth"
+# Base model path (original, never modified)
+BASE_MODEL_PATH = TRAIN_DIR / "oasis_simclr_edgeconv.pth"
+# Directory for fine-tuned model history
+MODEL_HISTORY_DIR = current_folder / "model_history"
+LATEST_MODEL_INFO = MODEL_HISTORY_DIR / "latest.txt"
+# Directory for feedback history
+FEEDBACK_HISTORY_DIR = current_folder / "feedback_history"
+
 DATASET_PATH = DATA_DIR / "teeth3ds_dataset.npy"
 INDEX_PATH = DATA_DIR / "teeth3ds_filenames.json"
 REPORT_SAVE_PATH = current_folder / "feedback_report.csv"
@@ -40,6 +47,53 @@ VECTOR_CACHE_PATH = current_folder / "feedback_vectors_cache.npy"
 # Reduced test cases for quick feedback
 NUM_TEST_CASES = 5
 TOP_K = 3
+
+
+def get_latest_model_path():
+    """
+    Get the path to the latest fine-tuned model.
+    If no fine-tuned model exists, return the base model path.
+    """
+    if LATEST_MODEL_INFO.exists():
+        with open(LATEST_MODEL_INFO, 'r') as f:
+            latest_path = Path(f.read().strip())
+            if latest_path.exists():
+                print(f"📦 Using LATEST fine-tuned model: {latest_path.name}")
+                return latest_path
+    print(f"📦 Using BASE model (no fine-tuned model found)")
+    return BASE_MODEL_PATH
+
+
+def save_feedback_with_history(results):
+    """
+    Save feedback results to both current file and history.
+    """
+    from datetime import datetime
+    
+    if not results:
+        return
+    
+    df = pd.DataFrame(results)
+    
+    # 1. Save to current feedback_report.csv (append)
+    if REPORT_SAVE_PATH.exists():
+        existing = pd.read_csv(REPORT_SAVE_PATH)
+        df_combined = pd.concat([existing, df], ignore_index=True)
+    else:
+        df_combined = df
+    df_combined.to_csv(REPORT_SAVE_PATH, index=False)
+    print(f"✓ Updated: {REPORT_SAVE_PATH}")
+    
+    # 2. Save to history with timestamp
+    FEEDBACK_HISTORY_DIR.mkdir(exist_ok=True)
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    history_path = FEEDBACK_HISTORY_DIR / f"feedback_{timestamp}.csv"
+    df.to_csv(history_path, index=False)
+    print(f"✓ Saved to history: {history_path.name}")
+
+
+# Get the model path to use
+MODEL_PATH = get_latest_model_path()
 
 class FeedbackApp:
     def __init__(self, cases, data_loader, on_complete):
@@ -329,15 +383,7 @@ def run():
             cases[-1]['q_obj'] = q_name if filenames else data[q_idx]
             cases[-1]['m_obj'] = m_name if filenames else data[m_idx]
 
-    def save(res):
-        if not res: return
-        df = pd.DataFrame(res)
-        if REPORT_SAVE_PATH.exists():
-            df = pd.concat([pd.read_csv(REPORT_SAVE_PATH), df])
-        df.to_csv(REPORT_SAVE_PATH, index=False)
-        print(f"Saved: {REPORT_SAVE_PATH}")
-
-    app = FeedbackApp(cases, geom_loader, save)
+    app = FeedbackApp(cases, geom_loader, save_feedback_with_history)
     app.run()
 
 if __name__ == "__main__":
