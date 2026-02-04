@@ -6,6 +6,7 @@ import numpy as np
 
 # --- CONFIGURATION ---
 DATASET_FILE = "../normalization/teeth3ds_dataset.npy"  # The file you created in Step 1
+VALIDATION_VIEW_FILE = "../validation/validation_views.npy"  # Third view for validation
 BATCH_SIZE = 16    # Lower this to 8 or 4 if you run out of GPU memory
 EPOCHS = 20
 LR = 0.001
@@ -57,10 +58,12 @@ class SimCLRDataset(Dataset):
 
     def __getitem__(self, idx):
         # SimCLR needs TWO different views of the SAME patient
+        # Third view is reserved for validation
         original = self.data[idx]
         view1 = self.augment(original)
         view2 = self.augment(original)
-        return torch.tensor(view1), torch.tensor(view2)
+        view3 = self.augment(original)  # Validation view
+        return torch.tensor(view1), torch.tensor(view2), torch.tensor(view3), idx
 
 # --- 2. EDGECONV LAYERS (Manual Implementation) ---
 def knn(x, k):
@@ -176,12 +179,43 @@ class NTXentLoss(nn.Module):
         return loss / (2 * batch_size)
 
 # --- 5. TRAINING LOOP ---
+def generate_validation_views(dataset):
+    """
+    Generate and save the third augmented views for validation.
+    These views are generated once before training and saved to disk.
+    """
+    import os
+    os.makedirs(os.path.dirname(VALIDATION_VIEW_FILE), exist_ok=True)
+    
+    print("Generating validation views (third augmented view for each sample)...")
+    validation_views = []
+    indices = []
+    
+    for idx in range(len(dataset.data)):
+        view3 = dataset.augment(dataset.data[idx])
+        validation_views.append(view3)
+        indices.append(idx)
+    
+    validation_views = np.array(validation_views, dtype=np.float32)
+    indices = np.array(indices, dtype=np.int32)
+    
+    # Save validation views and their original indices
+    np.save(VALIDATION_VIEW_FILE, validation_views)
+    np.save(VALIDATION_VIEW_FILE.replace('.npy', '_indices.npy'), indices)
+    
+    print(f"Saved {len(validation_views)} validation views to {VALIDATION_VIEW_FILE}")
+    return validation_views
+
 def train():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Starting Training on device: {device}")
     
     # Setup
     dataset = SimCLRDataset(DATASET_FILE)
+    
+    # Generate validation views BEFORE training (only once)
+    generate_validation_views(dataset)
+    
     dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
     
     model = SimCLREncoder().to(device)
@@ -193,8 +227,9 @@ def train():
     
     for epoch in range(EPOCHS):
         total_loss = 0
-        for i, (view1, view2) in enumerate(dataloader):
+        for i, (view1, view2, view3, idx) in enumerate(dataloader):
             # Move to GPU and fix shape [Batch, 3, N]
+            # Only use view1 and view2 for training, view3 is for validation only
             view1 = view1.transpose(2, 1).to(device)
             view2 = view2.transpose(2, 1).to(device)
             
