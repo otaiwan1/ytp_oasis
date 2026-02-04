@@ -14,7 +14,6 @@ project_root = current_folder.parent
 
 # Define the neighbor folders
 TRAIN_DIR = project_root / "train"
-VALIDATION_DIR = project_root / "validation"
 DATA_DIR = project_root / "normalization"
 
 # Add 'train' to path to import the model class
@@ -29,8 +28,8 @@ except ImportError:
 # --- 2. CONFIGURATION ---
 # Base model from 'train'
 MODEL_PATH = TRAIN_DIR / "oasis_simclr_edgeconv.pth"
-# CSV Report from 'validation'
-FEEDBACK_CSV = VALIDATION_DIR / "oasis_validation_report.csv"
+# CSV Report from 'fine-tuning' folder
+FEEDBACK_CSV = current_folder / "feedback_report.csv"
 # Data from 'normalization'
 DATASET_PATH = DATA_DIR / "teeth3ds_dataset.npy"
 # Save new model in CURRENT folder ('fine-tuning')
@@ -43,7 +42,7 @@ class FeedbackDataset(Dataset):
     def __init__(self):
         if not FEEDBACK_CSV.exists():
             print(f"Error: Report not found at {FEEDBACK_CSV}")
-            print("Please run 'validate_interactive.py' in the validation folder first.")
+            print("Please run 'collect_feedback.py' in this folder first.")
             sys.exit()
             
         self.feedback = pd.read_csv(FEEDBACK_CSV)
@@ -51,9 +50,17 @@ class FeedbackDataset(Dataset):
         
         self.pairs = []
         for _, row in self.feedback.iterrows():
-            # Convert grades to Binary Labels (1=Similar, 0=Different)
-            # Grade 2 or 3 is "Similar", Grade 0 or 1 is "Different"
-            label = 1.0 if row['Dentist_Grade'] >= 2 else 0.0
+            # Convert grades to Binary Labels
+            # Grade >= 7 is "Similar", Grade <= 4 is "Different"
+            # Grades 5-6 are ambiguous and skipped
+            grade = row['Dentist_Grade']
+            if grade >= 7:
+                label = 1.0
+            elif grade <= 4:
+                label = 0.0
+            else:
+                continue
+
             self.pairs.append((
                 int(row['Query_ID']), 
                 int(row['Match_ID']), 
