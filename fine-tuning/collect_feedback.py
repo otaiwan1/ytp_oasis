@@ -330,24 +330,10 @@ def run():
     indices = random.sample(range(len(data)), min(NUM_TEST_CASES, len(data)))
     cases = []
     
-    # Just skip vector calc for now to test UI if cache missing, 
-    # but re-calc is fast enough for small batches. 
-    # Let's do simple neighbor search on the fly to avoid complexity
-    
-    print("Computing vectors for random subset...")
-    subset = torch.tensor(data[indices], dtype=torch.float32).transpose(2,1).to(device)
-    with torch.no_grad():
-        sub_vecs, _ = model(subset)
-    sub_vecs = sub_vecs.cpu().numpy()
-    sub_vecs = sub_vecs / np.linalg.norm(sub_vecs, axis=1, keepdims=True)
-    
-    # For each in subset, find a match in the full dataset? 
-    # That's slow. Let's just create pairs from the random sample for UI test
-    # Or load cache.
-    
-    # LOAD CACHE (Previous logic was better, restoring simplified version)
+    # LOAD CACHE or compute ALL vectors (needed for meaningful matches)
     full_vecs = None
     if VECTOR_CACHE_PATH.exists():
+        print("Loading cached vectors...")
         full_vecs = np.load(VECTOR_CACHE_PATH)
     else:
         # Quick compute for ALL (needed for meaningful matches)
