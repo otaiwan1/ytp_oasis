@@ -45,7 +45,7 @@ REPORT_SAVE_PATH = current_folder / "feedback_report.csv"
 VECTOR_CACHE_PATH = current_folder / "feedback_vectors_cache.npy"
 
 # Reduced test cases for quick feedback
-NUM_TEST_CASES = 5
+NUM_TEST_CASES = 7
 TOP_K = 3
 
 
