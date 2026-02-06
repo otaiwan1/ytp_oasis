@@ -1,1 +1,1 @@
-D:\ytp_oasis\fine-tuning\model_history\v001_20260205_111357.pth
+D:\ytp_oasis\fine-tuning\model_history\v002_20260207_001830.pth
