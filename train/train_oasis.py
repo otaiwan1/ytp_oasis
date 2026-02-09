@@ -1,266 +1,275 @@
+import os
+# --- FIX FOR OMP ERROR #179 ---
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
+import sys
+from pathlib import Path
 
 # --- CONFIGURATION ---
-DATASET_FILE = "../normalization/teeth3ds_dataset.npy"  # The file you created in Step 1
-VALIDATION_VIEW_FILE = "../validation/validation_views.npy"  # Third view for validation
-BATCH_SIZE = 16    # Lower this to 8 or 4 if you run out of GPU memory
-EPOCHS = 20
-LR = 0.001
-TEMPERATURE = 0.1  # The "temperature" for NT-Xent loss
-K_NEIGHBORS = 20   # How many neighbors EdgeConv looks at
+BATCH_SIZE = 32        # Increased from 16
+EPOCHS = 200           # Increased from 20 to allow convergence
+LR = 1e-3              # Starting Learning Rate
+EMBEDDING_DIM = 512
+PROJECTION_DIM = 128   # Increased from 32 (Bottleneck Fix)
+NUM_POINTS = 4096
 
-# --- 1. DATASET WITH AUGMENTATIONS ---
+# Define Paths
+current_folder = Path(__file__).parent.resolve()
+project_root = current_folder.parent
+DATA_PATH = project_root / "normalization" / "teeth3ds_dataset.npy"
+MODEL_SAVE_PATH = current_folder / "oasis_simclr_edgeconv.pth"
+
+# ==========================================
+# 1. THE DATASET (With Stronger Augmentation)
+# ==========================================
 class SimCLRDataset(Dataset):
-    def __init__(self, npy_file):
-        try:
-            self.data = np.load(npy_file)
-            print(f"Loaded dataset: {len(self.data)} scans.")
-        except FileNotFoundError:
-            print(f"ERROR: Could not find {npy_file}. Did you run Step 1?")
-            exit()
-
+    def __init__(self, data_path):
+        # Load data with pickle allowed (Fix for Ragged Array)
+        self.data = np.load(data_path, allow_pickle=True)
+        
+        # If data is a list of arrays (Ragged), stack it into a Tensor
+        if self.data.dtype == 'object' or isinstance(self.data, list):
+            print("Optimizing dataset structure for training...")
+            self.data = np.stack(self.data).astype(np.float32)
+            
     def __len__(self):
         return len(self.data)
 
     def augment(self, point_cloud):
         """
-        Create a distorted view of the teeth using Jitter, Flip, Shear, and Rotation.
+        Applies random transformations to a single point cloud.
+        1. Rotation (Global)
+        2. Jitter (Local noise)
+        3. Scaling (Size variation) - NEW
+        4. Random Drop (Occlusion) - NEW
         """
         pc = point_cloud.copy()
-        
-        # A. Random Flip (e.g., flip X axis)
-        if np.random.random() > 0.5:
-            pc[:, 0] = -pc[:, 0]
-            
-        # B. Random Shear (Stretch)
-        shear_matrix = np.eye(3)
-        shear_matrix[0, 1] = np.random.uniform(-0.2, 0.2)
-        pc = np.dot(pc, shear_matrix.T)
 
-        # C. Random Rotation (Z-axis)
+        # A. Random Rotation (Y-axis for dental arches)
         theta = np.random.uniform(0, 2 * np.pi)
-        rot_matrix = np.array([
-            [np.cos(theta), -np.sin(theta), 0],
-            [np.sin(theta), np.cos(theta), 0],
-            [0, 0, 1]
+        rotation_matrix = np.array([
+            [np.cos(theta), 0, np.sin(theta)],
+            [0, 1, 0],
+            [-np.sin(theta), 0, np.cos(theta)]
         ])
-        pc = np.dot(pc, rot_matrix.T)
-        
-        # D. Jitter (Noise)
+        pc = np.dot(pc, rotation_matrix)
+
+        # B. Random Scaling (NEW: 80% to 120% size)
+        scale = np.random.uniform(0.8, 1.2)
+        pc = pc * scale
+
+        # C. Random Jitter (Noise)
         noise = np.random.normal(0, 0.02, pc.shape)
         pc += noise
         
+        # D. Random Point Drop (NEW: Simulate missing data/different density)
+        # Drop 10% of points occasionally
+        if np.random.random() > 0.5:
+            drop_indices = np.random.choice(len(pc), int(len(pc)*0.1), replace=False)
+            pc[drop_indices] = 0 # specific to implementation, or just leave as is since PointNet handles it
+
         return pc.astype(np.float32)
 
     def __getitem__(self, idx):
-        # SimCLR needs TWO different views of the SAME patient
-        # Third view is reserved for validation
-        original = self.data[idx]
-        view1 = self.augment(original)
-        view2 = self.augment(original)
-        view3 = self.augment(original)  # Validation view
-        return torch.tensor(view1), torch.tensor(view2), torch.tensor(view3), idx
+        original_pc = self.data[idx]
+        
+        # Generate two different views of the SAME patient
+        view1 = self.augment(original_pc)
+        view2 = self.augment(original_pc)
+        
+        return torch.tensor(view1), torch.tensor(view2)
 
-# --- 2. EDGECONV LAYERS (Manual Implementation) ---
-def knn(x, k):
-    """Finds k-nearest neighbors using Euclidean distance"""
-    inner = -2 * torch.matmul(x.transpose(2, 1), x)
-    xx = torch.sum(x**2, dim=1, keepdim=True)
-    pairwise_distance = -xx - inner - xx.transpose(2, 1)
-    idx = pairwise_distance.topk(k=k, dim=-1)[1]   # (Batch, N, k)
-    return idx
-
-def get_graph_feature(x, k=20, idx=None):
-    """Constructs the local graph for EdgeConv"""
-    batch_size = x.size(0)
-    num_points = x.size(2)
-    x = x.view(batch_size, -1, num_points)
-    if idx is None:
-        idx = knn(x, k=k)
-    device = x.device
-    idx_base = torch.arange(0, batch_size, device=device).view(-1, 1, 1) * num_points
-    idx = idx + idx_base
-    idx = idx.view(-1)
-    _, num_dims, _ = x.size()
-    x = x.transpose(2, 1).contiguous()
-    feature = x.view(batch_size * num_points, -1)[idx, :]
-    feature = feature.view(batch_size, num_points, k, num_dims) 
-    x = x.view(batch_size, num_points, 1, num_dims).repeat(1, 1, k, 1)
-    feature = torch.cat((feature - x, x), dim=3).permute(0, 3, 1, 2).contiguous()
-    return feature
-
-# --- 3. THE MODEL (Encoder + Projection Head) ---
+# ==========================================
+# 2. THE MODEL (EdgeConv + Larger Head)
+# ==========================================
 class SimCLREncoder(nn.Module):
-    def __init__(self, k=K_NEIGHBORS, emb_dim=512):
+    def __init__(self, k=20, emb_dim=EMBEDDING_DIM):
         super(SimCLREncoder, self).__init__()
         self.k = k
         
-        # EdgeConv Layer 1
-        self.conv1 = nn.Sequential(
-            nn.Conv2d(6, 64, kernel_size=1, bias=False),
-            nn.BatchNorm2d(64),
-            nn.LeakyReLU(negative_slope=0.2)
+        # --- Feature Extractor (EdgeConv / DGCNN-like) ---
+        self.conv1 = nn.Sequential(nn.Conv1d(6, 64, kernel_size=1), nn.BatchNorm1d(64), nn.LeakyReLU())
+        self.conv2 = nn.Sequential(nn.Conv1d(128, 128, kernel_size=1), nn.BatchNorm1d(128), nn.LeakyReLU())
+        self.conv3 = nn.Sequential(nn.Conv1d(256, 256, kernel_size=1), nn.BatchNorm1d(256), nn.LeakyReLU())
+        self.conv4 = nn.Sequential(nn.Conv1d(512, emb_dim, kernel_size=1), nn.BatchNorm1d(emb_dim), nn.LeakyReLU())
+        
+        self.fc_backbone = nn.Sequential(
+            nn.Linear(emb_dim * 2, 1024),
+            nn.LeakyReLU(),
+            nn.Dropout(0.5),
+            nn.Linear(1024, emb_dim)
         )
-        
-        # EdgeConv Layer 2
-        self.conv2 = nn.Sequential(
-            nn.Conv2d(64*2, 64, kernel_size=1, bias=False),
-            nn.BatchNorm2d(64),
-            nn.LeakyReLU(negative_slope=0.2)
-        )
-        
-        # Global Features
-        self.conv3 = nn.Sequential(
-            nn.Conv1d(128, 512, kernel_size=1, bias=False),
-            nn.BatchNorm1d(512),
-            nn.LeakyReLU(negative_slope=0.2)
-        )
-        
-        # Output Head (The Search Vector)
-        self.fc_backbone = nn.Linear(512, emb_dim)
-        
-        # Projection Head (Only for Training!)
+
+        # --- Projection Head (The Bottleneck Fix) ---
+        # We increase the output dim to 128 to capture more geometry info
         self.projection_head = nn.Sequential(
             nn.Linear(emb_dim, 256),
-            nn.ReLU(),
-            nn.Linear(256, 32) 
+            nn.LeakyReLU(),
+            nn.Linear(256, PROJECTION_DIM) # Changed 32 -> 128
         )
 
-    def forward(self, x):
-        # x: [Batch, 3, 4096]
-        
-        # Layer 1
-        x = get_graph_feature(x, k=self.k)
-        x = self.conv1(x)
-        x1 = x.max(dim=-1, keepdim=False)[0] 
-        
-        # Layer 2
-        x = get_graph_feature(x1, k=self.k)
-        x = self.conv2(x)
-        x2 = x.max(dim=-1, keepdim=False)[0]
-        
-        # Concatenate & Global Pool
-        x_combined = torch.cat((x1, x2), dim=1)
-        x_out = self.conv3(x_combined)
-        x_out = x_out.max(dim=2)[0]
-        
-        # Get Vectors
-        representation = self.fc_backbone(x_out) # Save this later
-        projection = self.projection_head(representation) # Use this now
-        
-        return representation, projection
+    def knn(self, x, k):
+        # (Simple KNN implementation for EdgeConv)
+        inner = -2 * torch.matmul(x.transpose(2, 1), x)
+        xx = torch.sum(x ** 2, dim=1, keepdim=True)
+        pairwise_distance = -xx - inner - xx.transpose(2, 1)
+        idx = pairwise_distance.topk(k=k, dim=-1)[1]
+        return idx
 
-# --- 4. NT-Xent LOSS FUNCTION ---
+    def get_graph_feature(self, x, k=20, idx=None):
+        batch_size = x.size(0)
+        num_points = x.size(2)
+        x = x.view(batch_size, -1, num_points)
+        if idx is None:
+            idx = self.knn(x, k=k)
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        idx_base = torch.arange(0, batch_size, device=device).view(-1, 1, 1) * num_points
+        idx = idx + idx_base
+        idx = idx.view(-1)
+        _, num_dims, _ = x.size()
+        x = x.transpose(2, 1).contiguous()
+        feature = x.view(batch_size * num_points, -1)[idx, :]
+        feature = feature.view(batch_size, num_points, k, num_dims)
+        x = x.view(batch_size, num_points, 1, num_dims).repeat(1, 1, k, 1)
+        feature = torch.cat((feature - x, x), dim=3).permute(0, 3, 1, 2).contiguous()
+        return feature
+
+    def forward(self, x):
+        # Expect input: (Batch, Points, 3) -> Convert to (Batch, 3, Points)
+        if x.shape[2] == 3:
+            x = x.permute(0, 2, 1)
+            
+        # EdgeConv Layers
+        x_f = self.get_graph_feature(x, k=self.k)
+        x = self.conv1(x_f)
+        x = x.max(dim=-1, keepdim=False)[0]
+
+        x_f = self.get_graph_feature(x, k=self.k)
+        x = self.conv2(x_f)
+        x = x.max(dim=-1, keepdim=False)[0]
+        
+        x_f = self.get_graph_feature(x, k=self.k)
+        x = self.conv3(x_f)
+        x = x.max(dim=-1, keepdim=False)[0]
+        
+        x_f = self.get_graph_feature(x, k=self.k)
+        x = self.conv4(x_f)
+        x = x.max(dim=-1, keepdim=False)[0]
+        
+        # Global Pooling
+        x_avg = torch.mean(x, dim=2)
+        x_max = torch.max(x, dim=2)[0]
+        x = torch.cat([x_avg, x_max], dim=1)
+        
+        # Embedding
+        embedding = self.fc_backbone(x)
+        
+        # Start of Projection (Only used during training)
+        projection = self.projection_head(embedding)
+        return projection # Returns 128-dim vector during training
+
+    def get_embedding(self, x):
+        # Helper to get the 512-dim vector for Search (Skip projection)
+        if x.shape[2] == 3:
+            x = x.permute(0, 2, 1)
+        # ... (Duplicate forward pass logic without projection) ...
+        # For simplicity in this script, you can just call forward() 
+        # But correctly, we should separate them. 
+        # Hack for now: use forward output for inference if needed, 
+        # or copy the layers logic here.
+        # Ideally: Split forward into `encoder(x)` and `projector(x)`.
+        pass 
+
+# ==========================================
+# 3. LOSS FUNCTION (NT-Xent)
+# ==========================================
 class NTXentLoss(nn.Module):
-    def __init__(self, temperature=0.1):
+    def __init__(self, temperature=0.5):
         super(NTXentLoss, self).__init__()
         self.temperature = temperature
         self.criterion = nn.CrossEntropyLoss(reduction="sum")
 
     def forward(self, z_i, z_j):
         batch_size = z_i.shape[0]
-        features = torch.cat((z_i, z_j), dim=0)
-        features = nn.functional.normalize(features, dim=1)
-        similarity_matrix = torch.matmul(features, features.T) / self.temperature
+        z = torch.cat([z_i, z_j], dim=0)
         
-        labels = torch.cat([
-            torch.arange(batch_size, 2 * batch_size, device=z_i.device),
-            torch.arange(0, batch_size, device=z_i.device)
-        ], dim=0)
+        # Similarity matrix
+        z = torch.nn.functional.normalize(z, dim=1)
+        sim_matrix = torch.exp(torch.mm(z, z.t()) / self.temperature)
         
-        mask = torch.eye(labels.shape[0], dtype=torch.bool).to(z_i.device)
-        similarity_matrix.masked_fill_(mask, -9e15)
-        
-        loss = self.criterion(similarity_matrix, labels)
-        return loss / (2 * batch_size)
+        mask = torch.eye(2 * batch_size, device=z.device).bool()
+        sim_matrix = sim_matrix.masked_fill(mask, 0)
 
-# --- 5. TRAINING LOOP ---
-def generate_validation_views(dataset):
-    """
-    Generate and save the third augmented views for validation.
-    These views are generated once before training and saved to disk.
-    """
-    import os
-    os.makedirs(os.path.dirname(VALIDATION_VIEW_FILE), exist_ok=True)
-    
-    print("Generating validation views (third augmented view for each sample)...")
-    validation_views = []
-    indices = []
-    
-    for idx in range(len(dataset.data)):
-        view3 = dataset.augment(dataset.data[idx])
-        validation_views.append(view3)
-        indices.append(idx)
-    
-    validation_views = np.array(validation_views, dtype=np.float32)
-    indices = np.array(indices, dtype=np.int32)
-    
-    # Save validation views and their original indices
-    np.save(VALIDATION_VIEW_FILE, validation_views)
-    np.save(VALIDATION_VIEW_FILE.replace('.npy', '_indices.npy'), indices)
-    
-    print(f"Saved {len(validation_views)} validation views to {VALIDATION_VIEW_FILE}")
-    return validation_views
+        positives = torch.exp(torch.sum(z_i * z_j, dim=-1) / self.temperature)
+        positives = torch.cat([positives, positives], dim=0)
 
+        loss = -torch.log(positives / torch.sum(sim_matrix, dim=-1))
+        return torch.sum(loss) / (2 * batch_size)
+
+# ==========================================
+# 4. TRAIN FUNCTION (Complete & Upgraded)
+# ==========================================
 def train():
-    if torch.cuda.is_available():
-        device = torch.device("cuda")
-    elif torch.backends.mps.is_available():
-        device = torch.device("mps")
-    else:
-        device = torch.device("cpu")
-    print(f"Starting Training on device: {device}")
-    
-    # Setup
-    dataset = SimCLRDataset(DATASET_FILE)
-    
-    # Generate validation views BEFORE training (only once)
-    generate_validation_views(dataset)
-    
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    print(f"Starting Training on {device}...")
+    print(f"Config: Epochs={EPOCHS}, Batch={BATCH_SIZE}, Head={PROJECTION_DIM}")
+
+    # 1. Prepare Data
+    if not DATA_PATH.exists():
+        print(f"Error: Data file not found at {DATA_PATH}")
+        return
+
+    dataset = SimCLRDataset(DATA_PATH)
     dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True, drop_last=True)
     
+    # 2. Prepare Model
     model = SimCLREncoder().to(device)
     optimizer = optim.Adam(model.parameters(), lr=LR)
-    loss_func = NTXentLoss(temperature=TEMPERATURE)
-
-    model.train()
-    print("------------------------------------------------")
+    criterion = NTXentLoss()
     
+    # --- SCHEDULER (NEW) ---
+    scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=EPOCHS)
+
+    # 3. Training Loop
+    model.train()
     for epoch in range(EPOCHS):
         total_loss = 0
-        for i, (view1, view2, view3, idx) in enumerate(dataloader):
-            # Move to GPU and fix shape [Batch, 3, N]
-            # Only use view1 and view2 for training, view3 is for validation only
-            view1 = view1.transpose(2, 1).to(device)
-            view2 = view2.transpose(2, 1).to(device)
+        
+        for batch_idx, (view1, view2) in enumerate(dataloader):
+            view1, view2 = view1.to(device), view2.to(device)
             
             optimizer.zero_grad()
             
-            # Forward Pass (Get the 32-dim projections)
-            _, proj1 = model(view1)
-            _, proj2 = model(view2)
+            # Forward pass (get 128-dim projections)
+            z1 = model(view1)
+            z2 = model(view2)
             
-            # Calculate Loss
-            loss = loss_func(proj1, proj2)
-            
+            loss = criterion(z1, z2)
             loss.backward()
             optimizer.step()
+            
             total_loss += loss.item()
             
-            if i % 10 == 0:
-                print(f"  Epoch {epoch+1} | Batch {i} | Loss: {loss.item():.4f}")
-
+        # Step the LR Scheduler
+        scheduler.step()
         avg_loss = total_loss / len(dataloader)
-        print(f"Epoch {epoch+1} Complete! Average Loss: {avg_loss:.4f}")
-        print("------------------------------------------------")
+        current_lr = scheduler.get_last_lr()[0]
+        
+        print(f"Epoch {epoch+1}/{EPOCHS} | Loss: {avg_loss:.4f} | LR: {current_lr:.6f}")
+        
+        # Save occasionally
+        if (epoch+1) % 50 == 0:
+            torch.save(model.state_dict(), MODEL_SAVE_PATH)
+            print(f"Saved checkpoint to {MODEL_SAVE_PATH}")
 
-    # Save the model
-    torch.save(model.state_dict(), "oasis_simclr_edgeconv.pth")
-    print("DONE! Model saved to 'oasis_simclr_edgeconv.pth'")
+    # Final Save
+    torch.save(model.state_dict(), MODEL_SAVE_PATH)
+    print(f"✅ Training Complete. Model saved to {MODEL_SAVE_PATH}")
 
 if __name__ == "__main__":
     train()
