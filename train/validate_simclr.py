@@ -239,6 +239,7 @@ if __name__ == "__main__":
                 
             if user_input.lower() == 'r':
                 query_idx = np.random.randint(len(embeddings))
+                print(f"Random index: {query_idx}")
             elif user_input.isdigit():
                 query_idx = int(user_input)
                 if query_idx >= len(embeddings):
