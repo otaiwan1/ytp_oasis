@@ -8,6 +8,7 @@ import open3d as o3d
 from pathlib import Path
 from sklearn.metrics.pairwise import cosine_similarity
 from tqdm import tqdm
+from sklearn.decomposition import PCA # [新增] 用於分析主成分
 
 # ==========================================
 # 1. 設定與路徑
@@ -45,6 +46,32 @@ except ImportError:
     print("   Please make sure validate_mae.py is in the same folder as train_mae_ddp.py")
     sys.exit(1)
 
+def compute_whitening(embeddings):
+    """
+    [核心修正] 特徵白化 (Whitening) / 去中心化
+    目的：移除所有向量共有的 "平均特徵" (例如牙弓整體形狀、位置編碼)，
+    只保留每個人獨特的 "差異特徵" (例如牙縫、錯位)。
+    """
+    print("\n🧪 Applying Feature Whitening (Removing Common Bias)...")
+    
+    # 1. 計算平均向量 (The "Average Tooth")
+    mean_vec = np.mean(embeddings, axis=0)
+    
+    # 2. 去中心化 (Subtract Mean)
+    # 讓向量分佈在原點周圍，而不是擠在某個角落
+    embeddings_centered = embeddings - mean_vec
+    
+    # 3. (選用) PCA 降維去噪
+    # 有時候最後幾個維度是雜訊，只取前 N 個主成分效果更好
+    # 這裡我們先做單純的去中心化即可，效果通常就很顯著
+    
+    # 4. 重新 Normalize (因為減去平均後長度變了)
+    # 注意：這裡使用 numpy 手動 normalize
+    norms = np.linalg.norm(embeddings_centered, axis=1, keepdims=True)
+    embeddings_normalized = embeddings_centered / (norms + 1e-8)
+    
+    return embeddings_normalized
+
 def load_resources():
     # A. 載入檔名表
     if not FILENAMES_PATH.exists():
@@ -54,75 +81,51 @@ def load_resources():
         filenames = json.load(f)
     print(f"📂 Loaded {len(filenames)} filenames.")
 
-    # B. 檢查快取 (如果有就直接用，省去 inference 時間)
+    # B. 檢查快取
+    raw_embeddings = None
     if CACHE_PATH.exists():
         print(f"🚀 Loading cached embeddings from {CACHE_PATH.name}...")
-        embeddings = np.load(CACHE_PATH)
-        return embeddings, filenames
+        raw_embeddings = np.load(CACHE_PATH)
+    else:
+        # C. 無快取 -> 計算 (這段代碼保持您原本的邏輯，但有一點小修改)
+        print("⚠️ No cache found. Computing embeddings...")
+        
+        if not DATASET_PATH.exists():
+            print(f"❌ Error: Dataset not found at {DATASET_PATH}")
+            sys.exit(1)
 
-    # C. 無快取 -> 載入模型與數據重新計算
-    print("⚠️ No cache found. Computing embeddings from scratch...")
-    
-    # 載入數據 (N, 4096, 6)
-    if not DATASET_PATH.exists():
-        print(f"❌ Error: Dataset not found at {DATASET_PATH}")
-        sys.exit(1)
+        data = np.load(DATASET_PATH, allow_pickle=True)
+        if isinstance(data, list): data = np.stack(data)
+        in_channels = data.shape[2]
+        
+        model = PointMAE(config, in_channels=in_channels).to(device)
+        state_dict = torch.load(MODEL_PATH, map_location=device)
+        new_state_dict = {k.replace("module.", ""): v for k, v in state_dict.items()}
+        model.load_state_dict(new_state_dict)
+        
+        # [修改] 保持 eval 模式，我們靠後處理來修正分佈
+        model.eval() 
+        
+        embeddings_list = []
+        batch_size = 64
+        print("⚙️ Extracting features...")
+        with torch.no_grad():
+            for i in tqdm(range(0, len(data), batch_size)):
+                batch = data[i : i + batch_size]
+                batch_tensor = torch.tensor(batch).float().to(device)
+                
+                # 取得 Raw Embedding (不要在模型裡做 Normalize)
+                emb = model.get_embedding(batch_tensor)
+                embeddings_list.append(emb.cpu().numpy())
+                
+        raw_embeddings = np.concatenate(embeddings_list, axis=0)
+        np.save(CACHE_PATH, raw_embeddings)
+        print(f"💾 Saved raw embeddings to {CACHE_PATH}")
 
-    print(f"   Loading dataset: {DATASET_PATH}")
-    data = np.load(DATASET_PATH, allow_pickle=True)
-    if isinstance(data, list): data = np.stack(data)
-    
-    # 檢查維度
-    in_channels = data.shape[2]
-    print(f"   Data Shape: {data.shape}")
-    print(f"   Model Input Channels: {in_channels} (Expected 6 for Normals)")
-    
-    # 初始化模型
-    model = PointMAE(config, in_channels=in_channels).to(device)
-    
-    # [關鍵] 處理 DDP 權重
-    # DDP 儲存的權重 key 會變成 "module.encoder...", 我們要移除 "module."
-    if not MODEL_PATH.exists():
-        print(f"❌ Error: Model checkpoint not found at {MODEL_PATH}")
-        sys.exit(1)
-
-    print(f"   Loading weights from {MODEL_PATH}...")
-    state_dict = torch.load(MODEL_PATH, map_location=device)
-    new_state_dict = {}
-    for k, v in state_dict.items():
-        if k.startswith("module."):
-            new_state_dict[k[7:]] = v # 移除 'module.'
-        else:
-            new_state_dict[k] = v
-            
-    model.load_state_dict(new_state_dict)
-    model.train()
-    
-    # D. 推論 (Inference)
-    embeddings = []
-    batch_size = 64 # 推論時 Batch 可以大一點
-    
-    print("⚙️ Extracting features...")
-    with torch.no_grad():
-        for i in tqdm(range(0, len(data), batch_size)):
-            batch = data[i : i + batch_size]
-            # 轉 Tensor
-            batch_tensor = torch.tensor(batch).float().to(device)
-            
-            # [關鍵] 使用 get_embedding 獲取特徵 (Encoder Output)
-            # 這會跳過 Decoder，直接拿 Encoder 的特徵
-            emb = model.get_embedding(batch_tensor)
-            
-            # Normalize (Cosine Similarity 需要向量長度為 1)
-            emb = F.normalize(emb, p=2, dim=1)
-            
-            embeddings.append(emb.cpu().numpy())
-            
-    final_embeddings = np.concatenate(embeddings, axis=0)
-    
-    # 存快取
-    np.save(CACHE_PATH, final_embeddings)
-    print(f"💾 Saved embeddings to {CACHE_PATH}")
+    # ==========================================
+    # [關鍵步驟] 這裡進行後處理
+    # ==========================================
+    final_embeddings = compute_whitening(raw_embeddings)
     
     return final_embeddings, filenames
 
