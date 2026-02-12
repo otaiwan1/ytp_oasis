@@ -11,3 +11,5 @@ pyproject.toml
 uv.lock
 .venv
 __pycache__/
+teeth3ds_mae_dataset.npy
+train/best_point_mae_ddp.pth
