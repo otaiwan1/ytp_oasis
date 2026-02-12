@@ -96,7 +96,7 @@ def load_resources():
             new_state_dict[k] = v
             
     model.load_state_dict(new_state_dict)
-    model.eval()
+    model.train()
     
     # D. 推論 (Inference)
     embeddings = []
