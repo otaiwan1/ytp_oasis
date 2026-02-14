@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Create Account{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row justify-content-center py-5">
+        <div class="col-md-5 col-lg-4">
+            <div class="text-center mb-4">
+                <div style="width: 56px; height: 56px; background: linear-gradient(135deg, var(--oasis-green-400), var(--oasis-green-600)); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                    <i class="bi bi-person-plus-fill" style="font-size: 1.5rem; color: white;"></i>
+                </div>
+                <h2 style="font-weight: 800; color: var(--oasis-gray-900); letter-spacing: -0.5px;">Create account</h2>
+                <p style="color: var(--oasis-gray-500); font-size: 0.95rem;">Join OASIS to start searching dental scans</p>
+            </div>
+
+            <div class="card-oasis p-4">
+                <form method="POST" action="{{ url_for('auth.register') }}">
+                    <div class="mb-3">
+                        <label class="form-label-oasis" for="username">Username</label>
+                        <input type="text" class="form-control form-control-oasis" id="username" name="username"
+                               placeholder="Choose a username" required minlength="3" autofocus>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label-oasis" for="email">Email</label>
+                        <input type="email" class="form-control form-control-oasis" id="email" name="email"
+                               placeholder="you@example.com" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label-oasis" for="password">Password</label>
+                        <input type="password" class="form-control form-control-oasis" id="password" name="password"
+                               placeholder="Min 6 characters" required minlength="6">
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label-oasis" for="confirm_password">Confirm Password</label>
+                        <input type="password" class="form-control form-control-oasis" id="confirm_password" name="confirm_password"
+                               placeholder="Repeat your password" required minlength="6">
+                    </div>
+                    <button type="submit" class="btn btn-oasis w-100 py-2">
+                        <i class="bi bi-person-check me-2"></i>Create Account
+                    </button>
+                </form>
+            </div>
+
+            <p class="text-center mt-3" style="color: var(--oasis-gray-500); font-size: 0.9rem;">
+                Already have an account? <a href="{{ url_for('auth.login') }}" style="color: var(--oasis-green-600); font-weight: 600; text-decoration: none;">Sign in</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

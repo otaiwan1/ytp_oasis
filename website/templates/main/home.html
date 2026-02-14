@@ -1,0 +1,395 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block extra_css %}
+<style>
+    .hero-section {
+        padding: 6rem 0 4rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -20%;
+        width: 600px;
+        height: 600px;
+        background: radial-gradient(circle, var(--oasis-green-100) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .hero-section::after {
+        content: '';
+        position: absolute;
+        bottom: -30%;
+        left: -10%;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, var(--oasis-green-50) 0%, transparent 70%);
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .hero-title {
+        font-size: 3.5rem;
+        font-weight: 800;
+        letter-spacing: -1.5px;
+        line-height: 1.1;
+        color: var(--oasis-gray-900);
+    }
+
+    .hero-title .highlight {
+        background: linear-gradient(135deg, var(--oasis-green-500), var(--oasis-green-700));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .hero-subtitle {
+        font-size: 1.2rem;
+        color: var(--oasis-gray-500);
+        line-height: 1.7;
+        max-width: 560px;
+    }
+
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: var(--oasis-green-50);
+        border: 1px solid var(--oasis-green-200);
+        color: var(--oasis-green-700);
+        padding: 0.5rem 1rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.85rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .hero-badge .dot {
+        width: 8px;
+        height: 8px;
+        background: var(--oasis-green-500);
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    .feature-card {
+        background: white;
+        border: 1px solid var(--oasis-gray-200);
+        border-radius: 16px;
+        padding: 2rem;
+        height: 100%;
+        transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+        transform: translateY(-4px);
+        border-color: var(--oasis-green-200);
+    }
+
+    .feature-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .feature-icon.green {
+        background: var(--oasis-green-100);
+        color: var(--oasis-green-600);
+    }
+
+    .feature-icon.blue {
+        background: #dbeafe;
+        color: #2563eb;
+    }
+
+    .feature-icon.purple {
+        background: #ede9fe;
+        color: #7c3aed;
+    }
+
+    .feature-icon.amber {
+        background: #fef3c7;
+        color: #d97706;
+    }
+
+    .feature-card h5 {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--oasis-gray-900);
+        margin-bottom: 0.5rem;
+    }
+
+    .feature-card p {
+        color: var(--oasis-gray-500);
+        font-size: 0.9rem;
+        margin: 0;
+        line-height: 1.6;
+    }
+
+    .stats-section {
+        padding: 4rem 0;
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-number {
+        font-size: 2.5rem;
+        font-weight: 800;
+        color: var(--oasis-green-600);
+        letter-spacing: -1px;
+    }
+
+    .stat-label {
+        font-size: 0.9rem;
+        color: var(--oasis-gray-500);
+        font-weight: 500;
+    }
+
+    .workflow-section {
+        padding: 4rem 0;
+    }
+
+    .workflow-step {
+        text-align: center;
+        padding: 1.5rem;
+    }
+
+    .workflow-number {
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, var(--oasis-green-400), var(--oasis-green-600));
+        color: white;
+        font-weight: 800;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+    }
+
+    .workflow-step h6 {
+        font-weight: 700;
+        color: var(--oasis-gray-900);
+    }
+
+    .workflow-step p {
+        color: var(--oasis-gray-500);
+        font-size: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+        .hero-title {
+            font-size: 2.2rem;
+        }
+        .hero-subtitle {
+            font-size: 1rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-7 hero-content">
+                <div class="hero-badge">
+                    <span class="dot"></span>
+                    YTP 2025 Research Project
+                </div>
+                <h1 class="hero-title mb-3">
+                    <span class="highlight">O</span>RTHODONTIC &nbsp;<span class="highlight">A</span>I<br>
+                    <span class="highlight">S</span>CAN &nbsp;<span class="highlight">I</span>MAGE<br>
+                    <span class="highlight">S</span>EARCH
+                </h1>
+                <p class="hero-subtitle mb-4">
+                    OASIS leverages deep learning with SimCLR contrastive learning and EdgeConv graph neural networks 
+                    to find similar orthodontic cases from 3D dental scans, empowering dentists 
+                    with AI-driven treatment insights.
+                </p>
+                <div class="d-flex gap-3 flex-wrap">
+                    {% if current_user.is_authenticated %}
+                    <a href="{{ url_for('search.search_page') }}" class="btn btn-oasis btn-lg px-4">
+                        <i class="bi bi-search me-2"></i>Start Searching
+                    </a>
+                    <a href="{{ url_for('collection.browse') }}" class="btn btn-oasis-outline btn-lg px-4">
+                        Browse Collection
+                    </a>
+                    {% else %}
+                    <a href="{{ url_for('auth.register') }}" class="btn btn-oasis btn-lg px-4">
+                        <i class="bi bi-rocket-takeoff me-2"></i>Get Started
+                    </a>
+                    <a href="{{ url_for('main.about') }}" class="btn btn-oasis-outline btn-lg px-4">
+                        Learn More
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block text-center hero-content">
+                <div style="background: linear-gradient(135deg, var(--oasis-green-50), var(--oasis-green-100)); border-radius: 24px; padding: 3rem; border: 1px solid var(--oasis-green-200);">
+                    <i class="bi bi-gpu-card" style="font-size: 6rem; color: var(--oasis-green-400);"></i>
+                    <p class="mt-3 mb-0" style="color: var(--oasis-green-700); font-weight: 600;">3D Deep Learning Engine</p>
+                    <p style="color: var(--oasis-gray-500); font-size: 0.85rem;">SimCLR + EdgeConv Architecture</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 style="font-weight: 800; color: var(--oasis-gray-900); letter-spacing: -0.5px;">Core Capabilities</h2>
+            <p style="color: var(--oasis-gray-500); max-width: 500px; margin: 0 auto;">Everything you need for intelligent dental scan analysis in one platform.</p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <div class="feature-icon green">
+                        <i class="bi bi-search-heart"></i>
+                    </div>
+                    <h5>Similarity Search</h5>
+                    <p>Upload a dental scan and instantly find the top-5 most similar cases from the database using AI embeddings.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <div class="feature-icon blue">
+                        <i class="bi bi-box"></i>
+                    </div>
+                    <h5>3D Scan Support</h5>
+                    <p>Native support for STL 3D dental scan files with automatic point cloud extraction and normalization.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <div class="feature-icon purple">
+                        <i class="bi bi-collection"></i>
+                    </div>
+                    <h5>Patient Collection</h5>
+                    <p>Browse all patient scans organized by patient ID, with multi-view rendered images for each scan.</p>
+                </div>
+            </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="feature-card">
+                    <div class="feature-icon amber">
+                        <i class="bi bi-cloud-arrow-up"></i>
+                    </div>
+                    <h5>Easy Upload</h5>
+                    <p>Upload new patient scans with drag-and-drop support. Data is automatically indexed for future searches.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How it Works -->
+<section class="workflow-section">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 style="font-weight: 800; color: var(--oasis-gray-900); letter-spacing: -0.5px;">How It Works</h2>
+            <p style="color: var(--oasis-gray-500);">Three simple steps to find similar dental cases.</p>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="workflow-step">
+                    <div class="workflow-number">1</div>
+                    <h6>Upload a Scan</h6>
+                    <p>Select an STL file of a dental scan from your computer.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="workflow-step">
+                    <div class="workflow-number">2</div>
+                    <h6>AI Analysis</h6>
+                    <p>Our SimCLR model encodes the 3D geometry into a 512-dimensional embedding vector using EdgeConv layers.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="workflow-step">
+                    <div class="workflow-number">3</div>
+                    <h6>View Results</h6>
+                    <p>Explore the top-5 most similar patient cases with scan images and similarity scores.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section" style="background: white; border-top: 1px solid var(--oasis-gray-200); border-bottom: 1px solid var(--oasis-gray-200);">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">512</div>
+                    <div class="stat-label">Embedding Dimensions</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">4096</div>
+                    <div class="stat-label">Points per Cloud</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">4</div>
+                    <div class="stat-label">EdgeConv Layers</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Rendered Views</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center py-5">
+            <h2 style="font-weight: 800; color: var(--oasis-gray-900); letter-spacing: -0.5px; font-size: 2rem;">Ready to explore?</h2>
+            <p style="color: var(--oasis-gray-500); max-width: 450px; margin: 0 auto 1.5rem;">Join OASIS and start discovering similar dental cases with the power of AI.</p>
+            {% if not current_user.is_authenticated %}
+            <a href="{{ url_for('auth.register') }}" class="btn btn-oasis btn-lg px-5">
+                Create Free Account
+            </a>
+            {% else %}
+            <a href="{{ url_for('search.search_page') }}" class="btn btn-oasis btn-lg px-5">
+                Go to Search
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}

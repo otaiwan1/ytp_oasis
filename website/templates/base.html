@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}OASIS{% endblock %} — Dental Scan Intelligence</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    
+    <style>
+        :root {
+            --oasis-green-50: #f0fdf4;
+            --oasis-green-100: #dcfce7;
+            --oasis-green-200: #bbf7d0;
+            --oasis-green-300: #86efac;
+            --oasis-green-400: #4ade80;
+            --oasis-green-500: #22c55e;
+            --oasis-green-600: #16a34a;
+            --oasis-green-700: #15803d;
+            --oasis-green-800: #166534;
+            --oasis-green-900: #14532d;
+            --oasis-white: #ffffff;
+            --oasis-gray-50: #f9fafb;
+            --oasis-gray-100: #f3f4f6;
+            --oasis-gray-200: #e5e7eb;
+            --oasis-gray-300: #d1d5db;
+            --oasis-gray-500: #6b7280;
+            --oasis-gray-700: #374151;
+            --oasis-gray-800: #1f2937;
+            --oasis-gray-900: #111827;
+        }
+
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--oasis-gray-50);
+            color: var(--oasis-gray-800);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Navbar */
+        .navbar-oasis {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--oasis-gray-200);
+            padding: 0.75rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar-brand-oasis {
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--oasis-green-700) !important;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .navbar-brand-oasis .brand-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, var(--oasis-green-400), var(--oasis-green-600));
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .nav-link-oasis {
+            color: var(--oasis-gray-700) !important;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 0.5rem 1rem !important;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link-oasis:hover, .nav-link-oasis.active {
+            color: var(--oasis-green-700) !important;
+            background: var(--oasis-green-50);
+        }
+
+        /* Buttons */
+        .btn-oasis {
+            background: linear-gradient(135deg, var(--oasis-green-500), var(--oasis-green-600));
+            color: white;
+            border: none;
+            padding: 0.625rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
+        }
+
+        .btn-oasis:hover {
+            background: linear-gradient(135deg, var(--oasis-green-600), var(--oasis-green-700));
+            color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(34, 197, 94, 0.35);
+        }
+
+        .btn-oasis-outline {
+            background: transparent;
+            color: var(--oasis-green-600);
+            border: 2px solid var(--oasis-green-300);
+            padding: 0.5rem 1.5rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-oasis-outline:hover {
+            background: var(--oasis-green-50);
+            border-color: var(--oasis-green-500);
+            color: var(--oasis-green-700);
+        }
+
+        /* Cards */
+        .card-oasis {
+            background: white;
+            border: 1px solid var(--oasis-gray-200);
+            border-radius: 16px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+        }
+
+        .card-oasis:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        /* Forms */
+        .form-control-oasis {
+            border: 2px solid var(--oasis-gray-200);
+            border-radius: 10px;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background: white;
+        }
+
+        .form-control-oasis:focus {
+            border-color: var(--oasis-green-400);
+            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+            outline: none;
+        }
+
+        .form-label-oasis {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: var(--oasis-gray-700);
+            margin-bottom: 0.375rem;
+        }
+
+        /* Page header */
+        .page-header {
+            padding: 2.5rem 0 1.5rem;
+        }
+
+        .page-header h1 {
+            font-weight: 800;
+            font-size: 2rem;
+            color: var(--oasis-gray-900);
+            letter-spacing: -0.5px;
+        }
+
+        .page-header p {
+            color: var(--oasis-gray-500);
+            font-size: 1.05rem;
+            max-width: 600px;
+        }
+
+        /* Footer */
+        .footer-oasis {
+            background: white;
+            border-top: 1px solid var(--oasis-gray-200);
+            padding: 1.5rem 0;
+            margin-top: auto;
+        }
+
+        .footer-oasis p {
+            color: var(--oasis-gray-500);
+            font-size: 0.85rem;
+            margin: 0;
+        }
+
+        /* Flash messages */
+        .alert-oasis {
+            border: none;
+            border-radius: 12px;
+            padding: 1rem 1.25rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* Upload zone */
+        .upload-zone {
+            border: 2px dashed var(--oasis-gray-300);
+            border-radius: 16px;
+            padding: 3rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: var(--oasis-gray-50);
+        }
+
+        .upload-zone:hover, .upload-zone.dragover {
+            border-color: var(--oasis-green-400);
+            background: var(--oasis-green-50);
+        }
+
+        .upload-zone .upload-icon {
+            font-size: 3rem;
+            color: var(--oasis-gray-300);
+            margin-bottom: 1rem;
+        }
+
+        .upload-zone:hover .upload-icon,
+        .upload-zone.dragover .upload-icon {
+            color: var(--oasis-green-400);
+        }
+
+        /* Badge */
+        .badge-oasis {
+            background: var(--oasis-green-100);
+            color: var(--oasis-green-700);
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+
+        /* Loading spinner */
+        .spinner-oasis {
+            width: 3rem;
+            height: 3rem;
+            border: 3px solid var(--oasis-gray-200);
+            border-top-color: var(--oasis-green-500);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Similarity bar */
+        .similarity-bar {
+            height: 6px;
+            border-radius: 3px;
+            background: var(--oasis-gray-200);
+            overflow: hidden;
+        }
+
+        .similarity-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, var(--oasis-green-400), var(--oasis-green-600));
+            transition: width 0.5s ease;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .page-header h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-oasis">
+        <div class="container">
+            <a class="navbar-brand navbar-brand-oasis" href="{{ url_for('main.home') }}">
+                <span class="brand-icon"><i class="bi bi-hexagon-fill"></i></span>
+                OASIS
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navContent">
+                <ul class="navbar-nav ms-auto align-items-center gap-1">
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-oasis {% if request.endpoint == 'main.home' %}active{% endif %}" href="{{ url_for('main.home') }}">
+                            <i class="bi bi-house-door me-1"></i>Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-oasis {% if request.endpoint == 'main.about' %}active{% endif %}" href="{{ url_for('main.about') }}">
+                            <i class="bi bi-info-circle me-1"></i>About
+                        </a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-oasis {% if 'search' in request.endpoint|default('') %}active{% endif %}" href="{{ url_for('search.search_page') }}">
+                            <i class="bi bi-search me-1"></i>Search
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-oasis {% if 'collection' in request.endpoint|default('') %}active{% endif %}" href="{{ url_for('collection.browse') }}">
+                            <i class="bi bi-grid-3x3-gap me-1"></i>Collection
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link nav-link-oasis {% if 'upload' in request.endpoint|default('') %}active{% endif %}" href="{{ url_for('upload.upload_page') }}">
+                            <i class="bi bi-cloud-upload me-1"></i>Upload
+                        </a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <div class="dropdown">
+                            <a class="nav-link nav-link-oasis dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person-circle me-1"></i>{{ current_user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end border shadow-sm" style="border-radius: 12px;">
+                                <li><a class="dropdown-item py-2" href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right me-2"></i>Logout</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    {% else %}
+                    <li class="nav-item ms-2">
+                        <a class="btn btn-oasis-outline btn-sm" href="{{ url_for('auth.login') }}">Sign In</a>
+                    </li>
+                    <li class="nav-item ms-1">
+                        <a class="btn btn-oasis btn-sm" href="{{ url_for('auth.register') }}">Get Started</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    <div class="container mt-3">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-oasis alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+    </div>
+
+    <!-- Main Content -->
+    <main class="flex-grow-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer-oasis">
+        <div class="container text-center">
+            <p>© 2025 OASIS — Orthodontic AI Similarity Intelligent System &nbsp;|&nbsp; YTP Research Project</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
