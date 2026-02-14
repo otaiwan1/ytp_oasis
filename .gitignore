@@ -1,6 +1,7 @@
 *.DS_Store
 collecting-data/scanfiles
 collecting-data/stlFiles
+collecting-data/rendered_images
 normalization/data_part_1
 normalization/teeth3ds_dataset.npy
 venv/
