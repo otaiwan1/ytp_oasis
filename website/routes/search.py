@@ -2,10 +2,13 @@ import os
 import json
 import numpy as np
 import torch
+from multiprocessing import Pool
+from functools import partial
 from flask import Blueprint, render_template, request, jsonify, current_app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from pathlib import Path
+from tqdm import tqdm
 
 search_bp = Blueprint('search', __name__, url_prefix='/search')
 
@@ -60,8 +63,19 @@ def get_embedding(model, point_cloud, device):
     return embedding.cpu().numpy().flatten()
 
 
+def _convert_single_stl(args):
+    """Worker function for multiprocessing STL to point cloud conversion."""
+    stl_path, num_points = args
+    try:
+        pc = stl_to_point_cloud(stl_path, num_points)
+        return pc, None
+    except Exception as e:
+        return None, str(e)
+
+
 def build_embeddings_cache(model, device):
-    """Build embedding cache for all STL files in the data directory."""
+    """Build embedding cache for all STL files in the data directory.
+    Uses 15 CPU cores for parallel STL-to-point-cloud conversion."""
     stl_dir = Path(current_app.config['STL_DATA_DIR'])
     cache_path = current_app.config['EMBEDDINGS_CACHE']
     filenames_path = current_app.config['FILENAMES_CACHE']
@@ -83,18 +97,33 @@ def build_embeddings_cache(model, device):
             return embeddings, cached_filenames
 
     # Build new cache
-    print(f"Building embeddings cache for {len(stl_files)} files...")
-    embeddings = []
+    print(f"Building embeddings cache for {len(stl_files)} files using 15 cores...")
+
+    # Step 1: Parallel STL → point cloud conversion (CPU-bound, 15 cores)
+    stl_paths = [(str(stl_dir / fname), num_points) for fname in stl_files]
+    point_clouds = []
     valid_filenames = []
 
-    for fname in stl_files:
-        try:
-            pc = stl_to_point_cloud(str(stl_dir / fname), num_points)
-            emb = get_embedding(model, pc, device)
-            embeddings.append(emb)
+    with Pool(processes=15) as pool:
+        results = list(tqdm(
+            pool.imap(_convert_single_stl, stl_paths),
+            total=len(stl_paths),
+            desc="Loading STL files",
+            unit="file"
+        ))
+
+    for fname, (pc, err) in zip(stl_files, results):
+        if pc is not None:
+            point_clouds.append(pc)
             valid_filenames.append(fname)
-        except Exception as e:
-            print(f"Error processing {fname}: {e}")
+        else:
+            print(f"Error processing {fname}: {err}")
+
+    # Step 2: Compute embeddings (GPU/CPU model inference)
+    embeddings = []
+    for pc in tqdm(point_clouds, desc="Computing embeddings", unit="scan"):
+        emb = get_embedding(model, pc, device)
+        embeddings.append(emb)
 
     if embeddings:
         embeddings = np.stack(embeddings)
@@ -102,6 +131,7 @@ def build_embeddings_cache(model, device):
         np.save(cache_path, embeddings)
         with open(filenames_path, 'w') as f:
             json.dump(valid_filenames, f)
+        print(f"Cache saved: {len(valid_filenames)} embeddings → {cache_path}")
     else:
         embeddings = np.array([])
 
