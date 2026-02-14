@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+{% block title %}Similarity Search{% endblock %}
+
+{% block extra_css %}
+<style>
+    .result-card {
+        background: white;
+        border: 1px solid var(--oasis-gray-200);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .result-card:hover {
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border-color: var(--oasis-green-300);
+    }
+
+    .rank-badge {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.1rem;
+    }
+
+    .rank-1 { background: linear-gradient(135deg, #ffd700, #ffb800); color: white; }
+    .rank-2 { background: linear-gradient(135deg, #c0c0c0, #a0a0a0); color: white; }
+    .rank-3 { background: linear-gradient(135deg, #cd7f32, #b06b2a); color: white; }
+    .rank-4, .rank-5 { background: var(--oasis-gray-200); color: var(--oasis-gray-700); }
+
+    .selected-file-info {
+        background: var(--oasis-green-50);
+        border: 1px solid var(--oasis-green-200);
+        border-radius: 12px;
+        padding: 1rem 1.25rem;
+        display: none;
+    }
+
+    .selected-file-info.active {
+        display: flex;
+    }
+
+    #results-container {
+        display: none;
+    }
+
+    #results-container.active {
+        display: block;
+    }
+
+    #loading-container {
+        display: none;
+    }
+
+    #loading-container.active {
+        display: flex;
+    }
+
+    #no-results {
+        display: none;
+    }
+
+    #no-results.active {
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1><i class="bi bi-search me-2" style="color: var(--oasis-green-500);"></i>Similarity Search</h1>
+        <p>Upload a dental scan (STL file) to find the top-5 most similar cases in the database.</p>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="card-oasis p-4 mb-4">
+        <form id="searchForm" enctype="multipart/form-data">
+            <div class="upload-zone" id="dropZone" onclick="document.getElementById('stlInput').click();">
+                <i class="bi bi-cloud-arrow-up upload-icon"></i>
+                <h5 style="font-weight: 700; color: var(--oasis-gray-700);">Drop your STL file here</h5>
+                <p style="color: var(--oasis-gray-500); font-size: 0.9rem; margin-bottom: 1rem;">or click to browse from your computer</p>
+                <span class="badge-oasis">.stl files only</span>
+                <input type="file" id="stlInput" name="stl_file" accept=".stl" hidden>
+            </div>
+
+            <!-- Selected File Info -->
+            <div class="selected-file-info mt-3 align-items-center" id="fileInfo">
+                <i class="bi bi-file-earmark-check" style="font-size: 1.5rem; color: var(--oasis-green-600); margin-right: 0.75rem;"></i>
+                <div class="flex-grow-1">
+                    <div style="font-weight: 600; color: var(--oasis-gray-900); font-size: 0.95rem;" id="selectedFileName">—</div>
+                    <div style="font-size: 0.8rem; color: var(--oasis-gray-500);" id="selectedFileSize">—</div>
+                </div>
+                <button type="button" class="btn btn-sm" style="color: var(--oasis-gray-500);" onclick="clearFile()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+
+            <div class="mt-3 text-end">
+                <button type="submit" class="btn btn-oasis px-4" id="searchBtn" disabled>
+                    <i class="bi bi-search me-2"></i>Search Similar Scans
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loading-container" class="justify-content-center align-items-center py-5">
+        <div class="text-center">
+            <div class="spinner-oasis mx-auto mb-3"></div>
+            <h5 style="font-weight: 700; color: var(--oasis-gray-700);">Analyzing scan...</h5>
+            <p style="color: var(--oasis-gray-500); font-size: 0.9rem;">Computing 512-dimensional embedding and searching the database</p>
+        </div>
+    </div>
+
+    <!-- No Results -->
+    <div id="no-results" class="text-center py-5">
+        <i class="bi bi-inbox" style="font-size: 3rem; color: var(--oasis-gray-300);"></i>
+        <h5 class="mt-3" style="font-weight: 700; color: var(--oasis-gray-700);">No data available</h5>
+        <p style="color: var(--oasis-gray-500); font-size: 0.9rem;" id="no-results-msg">Please add STL files to the data directory first.</p>
+    </div>
+
+    <!-- Results Section -->
+    <div id="results-container">
+        <div class="d-flex align-items-center justify-content-between mb-3">
+            <h4 style="font-weight: 700; color: var(--oasis-gray-900); margin: 0;">
+                <i class="bi bi-stars me-2" style="color: var(--oasis-green-500);"></i>Search Results
+            </h4>
+            <span class="badge-oasis" id="queryLabel">—</span>
+        </div>
+
+        <div id="results-list">
+            <!-- Results will be injected here by JS -->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const dropZone = document.getElementById('dropZone');
+const stlInput = document.getElementById('stlInput');
+const fileInfo = document.getElementById('fileInfo');
+const searchBtn = document.getElementById('searchBtn');
+const searchForm = document.getElementById('searchForm');
+
+// Drag and drop
+['dragenter', 'dragover'].forEach(ev => {
+    dropZone.addEventListener(ev, (e) => {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+});
+
+['dragleave', 'drop'].forEach(ev => {
+    dropZone.addEventListener(ev, (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+    });
+});
+
+dropZone.addEventListener('drop', (e) => {
+    const files = e.dataTransfer.files;
+    if (files.length > 0 && files[0].name.toLowerCase().endsWith('.stl')) {
+        stlInput.files = files;
+        showFileInfo(files[0]);
+    }
+});
+
+stlInput.addEventListener('change', () => {
+    if (stlInput.files.length > 0) {
+        showFileInfo(stlInput.files[0]);
+    }
+});
+
+function showFileInfo(file) {
+    document.getElementById('selectedFileName').textContent = file.name;
+    document.getElementById('selectedFileSize').textContent = formatSize(file.size);
+    fileInfo.classList.add('active');
+    searchBtn.disabled = false;
+}
+
+function clearFile() {
+    stlInput.value = '';
+    fileInfo.classList.remove('active');
+    searchBtn.disabled = true;
+}
+
+function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+// Form submission
+searchForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    if (!stlInput.files.length) return;
+
+    const formData = new FormData();
+    formData.append('stl_file', stlInput.files[0]);
+
+    // Show loading
+    document.getElementById('loading-container').classList.add('active');
+    document.getElementById('results-container').classList.remove('active');
+    document.getElementById('no-results').classList.remove('active');
+    searchBtn.disabled = true;
+
+    try {
+        const response = await fetch('{{ url_for("search.query") }}', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+        document.getElementById('loading-container').classList.remove('active');
+
+        if (!response.ok) {
+            if (response.status === 404) {
+                document.getElementById('no-results-msg').textContent = data.error || 'No scan data available.';
+                document.getElementById('no-results').classList.add('active');
+            } else {
+                alert(data.error || 'Search failed. Please try again.');
+            }
+            searchBtn.disabled = false;
+            return;
+        }
+
+        // Show results
+        displayResults(data);
+        searchBtn.disabled = false;
+
+    } catch (err) {
+        document.getElementById('loading-container').classList.remove('active');
+        alert('Network error. Please check your connection and try again.');
+        searchBtn.disabled = false;
+    }
+});
+
+function displayResults(data) {
+    const container = document.getElementById('results-list');
+    container.innerHTML = '';
+
+    document.getElementById('queryLabel').textContent = 'Query: ' + data.query_file;
+
+    data.results.forEach(r => {
+        const simPercent = (r.similarity * 100).toFixed(1);
+        const rankClass = 'rank-' + r.rank;
+        
+        const card = document.createElement('div');
+        card.className = 'result-card';
+        card.innerHTML = `
+            <div class="d-flex align-items-center">
+                <div class="rank-badge ${rankClass} me-3">${r.rank}</div>
+                <div class="flex-grow-1">
+                    <div class="d-flex align-items-center gap-2 mb-1">
+                        <h6 style="font-weight: 700; color: var(--oasis-gray-900); margin: 0;">${r.filename}</h6>
+                        <span class="badge-oasis">${simPercent}% similar</span>
+                    </div>
+                    <div style="font-size: 0.85rem; color: var(--oasis-gray-500);">
+                        Patient: <strong>${r.patient_uid}</strong>
+                        ${r.serial_number ? ' &nbsp;|&nbsp; Serial: <strong>' + r.serial_number + '</strong>' : ''}
+                    </div>
+                    <div class="similarity-bar mt-2" style="max-width: 300px;">
+                        <div class="similarity-bar-fill" style="width: ${simPercent}%;"></div>
+                    </div>
+                </div>
+                <a href="/collection/patient/${r.patient_uid}" class="btn btn-oasis-outline btn-sm ms-3">
+                    <i class="bi bi-folder2-open me-1"></i>View All Scans
+                </a>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+
+    document.getElementById('results-container').classList.add('active');
+}
+</script>
+{% endblock %}

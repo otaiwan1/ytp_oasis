@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+{% block title %}About{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1><i class="bi bi-info-circle me-2" style="color: var(--oasis-green-500);"></i>About OASIS</h1>
+        <p>Learn about the technology and research behind the system.</p>
+    </div>
+
+    <!-- Project Overview -->
+    <div class="card-oasis p-4 mb-4">
+        <h4 style="font-weight: 700; color: var(--oasis-gray-900);">
+            <i class="bi bi-flag me-2" style="color: var(--oasis-green-500);"></i>Project Overview
+        </h4>
+        <p style="color: var(--oasis-gray-700); line-height: 1.8;">
+            <strong>OASIS</strong> (Orthodontic AI Similarity Intelligent System) is a research project developed 
+            under the <strong>YTP 2025 (Young Turing Program)</strong>. The goal is to assist orthodontists by providing 
+            an AI-powered tool that can search for similar dental cases from a database of 3D scans.
+        </p>
+        <p style="color: var(--oasis-gray-700); line-height: 1.8;">
+            When a dentist encounters a new patient, they can upload the patient's 3D dental scan (STL file) 
+            and our system will find the most similar historical cases. This helps dentists reference past 
+            treatment plans and outcomes for similar malocclusion patterns.
+        </p>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <!-- Technical Architecture -->
+        <div class="col-lg-6">
+            <div class="card-oasis p-4 h-100">
+                <h4 style="font-weight: 700; color: var(--oasis-gray-900);">
+                    <i class="bi bi-cpu me-2" style="color: var(--oasis-green-500);"></i>Technical Architecture
+                </h4>
+                <div class="mt-3">
+                    <div class="mb-3 p-3" style="background: var(--oasis-green-50); border-radius: 12px;">
+                        <h6 style="font-weight: 700; color: var(--oasis-green-700); margin-bottom: 0.25rem;">SimCLR Framework</h6>
+                        <p style="font-size: 0.85rem; color: var(--oasis-gray-700); margin: 0;">
+                            Self-supervised contrastive learning to create meaningful dental scan embeddings 
+                            without requiring labeled data.
+                        </p>
+                    </div>
+                    <div class="mb-3 p-3" style="background: #dbeafe; border-radius: 12px;">
+                        <h6 style="font-weight: 700; color: #1d4ed8; margin-bottom: 0.25rem;">EdgeConv (DGCNN)</h6>
+                        <p style="font-size: 0.85rem; color: var(--oasis-gray-700); margin: 0;">
+                            Dynamic graph neural network that captures local geometric structures 
+                            in 3D point clouds through k-nearest neighbor graphs.
+                        </p>
+                    </div>
+                    <div class="mb-3 p-3" style="background: #ede9fe; border-radius: 12px;">
+                        <h6 style="font-weight: 700; color: #6d28d9; margin-bottom: 0.25rem;">4-Layer Architecture</h6>
+                        <p style="font-size: 0.85rem; color: var(--oasis-gray-700); margin: 0;">
+                            3 → 64 → 64 → 128 → 256 channels, aggregated into a 512-dimensional 
+                            embedding for robust similarity comparison.
+                        </p>
+                    </div>
+                    <div class="p-3" style="background: #fef3c7; border-radius: 12px;">
+                        <h6 style="font-weight: 700; color: #b45309; margin-bottom: 0.25rem;">NT-Xent Loss</h6>
+                        <p style="font-size: 0.85rem; color: var(--oasis-gray-700); margin: 0;">
+                            Normalized temperature-scaled cross entropy loss for effective 
+                            contrastive learning with temperature τ = 0.1.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Pipeline -->
+        <div class="col-lg-6">
+            <div class="card-oasis p-4 h-100">
+                <h4 style="font-weight: 700; color: var(--oasis-gray-900);">
+                    <i class="bi bi-diagram-3 me-2" style="color: var(--oasis-green-500);"></i>Data Pipeline
+                </h4>
+                <div class="mt-3">
+                    <div class="d-flex align-items-start mb-3">
+                        <div style="min-width: 36px; height: 36px; border-radius: 50%; background: var(--oasis-green-100); color: var(--oasis-green-700); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;" class="me-3">1</div>
+                        <div>
+                            <h6 style="font-weight: 700; margin-bottom: 0.125rem;">STL Collection</h6>
+                            <p style="font-size: 0.85rem; color: var(--oasis-gray-500); margin: 0;">3D dental scan files collected from orthodontic practices via OrthoCAD exports.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start mb-3">
+                        <div style="min-width: 36px; height: 36px; border-radius: 50%; background: var(--oasis-green-100); color: var(--oasis-green-700); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;" class="me-3">2</div>
+                        <div>
+                            <h6 style="font-weight: 700; margin-bottom: 0.125rem;">Point Cloud Extraction</h6>
+                            <p style="font-size: 0.85rem; color: var(--oasis-gray-500); margin: 0;">Mesh surfaces sampled to 4096 normalized 3D points with centroid alignment and unit scaling.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start mb-3">
+                        <div style="min-width: 36px; height: 36px; border-radius: 50%; background: var(--oasis-green-100); color: var(--oasis-green-700); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;" class="me-3">3</div>
+                        <div>
+                            <h6 style="font-weight: 700; margin-bottom: 0.125rem;">Data Augmentation</h6>
+                            <p style="font-size: 0.85rem; color: var(--oasis-gray-500); margin: 0;">Rotation, scaling, jittering, and cuboid cutout for robust contrastive pair generation.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start mb-3">
+                        <div style="min-width: 36px; height: 36px; border-radius: 50%; background: var(--oasis-green-100); color: var(--oasis-green-700); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;" class="me-3">4</div>
+                        <div>
+                            <h6 style="font-weight: 700; margin-bottom: 0.125rem;">Multi-View Rendering</h6>
+                            <p style="font-size: 0.85rem; color: var(--oasis-gray-500); margin: 0;">6-view rendering (front, back, top, bottom, left, right) using Open3D for visualization.</p>
+                        </div>
+                    </div>
+                    <div class="d-flex align-items-start">
+                        <div style="min-width: 36px; height: 36px; border-radius: 50%; background: var(--oasis-green-100); color: var(--oasis-green-700); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem;" class="me-3">5</div>
+                        <div>
+                            <h6 style="font-weight: 700; margin-bottom: 0.125rem;">Feedback Loop</h6>
+                            <p style="font-size: 0.85rem; color: var(--oasis-gray-500); margin: 0;">Dentist feedback is collected to fine-tune the model for improved results over time.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Model Configuration -->
+    <div class="card-oasis p-4 mb-5">
+        <h4 style="font-weight: 700; color: var(--oasis-gray-900);">
+            <i class="bi bi-gear me-2" style="color: var(--oasis-green-500);"></i>Model Configuration
+        </h4>
+        <div class="row mt-3">
+            <div class="col-md-3 col-6 mb-3">
+                <div class="p-3 text-center" style="background: var(--oasis-gray-50); border-radius: 12px;">
+                    <div style="font-size: 1.5rem; font-weight: 800; color: var(--oasis-green-600);">4096</div>
+                    <div style="font-size: 0.8rem; color: var(--oasis-gray-500); font-weight: 500;">Points per Cloud</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="p-3 text-center" style="background: var(--oasis-gray-50); border-radius: 12px;">
+                    <div style="font-size: 1.5rem; font-weight: 800; color: var(--oasis-green-600);">512</div>
+                    <div style="font-size: 0.8rem; color: var(--oasis-gray-500); font-weight: 500;">Embedding Dim</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="p-3 text-center" style="background: var(--oasis-gray-50); border-radius: 12px;">
+                    <div style="font-size: 1.5rem; font-weight: 800; color: var(--oasis-green-600);">20</div>
+                    <div style="font-size: 0.8rem; color: var(--oasis-gray-500); font-weight: 500;">K Neighbors</div>
+                </div>
+            </div>
+            <div class="col-md-3 col-6 mb-3">
+                <div class="p-3 text-center" style="background: var(--oasis-gray-50); border-radius: 12px;">
+                    <div style="font-size: 1.5rem; font-weight: 800; color: var(--oasis-green-600);">0.1</div>
+                    <div style="font-size: 0.8rem; color: var(--oasis-gray-500); font-weight: 500;">Temperature (τ)</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

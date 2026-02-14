@@ -1,0 +1,189 @@
+{% extends "base.html" %}
+{% block title %}Upload Scans{% endblock %}
+
+{% block extra_css %}
+<style>
+    .upload-main-zone {
+        border: 2px dashed var(--oasis-gray-300);
+        border-radius: 16px;
+        padding: 3rem 2rem;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: var(--oasis-gray-50);
+    }
+
+    .upload-main-zone:hover, .upload-main-zone.dragover {
+        border-color: var(--oasis-green-400);
+        background: var(--oasis-green-50);
+    }
+
+    .file-list-item {
+        display: flex;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        background: var(--oasis-gray-50);
+        border-radius: 10px;
+        margin-bottom: 0.5rem;
+    }
+
+    .file-list-item .file-icon {
+        color: var(--oasis-green-500);
+        font-size: 1.25rem;
+        margin-right: 0.75rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="page-header">
+        <h1><i class="bi bi-cloud-arrow-up me-2" style="color: var(--oasis-green-500);"></i>Upload Scans</h1>
+        <p>Upload new patient dental scans to add them to the searchable database.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card-oasis p-4">
+                <form method="POST" enctype="multipart/form-data" action="{{ url_for('upload.upload_page') }}">
+                    <!-- Patient UID -->
+                    <div class="mb-4">
+                        <label class="form-label-oasis" for="patient_uid">
+                            <i class="bi bi-person-badge me-1"></i>Patient UID
+                        </label>
+                        <input type="text" class="form-control form-control-oasis" id="patient_uid" name="patient_uid"
+                               placeholder="e.g., 0058ceb9-e243-4f46-885c-773e5f9e298b" required>
+                        <div style="font-size: 0.8rem; color: var(--oasis-gray-500); margin-top: 0.375rem;">
+                            The unique identifier for the patient. Files will be named as <code>patientUID_serialNumber.stl</code>
+                        </div>
+                    </div>
+
+                    <!-- File Upload -->
+                    <div class="mb-4">
+                        <label class="form-label-oasis">
+                            <i class="bi bi-file-earmark-medical me-1"></i>STL Files
+                        </label>
+                        <div class="upload-main-zone" id="uploadZone" onclick="document.getElementById('fileInput').click();">
+                            <i class="bi bi-cloud-arrow-up" style="font-size: 2.5rem; color: var(--oasis-gray-300);"></i>
+                            <h6 style="font-weight: 600; color: var(--oasis-gray-700); margin-top: 0.75rem;">Drop STL files here or click to browse</h6>
+                            <p style="color: var(--oasis-gray-500); font-size: 0.85rem; margin: 0;">You can select multiple files at once</p>
+                        </div>
+                        <input type="file" id="fileInput" name="stl_files" accept=".stl" multiple hidden>
+                    </div>
+
+                    <!-- Selected Files List -->
+                    <div id="fileList" class="mb-4" style="display: none;">
+                        <label class="form-label-oasis">Selected Files</label>
+                        <div id="fileListItems"></div>
+                    </div>
+
+                    <div class="text-end">
+                        <button type="submit" class="btn btn-oasis px-4" id="uploadBtn" disabled>
+                            <i class="bi bi-upload me-2"></i>Upload Scans
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mt-4 mt-lg-0">
+            <div class="card-oasis p-4">
+                <h5 style="font-weight: 700; color: var(--oasis-gray-900);">
+                    <i class="bi bi-info-circle me-2" style="color: var(--oasis-green-500);"></i>Upload Guide
+                </h5>
+                <div class="mt-3">
+                    <div class="mb-3">
+                        <h6 style="font-weight: 600; font-size: 0.9rem; color: var(--oasis-gray-800);">File Format</h6>
+                        <p style="font-size: 0.85rem; color: var(--oasis-gray-500); margin: 0;">
+                            Only <strong>.stl</strong> (STereoLithography) files are accepted. These are standard 3D dental scan exports.
+                        </p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 style="font-weight: 600; font-size: 0.9rem; color: var(--oasis-gray-800);">Naming Convention</h6>
+                        <p style="font-size: 0.85rem; color: var(--oasis-gray-500); margin: 0;">
+                            Files are stored as <code>patientUID_serialNumber.stl</code>. Serial numbers are auto-assigned.
+                        </p>
+                    </div>
+                    <div class="mb-3">
+                        <h6 style="font-weight: 600; font-size: 0.9rem; color: var(--oasis-gray-800);">Multiple Scans</h6>
+                        <p style="font-size: 0.85rem; color: var(--oasis-gray-500); margin: 0;">
+                            Upload multiple scans for the same patient at once. They'll be indexed sequentially.
+                        </p>
+                    </div>
+                    <div>
+                        <h6 style="font-weight: 600; font-size: 0.9rem; color: var(--oasis-gray-800);">Auto-Indexing</h6>
+                        <p style="font-size: 0.85rem; color: var(--oasis-gray-500); margin: 0;">
+                            After upload, the embeddings cache is refreshed so new scans are searchable immediately.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const uploadZone = document.getElementById('uploadZone');
+const fileInput = document.getElementById('fileInput');
+const fileList = document.getElementById('fileList');
+const fileListItems = document.getElementById('fileListItems');
+const uploadBtn = document.getElementById('uploadBtn');
+
+['dragenter', 'dragover'].forEach(ev => {
+    uploadZone.addEventListener(ev, (e) => {
+        e.preventDefault();
+        uploadZone.classList.add('dragover');
+    });
+});
+
+['dragleave', 'drop'].forEach(ev => {
+    uploadZone.addEventListener(ev, (e) => {
+        e.preventDefault();
+        uploadZone.classList.remove('dragover');
+    });
+});
+
+uploadZone.addEventListener('drop', (e) => {
+    const dt = e.dataTransfer;
+    fileInput.files = dt.files;
+    updateFileList();
+});
+
+fileInput.addEventListener('change', updateFileList);
+
+function updateFileList() {
+    fileListItems.innerHTML = '';
+    const files = fileInput.files;
+    
+    if (files.length === 0) {
+        fileList.style.display = 'none';
+        uploadBtn.disabled = true;
+        return;
+    }
+
+    fileList.style.display = 'block';
+    uploadBtn.disabled = false;
+
+    Array.from(files).forEach(file => {
+        const item = document.createElement('div');
+        item.className = 'file-list-item';
+        item.innerHTML = `
+            <i class="bi bi-file-earmark-check file-icon"></i>
+            <div class="flex-grow-1">
+                <div style="font-weight: 600; font-size: 0.9rem; color: var(--oasis-gray-900);">${file.name}</div>
+                <div style="font-size: 0.8rem; color: var(--oasis-gray-500);">${formatSize(file.size)}</div>
+            </div>
+        `;
+        fileListItems.appendChild(item);
+    });
+}
+
+function formatSize(bytes) {
+    if (bytes < 1024) return bytes + ' B';
+    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+</script>
+{% endblock %}
