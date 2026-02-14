@@ -1,14 +1,16 @@
 import os
 import json
+import copy
+import tempfile
 import numpy as np
 import torch
-from multiprocessing import Pool
-from functools import partial
+import torch.nn.functional as F
+import torchvision.transforms as T
+from PIL import Image
 from flask import Blueprint, render_template, request, jsonify, current_app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from pathlib import Path
-from tqdm import tqdm
 
 search_bp = Blueprint('search', __name__, url_prefix='/search')
 
@@ -17,133 +19,148 @@ def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
 
 
-def load_model(model_path, device):
-    """Load the SimCLR encoder model."""
-    from models.encoder import SimCLREncoder
+# ─── DINOv2 model loading ───────────────────────────────────────────
 
-    model = SimCLREncoder(
-        k=current_app.config['K_NEIGHBORS'],
-        emb_dim=current_app.config['EMBEDDING_DIM']
-    )
-
-    state_dict = torch.load(model_path, map_location=device, weights_only=True)
-    # Handle DataParallel saved models
-    new_state_dict = {}
-    for k, v in state_dict.items():
-        name = k.replace('module.', '') if k.startswith('module.') else k
-        new_state_dict[name] = v
-    model.load_state_dict(new_state_dict)
-    model.eval()
+def load_dinov2_model(model_name, device):
+    """Load DINOv2 model from PyTorch Hub."""
+    model = torch.hub.load('facebookresearch/dinov2', model_name)
     model.to(device)
+    model.eval()
     return model
 
 
-def stl_to_point_cloud(stl_path, num_points=4096):
-    """Convert an STL file to a normalized point cloud."""
-    import trimesh
-    mesh = trimesh.load(stl_path, force='mesh')
-    points, _ = trimesh.sample.sample_surface(mesh, num_points)
-    points = np.array(points, dtype=np.float32)
-
-    # Normalize: center and scale
-    centroid = points.mean(axis=0)
-    points -= centroid
-    max_dist = np.max(np.sqrt(np.sum(points ** 2, axis=1)))
-    if max_dist > 0:
-        points /= max_dist
-
-    return points
+def get_dinov2_transforms(img_size=224):
+    """Standard DINOv2 preprocessing (ImageNet normalization)."""
+    return T.Compose([
+        T.Resize((img_size, img_size)),
+        T.ToTensor(),
+        T.Normalize(mean=[0.485, 0.456, 0.406],
+                    std=[0.229, 0.224, 0.225])
+    ])
 
 
-def get_embedding(model, point_cloud, device):
-    """Get embedding vector from a point cloud."""
-    pc_tensor = torch.tensor(point_cloud, dtype=torch.float32).unsqueeze(0).to(device)
+# ─── STL → multi-view rendering ─────────────────────────────────────
+
+def _get_combined_rotation_matrix(base_euler_deg, roll_deg):
+    """Compute combined rotation matrix from Euler angles + roll."""
+    rx, ry, rz = np.deg2rad(base_euler_deg)
+    import open3d as o3d
+    R_base = o3d.geometry.get_rotation_matrix_from_xyz((rx, ry, rz))
+    roll_rad = np.deg2rad(roll_deg)
+    R_roll = np.array([
+        [np.cos(roll_rad), -np.sin(roll_rad), 0],
+        [np.sin(roll_rad),  np.cos(roll_rad), 0],
+        [0,                 0,                1]
+    ])
+    return np.matmul(R_roll, R_base)
+
+
+def _render_view(renderer, mesh, view_cfg, fov_deg):
+    """Render a single view of a mesh using offscreen renderer."""
+    import open3d as o3d
+    import open3d.visualization.rendering as rendering
+
+    mesh_copy = copy.deepcopy(mesh)
+    R = _get_combined_rotation_matrix(view_cfg["base"], view_cfg["roll"])
+    mesh_copy.rotate(R, center=(0, 0, 0))
+
+    renderer.scene.clear_geometry()
+    mat = rendering.MaterialRecord()
+    mat.shader = "defaultUnlit"
+    renderer.scene.add_geometry("tooth", mesh_copy, mat)
+
+    bounds = mesh_copy.get_axis_aligned_bounding_box()
+    center = bounds.get_center()
+    extent = bounds.get_max_bound() - bounds.get_min_bound()
+    max_len = np.max(extent)
+    dist = (max_len / 2.0) / np.tan(np.deg2rad(fov_deg / 2.0)) * 1.2
+    eye = center + np.array([0, 0, dist])
+    up = np.array([0, 1, 0])
+
+    renderer.setup_camera(fov_deg,
+                          center.astype(np.float32),
+                          eye.astype(np.float32),
+                          up.astype(np.float32))
+    img = renderer.render_to_image()
+    return np.asarray(img)
+
+
+def render_stl_multiview(stl_path, views_config, views_order, render_size=512, fov_deg=60.0):
+    """Render an STL file from multiple viewpoints.
+
+    Returns a list of PIL Images (RGB) in the order given by *views_order*.
+    """
+    import open3d as o3d
+    import open3d.visualization.rendering as rendering
+
+    mesh = o3d.io.read_triangle_mesh(str(stl_path))
+    if len(mesh.vertices) == 0:
+        raise ValueError(f"Empty mesh: {stl_path}")
+
+    mesh.compute_vertex_normals()
+    mesh.translate(-mesh.get_center())
+    normals = np.asarray(mesh.vertex_normals)
+    colors = (normals + 1) / 2.0
+    mesh.vertex_colors = o3d.utility.Vector3dVector(colors)
+
+    renderer = rendering.OffscreenRenderer(render_size, render_size)
+    renderer.scene.set_background([0.0, 0.0, 0.0, 1.0])
+
+    images = []
+    for view_name in views_order:
+        cfg = views_config[view_name]
+        img_np = _render_view(renderer, mesh, cfg, fov_deg)
+        images.append(Image.fromarray(img_np).convert('RGB'))
+
+    return images
+
+
+# ─── Embedding computation ───────────────────────────────────────────
+
+def get_dinov2_embedding(model, pil_images, transform, device):
+    """Compute a single DINOv2 embedding from a list of view images.
+
+    Mirrors the approach in extract_dinov2.py:
+      1. Transform each view image
+      2. Forward through DINOv2 as a batch
+      3. Mean-pool across views
+      4. L2-normalize
+    """
+    tensors = [transform(img) for img in pil_images]
+    batch = torch.stack(tensors).to(device)
+
     with torch.no_grad():
-        embedding = model.backbone(pc_tensor)
-    return embedding.cpu().numpy().flatten()
+        outputs = model(batch)                       # (N_views, emb_dim)
+        embedding = torch.mean(outputs, dim=0)       # (emb_dim,)
+        embedding = F.normalize(embedding, p=2, dim=0)
+
+    return embedding.cpu().numpy()
 
 
-def _convert_single_stl(args):
-    """Worker function for multiprocessing STL to point cloud conversion."""
-    stl_path, num_points = args
-    try:
-        pc = stl_to_point_cloud(stl_path, num_points)
-        return pc, None
-    except Exception as e:
-        return None, str(e)
+# ─── Database embeddings ─────────────────────────────────────────────
 
-
-def build_embeddings_cache(model, device):
-    """Build embedding cache for all STL files in the data directory.
-    Uses 15 CPU cores for parallel STL-to-point-cloud conversion."""
-    stl_dir = Path(current_app.config['STL_DATA_DIR'])
+def load_embeddings_db():
+    """Load pre-computed DINOv2 embeddings and filenames."""
     cache_path = current_app.config['EMBEDDINGS_CACHE']
     filenames_path = current_app.config['FILENAMES_CACHE']
-    num_points = current_app.config['NUM_POINTS']
 
-    if not stl_dir.exists():
+    if not os.path.exists(cache_path) or not os.path.exists(filenames_path):
         return np.array([]), []
 
-    stl_files = sorted([f.name for f in stl_dir.glob('*.stl')])
-    if not stl_files:
-        return np.array([]), []
+    embeddings = np.load(cache_path)
+    with open(filenames_path, 'r') as f:
+        filenames = json.load(f)
 
-    # Check if cache exists and is up to date
-    if os.path.exists(cache_path) and os.path.exists(filenames_path):
-        with open(filenames_path, 'r') as f:
-            cached_filenames = json.load(f)
-        if cached_filenames == stl_files:
-            embeddings = np.load(cache_path)
-            return embeddings, cached_filenames
+    return embeddings, filenames
 
-    # Build new cache
-    print(f"Building embeddings cache for {len(stl_files)} files using 15 cores...")
 
-    # Step 1: Parallel STL → point cloud conversion (CPU-bound, 15 cores)
-    stl_paths = [(str(stl_dir / fname), num_points) for fname in stl_files]
-    point_clouds = []
-    valid_filenames = []
-
-    with Pool(processes=15) as pool:
-        results = list(tqdm(
-            pool.imap(_convert_single_stl, stl_paths),
-            total=len(stl_paths),
-            desc="Loading STL files",
-            unit="file"
-        ))
-
-    for fname, (pc, err) in zip(stl_files, results):
-        if pc is not None:
-            point_clouds.append(pc)
-            valid_filenames.append(fname)
-        else:
-            print(f"Error processing {fname}: {err}")
-
-    # Step 2: Compute embeddings (GPU/CPU model inference)
-    embeddings = []
-    for pc in tqdm(point_clouds, desc="Computing embeddings", unit="scan"):
-        emb = get_embedding(model, pc, device)
-        embeddings.append(emb)
-
-    if embeddings:
-        embeddings = np.stack(embeddings)
-        os.makedirs(os.path.dirname(cache_path), exist_ok=True)
-        np.save(cache_path, embeddings)
-        with open(filenames_path, 'w') as f:
-            json.dump(valid_filenames, f)
-        print(f"Cache saved: {len(valid_filenames)} embeddings → {cache_path}")
-    else:
-        embeddings = np.array([])
-
-    return embeddings, valid_filenames
-
+# ─── Similarity search ───────────────────────────────────────────────
 
 def search_similar(query_embedding, db_embeddings, db_filenames, top_k=5):
     """Find top-k most similar scans using cosine similarity."""
     if len(db_embeddings) == 0:
         return []
 
-    # Normalize
     query_norm = query_embedding / (np.linalg.norm(query_embedding) + 1e-8)
     db_norms = db_embeddings / (np.linalg.norm(db_embeddings, axis=1, keepdims=True) + 1e-8)
 
@@ -153,7 +170,6 @@ def search_similar(query_embedding, db_embeddings, db_filenames, top_k=5):
     results = []
     for idx in top_indices:
         filename = db_filenames[idx]
-        # Parse patientUID-serialNumber format
         parts = filename.replace('.stl', '').split('_', 1)
         patient_uid = parts[0] if parts else filename
         serial_number = parts[1] if len(parts) > 1 else ''
@@ -169,19 +185,26 @@ def search_similar(query_embedding, db_embeddings, db_filenames, top_k=5):
     return results
 
 
-# Global model cache
+# ─── Global model cache (singleton) ──────────────────────────────────
+
 _model_cache = {}
 
 
 def get_cached_model():
-    """Get or load the model (singleton pattern)."""
+    """Get or load the DINOv2 model (singleton)."""
     if 'model' not in _model_cache:
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        model = load_model(current_app.config['MODEL_PATH'], device)
+        model_name = current_app.config['DINOV2_MODEL_NAME']
+        model = load_dinov2_model(model_name, device)
+        img_size = current_app.config['DINOV2_IMG_SIZE']
+        transform = get_dinov2_transforms(img_size)
         _model_cache['model'] = model
         _model_cache['device'] = device
-    return _model_cache['model'], _model_cache['device']
+        _model_cache['transform'] = transform
+    return _model_cache['model'], _model_cache['device'], _model_cache['transform']
 
+
+# ─── Flask routes ────────────────────────────────────────────────────
 
 @search_bp.route('/')
 @login_required
@@ -192,7 +215,7 @@ def search_page():
 @search_bp.route('/query', methods=['POST'])
 @login_required
 def query():
-    """Handle similarity search query."""
+    """Handle similarity search query using DINOv2."""
     if 'stl_file' not in request.files:
         return jsonify({'error': 'No file uploaded'}), 400
 
@@ -206,27 +229,38 @@ def query():
     try:
         # Save uploaded file temporarily
         filename = secure_filename(file.filename)
-        upload_path = os.path.join(current_app.config['UPLOAD_FOLDER'], f'query_{current_user.id}_{filename}')
+        upload_path = os.path.join(current_app.config['UPLOAD_FOLDER'],
+                                   f'query_{current_user.id}_{filename}')
         file.save(upload_path)
 
-        # Load model and compute embedding
-        model, device = get_cached_model()
-        num_points = current_app.config['NUM_POINTS']
+        # Load DINOv2 model
+        model, device, transform = get_cached_model()
 
-        query_pc = stl_to_point_cloud(upload_path, num_points)
-        query_embedding = get_embedding(model, query_pc, device)
+        # Render uploaded STL → multi-view images
+        views_config = current_app.config['RENDER_VIEWS_CONFIG']
+        views_order = current_app.config['DINOV2_VIEWS']
+        render_size = current_app.config['RENDER_IMG_SIZE']
+        fov_deg = current_app.config['RENDER_FOV_DEG']
 
-        # Build/load embeddings cache
-        db_embeddings, db_filenames = build_embeddings_cache(model, device)
+        pil_images = render_stl_multiview(upload_path, views_config,
+                                          views_order, render_size, fov_deg)
+
+        # Compute query embedding
+        query_embedding = get_dinov2_embedding(model, pil_images, transform, device)
+
+        # Load pre-computed database embeddings
+        db_embeddings, db_filenames = load_embeddings_db()
 
         if len(db_embeddings) == 0:
             return jsonify({
-                'error': 'No scan data available in the database. Please add STL files to the data directory first.'
+                'error': 'No DINOv2 embeddings available. '
+                         'Please run extract_dinov2.py first.'
             }), 404
 
         # Search
         top_k = current_app.config['TOP_K']
-        results = search_similar(query_embedding, db_embeddings, db_filenames, top_k)
+        results = search_similar(query_embedding, db_embeddings,
+                                 db_filenames, top_k)
 
         # Clean up temp file
         os.remove(upload_path)

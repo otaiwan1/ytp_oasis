@@ -15,14 +15,29 @@ class Config:
     ALLOWED_EXTENSIONS = {'stl'}
 
     # Model settings
-    MODEL_PATH = str(PROJECT_ROOT / 'train' / 'best_dental_simclr_multi_gpu.pth')
     STL_DATA_DIR = str(PROJECT_ROOT / 'collecting-data' / 'stlFiles')
     RENDERED_IMAGES_DIR = str(PROJECT_ROOT / 'collecting-data' / 'rendered_images')
-    EMBEDDINGS_CACHE = str(BASE_DIR / 'database' / 'embeddings_cache.npy')
-    FILENAMES_CACHE = str(BASE_DIR / 'database' / 'filenames_cache.json')
 
-    # Model hyperparameters (must match training)
-    NUM_POINTS = 4096
-    EMBEDDING_DIM = 512
-    K_NEIGHBORS = 20
+    # DINOv2 settings
+    DINOV2_MODEL_NAME = 'dinov2_vitl14'
+    DINOV2_IMG_SIZE = 224
+    DINOV2_VIEWS = ['front', 'left', 'right', 'top', 'bottom']
+    EMBEDDING_DIM = 1024  # dinov2_vitl14 output dimension
+
+    # Pre-computed DINOv2 embeddings (database)
+    EMBEDDINGS_CACHE = str(PROJECT_ROOT / 'train' / 'dinov2_embeddings.npy')
+    FILENAMES_CACHE = str(PROJECT_ROOT / 'train' / 'dinov2_filenames.json')
+
+    # Rendering settings (must match render_multiview_final.py)
+    RENDER_IMG_SIZE = 512
+    RENDER_FOV_DEG = 60.0
+    RENDER_VIEWS_CONFIG = {
+        "front":  {"base": [-90, 0, 0],  "roll": 0},
+        "back":   {"base": [90, 0, 0],   "roll": 0},
+        "top":    {"base": [0, 0, 0],    "roll": 0},
+        "bottom": {"base": [0, 180, 0],  "roll": 0},
+        "right":  {"base": [0, 90, 0],   "roll": 90},
+        "left":   {"base": [0, -90, 0],  "roll": -90},
+    }
+
     TOP_K = 5
