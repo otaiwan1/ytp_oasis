@@ -25,7 +25,7 @@ output_emb_path = current_folder / "dinov2_embeddings.npy"
 output_ids_path = current_folder / "dinov2_filenames.json"
 
 # 視角順序 (確保每次讀取的順序一致)
-VIEWS = ["front", "back", "left", "right", "top", "bottom"]
+VIEWS = ["front", "left", "right", "top", "bottom"]
 # ======================================
 
 def get_transforms():
