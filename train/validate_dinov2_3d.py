@@ -1,7 +1,8 @@
+import os
+os.environ['LP_NUM_THREADS'] = '8'
 import open3d as o3d
 import numpy as np
 import json
-import os
 from pathlib import Path
 from sklearn.metrics.pairwise import cosine_similarity
 
