@@ -1,10 +1,15 @@
 """
-validate_dinov2.py — DINOv2 top-k validation with unified Open3D GUI windows.
+validate_dinov2.py — DINOv2 top-k validation with Open3D 3D viewer.
 
 For each top-k round (k=1, 3, 5, 10), iterates over 60 test queries.
-Each query opens a single Open3D window showing the query mesh (gray) and
-top-k result meshes (light-blue), with Pass / Fail buttons at the bottom.
-Clicking a button records the verdict, closes the window, and advances.
+Each query opens an Open3D window showing the query mesh (gray, top) and
+top-k result meshes (light-blue, below).  The dentist inspects the 3D
+scene and presses:
+
+    P  →  Pass  (results look clinically similar)
+    F  →  Fail  (results are not similar enough)
+
+The window closes automatically and the next query opens.
 
 Supports resuming interrupted sessions via validation_progress.json.
 Generates validation_report.json when all rounds are complete.
@@ -13,15 +18,10 @@ Usage:
     python validation/validate_dinov2.py
 """
 
-import os
-os.environ['LP_NUM_THREADS'] = '8'
-
 import json
 import sys
 import numpy as np
 import open3d as o3d
-import open3d.visualization.gui as gui
-import open3d.visualization.rendering as rendering
 from pathlib import Path
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -44,7 +44,7 @@ COLOR_QUERY = [0.8, 0.8, 0.8]   # gray-white
 COLOR_MATCH = [0.6, 0.7, 0.9]   # light-blue
 TOP_K_VALUES = [1, 3, 5, 10]
 
-# Rotation to stand the teeth up (-90° around X)
+# Rotation to stand the teeth up (-90 deg around X)
 R_STAND_UP = o3d.geometry.get_rotation_matrix_from_xyz((-np.pi / 2, 0, 0))
 
 
@@ -54,7 +54,7 @@ def load_stl(filename, color):
     """Load an STL mesh, center it, and paint a uniform color."""
     stl_path = STL_DIR / filename
     if not stl_path.exists():
-        print(f"  ⚠️  File not found: {filename}")
+        print(f"  Warning: File not found: {filename}")
         return None
     try:
         mesh = o3d.io.read_triangle_mesh(str(stl_path))
@@ -63,25 +63,22 @@ def load_stl(filename, color):
         mesh.paint_uniform_color(color)
         return mesh
     except Exception as e:
-        print(f"  ❌  Error loading {filename}: {e}")
+        print(f"  Error loading {filename}: {e}")
         return None
 
 
 def load_data():
     """Load embeddings, filenames, test/base splits, and build index maps."""
-    # Full embedding database
     all_embeddings = np.load(EMB_PATH)
     with open(IDS_PATH, 'r') as f:
         all_filenames = json.load(f)
     fname_to_idx = {fn: i for i, fn in enumerate(all_filenames)}
 
-    # Splits
     with open(TEST_SCANS, 'r') as f:
         test_fnames = json.load(f)
     with open(BASE_SCANS, 'r') as f:
         base_fnames = json.load(f)
 
-    # Build index arrays
     test_indices = [fname_to_idx[fn] for fn in test_fnames if fn in fname_to_idx]
     base_indices = [fname_to_idx[fn] for fn in base_fnames if fn in fname_to_idx]
 
@@ -154,113 +151,44 @@ def print_summary(report):
     print()
 
 
-# ─── Open3D GUI Validation Window ────────────────────────────────────
+# ─── 3D Viewer with key-based verdict ───────────────────────────────
 
-class ValidationWindow:
+def show_and_judge(geometries, title):
     """
-    A single Open3D GUI window showing query + top-k result meshes
-    with Pass and Fail buttons. Clicking either records the verdict
-    and closes the window.
+    Open an Open3D window with the given geometries.
+    The user presses P (pass) or F (fail) to record a verdict.
+    The window closes automatically after the key press.
+
+    Returns "pass", "fail", or None (if the window was closed without
+    pressing P or F, treated as "fail" by the caller).
     """
+    verdict = [None]  # mutable container for closure
 
-    def __init__(self, app, query_fname, result_fnames, result_sims,
-                 top_k, query_num, total_queries):
-        self.app = app
-        self.verdict = None  # will be set to "pass" or "fail"
+    def on_pass(vis):
+        verdict[0] = "pass"
+        vis.destroy_window()
+        return False
 
-        # ── Build info strings ───────────────────────────────────────
-        title = (f"OASIS Validation — Top-{top_k}  |  "
-                 f"Query {query_num}/{total_queries}")
-        info_lines = [
-            f"Query:  {query_fname}",
-            f"Top-{top_k} results:"
-        ]
-        for i, (fn, sim) in enumerate(zip(result_fnames, result_sims), 1):
-            info_lines.append(f"  Rank {i}:  {fn}  (sim {sim:.4f})")
+    def on_fail(vis):
+        verdict[0] = "fail"
+        vis.destroy_window()
+        return False
 
-        # ── Create window ────────────────────────────────────────────
-        self.window = app.create_window(title, 1100, 800)
-        w = self.window
+    # Register both upper and lower case
+    key_callbacks = {
+        ord('P'): on_pass,
+        ord('p'): on_pass,
+        ord('F'): on_fail,
+        ord('f'): on_fail,
+    }
 
-        # Theme / font
-        em = w.theme.font_size
+    o3d.visualization.draw_geometries_with_key_callbacks(
+        geometries, key_callbacks,
+        window_name=title,
+        width=1100, height=800,
+        left=50, top=50)
 
-        # ── Layout: vertical stack ───────────────────────────────────
-        # Top: info panel  |  Middle: 3D scene  |  Bottom: buttons
-        panel = gui.Vert(0, gui.Margins(0.5 * em, 0.5 * em,
-                                         0.5 * em, 0.5 * em))
-
-        # Info labels
-        info_panel = gui.Vert(0.15 * em, gui.Margins(0, 0, 0, 0))
-        for line in info_lines:
-            lbl = gui.Label(line)
-            info_panel.add_child(lbl)
-        panel.add_child(info_panel)
-
-        # 3D scene
-        self.scene_widget = gui.SceneWidget()
-        self.scene_widget.scene = rendering.Open3DScene(w.renderer)
-        self.scene_widget.scene.set_background([0.15, 0.15, 0.15, 1.0])
-        panel.add_child(self.scene_widget)
-
-        # Button row
-        btn_row = gui.Horiz(0.5 * em, gui.Margins(0, 0.25 * em, 0, 0))
-
-        # Spacer to center the buttons
-        btn_row.add_stretch()
-
-        pass_btn = gui.Button("  ✅  Pass  ")
-        pass_btn.background_color = gui.Color(0.2, 0.7, 0.3)
-        pass_btn.set_on_clicked(self._on_pass)
-        btn_row.add_child(pass_btn)
-
-        fail_btn = gui.Button("  ❌  Fail  ")
-        fail_btn.background_color = gui.Color(0.8, 0.25, 0.25)
-        fail_btn.set_on_clicked(self._on_fail)
-        btn_row.add_child(fail_btn)
-
-        btn_row.add_stretch()
-
-        panel.add_child(btn_row)
-
-        w.add_child(panel)
-
-        # ── Add meshes to the scene ──────────────────────────────────
-        self._add_meshes(query_fname, result_fnames)
-
-    def _add_meshes(self, query_fname, result_fnames):
-        """Load and arrange meshes in the 3D scene."""
-        mat = rendering.MaterialRecord()
-        mat.shader = "defaultLit"
-
-        # Query mesh (index 0, top position)
-        mesh = load_stl(query_fname, COLOR_QUERY)
-        if mesh:
-            mesh.rotate(R_STAND_UP, center=(0, 0, 0))
-            mesh.translate((0, 0, 0))
-            self.scene_widget.scene.add_geometry(
-                f"query_{query_fname}", mesh, mat)
-
-        # Result meshes (below the query)
-        for i, fn in enumerate(result_fnames, 1):
-            rmesh = load_stl(fn, COLOR_MATCH)
-            if rmesh:
-                rmesh.rotate(R_STAND_UP, center=(0, 0, 0))
-                rmesh.translate((0, -i * OFFSET_STEP, 0))
-                self.scene_widget.scene.add_geometry(
-                    f"result_{i}_{fn}", rmesh, mat)
-
-        # Fit camera to show all geometry
-        bounds = self.scene_widget.scene.bounding_box
-        self.scene_widget.setup_camera(60.0, bounds, bounds.get_center())
-
-    def _on_pass(self):
-        self.verdict = "pass"
-        self.window.close()
-
-    def _on_fail(self):
-        self.verdict = "fail"
-        self.window.close()
+    return verdict[0]
 
 
 # ─── Main validation loop ────────────────────────────────────────────
@@ -272,11 +200,11 @@ def run_validation():
                     (EMB_PATH, "dinov2_embeddings.npy"),
                     (IDS_PATH, "dinov2_filenames.json")]:
         if not p.exists():
-            print(f"❌  Missing {desc}. Path: {p}")
+            print(f"Missing {desc}. Path: {p}")
             sys.exit(1)
 
     # Load data
-    print("🚀  Loading data...")
+    print("Loading data...")
     test_fnames, base_fnames, test_embs, base_embs = load_data()
     print(f"    Test scans:  {len(test_fnames)}")
     print(f"    Base scans:  {len(base_fnames)}")
@@ -284,9 +212,10 @@ def run_validation():
     # Load / init progress
     progress = load_progress()
 
-    # Initialize Open3D application
-    app = gui.Application.instance
-    app.initialize()
+    print("\n" + "-" * 50)
+    print("  Controls:  P = Pass   |   F = Fail")
+    print("  (press while the 3D window is focused)")
+    print("-" * 50)
 
     # Iterate over top-k rounds
     for k in TOP_K_VALUES:
@@ -296,7 +225,8 @@ def run_validation():
 
         done_count = len(progress[key])
         if done_count >= len(test_fnames):
-            print(f"\n✅  Top-{k} already complete ({done_count}/{len(test_fnames)}).")
+            print(f"\n  Top-{k} already complete "
+                  f"({done_count}/{len(test_fnames)}).")
             continue
 
         print(f"\n{'='*50}")
@@ -322,19 +252,41 @@ def run_validation():
             # Print to terminal
             print(f"\n  [{key}] Query {query_num}/{len(test_fnames)}: "
                   f"{query_fname}")
-            for ri, (fn, sc) in enumerate(zip(result_fnames, result_sims), 1):
+            for ri, (fn, sc) in enumerate(
+                    zip(result_fnames, result_sims), 1):
                 print(f"    Rank {ri}: {fn}  (sim {sc:.4f})")
+            print("    >> Press P (pass) or F (fail) in the 3D window")
 
-            # Create validation window
-            vw = ValidationWindow(
-                app, query_fname, result_fnames, result_sims,
-                k, query_num, len(test_fnames))
+            # Build geometries
+            geometries = []
 
-            # Run the event loop until the window is closed
-            app.run()
+            # Query mesh (gray, top position)
+            qmesh = load_stl(query_fname, COLOR_QUERY)
+            if qmesh:
+                qmesh.rotate(R_STAND_UP, center=(0, 0, 0))
+                geometries.append(qmesh)
 
-            # Record verdict
-            verdict = vw.verdict or "fail"  # default to fail if window closed
+            # Result meshes (light-blue, spaced below)
+            for i, fn in enumerate(result_fnames, 1):
+                rmesh = load_stl(fn, COLOR_MATCH)
+                if rmesh:
+                    rmesh.rotate(R_STAND_UP, center=(0, 0, 0))
+                    rmesh.translate((0, -i * OFFSET_STEP, 0))
+                    geometries.append(rmesh)
+
+            if not geometries:
+                print("    Warning: No meshes loaded, skipping.")
+                continue
+
+            # Show 3D viewer -- blocks until P or F is pressed
+            title = (f"Top-{k}  |  Query {query_num}/{len(test_fnames)}"
+                     f"  |  P=Pass  F=Fail")
+            verdict = show_and_judge(geometries, title)
+
+            # Default to fail if window closed without pressing P/F
+            if verdict is None:
+                verdict = "fail"
+
             progress[key][query_fname] = {
                 "verdict": verdict,
                 "results": [
@@ -344,13 +296,13 @@ def run_validation():
             }
             save_progress(progress)
 
-            symbol = "✅" if verdict == "pass" else "❌"
-            print(f"    → {symbol} {verdict.upper()}")
+            symbol = "PASS" if verdict == "pass" else "FAIL"
+            print(f"    -> {symbol}")
 
-        print(f"\n✅  Top-{k} round complete!")
+        print(f"\n  Top-{k} round complete!")
 
     # Generate report
-    print("\n📊  Generating report...")
+    print("\nGenerating report...")
     report = generate_report(progress, test_fnames)
     print_summary(report)
 
