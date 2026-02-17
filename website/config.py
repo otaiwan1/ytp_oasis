@@ -5,6 +5,7 @@ BASE_DIR = Path(__file__).parent.resolve()
 PROJECT_ROOT = BASE_DIR.parent
 
 class Config:
+    PROJECT_ROOT_DIR = str(PROJECT_ROOT)
     SECRET_KEY = os.environ.get('SECRET_KEY', 'oasis-dev-secret-key-change-in-production')
     SQLALCHEMY_DATABASE_URI = f"sqlite:///{BASE_DIR / 'database' / 'oasis.db'}"
     SQLALCHEMY_TRACK_MODIFICATIONS = False

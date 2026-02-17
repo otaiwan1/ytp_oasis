@@ -25,12 +25,14 @@ def create_app():
     from routes.search import search_bp
     from routes.upload import upload_bp
     from routes.collection import collection_bp
+    from routes.validation import validation_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
     app.register_blueprint(search_bp)
     app.register_blueprint(upload_bp)
     app.register_blueprint(collection_bp)
+    app.register_blueprint(validation_bp)
 
     # Create database tables & register user_loader
     with app.app_context():

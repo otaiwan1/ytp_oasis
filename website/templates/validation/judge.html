@@ -1,0 +1,843 @@
+{% extends "base.html" %}
+{% block title %}Validation — Judge{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ── Page layout ─────────────────────────────────────────── */
+    .judge-wrapper {
+        display: flex;
+        gap: 1rem;
+    }
+    .judge-content { flex: 1; min-width: 0; }
+    .judge-sidebar {
+        width: 260px;
+        flex-shrink: 0;
+        overflow-y: auto;
+        max-height: calc(100vh - 140px);
+        position: sticky;
+        top: 90px;
+    }
+
+    /* ── Header bar ──────────────────────────────────────────── */
+    .judge-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+        flex-wrap: wrap;
+    }
+    .judge-header .counter {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--oasis-gray-500);
+    }
+
+    /* ── Scan card (shared for query & results) ──────────────── */
+    .scan-card-j {
+        background: white;
+        border: 1px solid var(--oasis-gray-200);
+        border-radius: 14px;
+        overflow: hidden;
+        transition: all 0.25s;
+        cursor: pointer;
+    }
+    .scan-card-j:hover {
+        box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+        border-color: var(--oasis-green-300);
+    }
+    .scan-card-j .thumb-box {
+        width: 100%;
+        height: 440px;
+        background: #1a1a2e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+    .scan-card-j .thumb-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    .scan-card-j .thumb-loading {
+        color: rgba(255,255,255,0.3);
+        font-size: 2rem;
+    }
+    .scan-card-j .card-info {
+        padding: 0.5rem 0.75rem;
+    }
+    .scan-card-j .card-tag {
+        font-weight: 800;
+        font-size: 0.72rem;
+        border-radius: 6px;
+        padding: 0.15rem 0.5rem;
+        display: inline-block;
+        margin-bottom: 0.25rem;
+    }
+    .card-tag.query-tag { background: #fef3c7; color: #92400e; }
+    .card-tag.result-tag { background: #dbeafe; color: #1e40af; }
+    .scan-card-j .card-name {
+        font-size: 0.72rem;
+        color: var(--oasis-gray-500);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .scan-card-j .card-sim {
+        font-weight: 700;
+        font-size: 0.78rem;
+        color: var(--oasis-green-600);
+    }
+    .scan-card-j .click-hint-j {
+        position: absolute;
+        bottom: 60px; left: 0; right: 0;
+        text-align: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: rgba(255,255,255,0.7);
+        opacity: 0;
+        transition: opacity 0.2s;
+        pointer-events: none;
+    }
+    .scan-card-j { position: relative; }
+    .scan-card-j:hover .click-hint-j { opacity: 1; }
+
+    /* Query card is larger */
+    .query-col .thumb-box { height: 420px; }
+    .query-col .scan-card-j { border-color: #fbbf24; border-width: 2px; }
+
+    /* ── Section labels ──────────────────────────────────────── */
+    .section-label {
+        font-weight: 800;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        color: var(--oasis-gray-700);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .section-label .sep {
+        flex: 1;
+        height: 1px;
+        background: var(--oasis-gray-200);
+    }
+
+    /* ── Verdict bar ─────────────────────────────────────────── */
+    .verdict-bar {
+        display: flex;
+        gap: 0.75rem;
+        padding: 1rem 0 0.25rem;
+        justify-content: center;
+        align-items: center;
+    }
+    .btn-pass {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: white; border: none; border-radius: 12px;
+        font-weight: 700; font-size: 1.1rem; padding: 0.75rem 2rem;
+        transition: all 0.2s; cursor: pointer;
+    }
+    .btn-pass:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(34,197,94,0.4); }
+    .btn-fail {
+        background: linear-gradient(135deg, #ef4444, #dc2626);
+        color: white; border: none; border-radius: 12px;
+        font-weight: 700; font-size: 1.1rem; padding: 0.75rem 2rem;
+        transition: all 0.2s; cursor: pointer;
+    }
+    .btn-fail:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(239,68,68,0.4); }
+
+    .key-hint {
+        font-size: 0.8rem;
+        color: var(--oasis-gray-500);
+        text-align: center;
+        margin-top: 0.25rem;
+    }
+    .key-hint kbd {
+        background: var(--oasis-gray-200);
+        border-radius: 4px;
+        padding: 0.1rem 0.4rem;
+        font-weight: 700;
+        color: var(--oasis-gray-700);
+    }
+
+    /* ── Sidebar ─────────────────────────────────────────────── */
+    .round-card {
+        background: white;
+        border: 1px solid var(--oasis-gray-200);
+        border-radius: 12px;
+        padding: 0.85rem;
+        margin-bottom: 0.6rem;
+    }
+    .round-card.active { border-color: var(--oasis-green-500); box-shadow: 0 0 0 2px var(--oasis-green-200); }
+    .round-card h6 { font-weight: 700; margin: 0 0 0.2rem; font-size: 0.9rem; }
+    .round-progress { font-size: 0.75rem; color: var(--oasis-gray-500); }
+    .progress-bar-mini {
+        height: 5px;
+        background: var(--oasis-gray-200);
+        border-radius: 3px;
+        margin-top: 0.35rem;
+        overflow: hidden;
+    }
+    .progress-bar-mini .fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--oasis-green-400), var(--oasis-green-600));
+        border-radius: 3px;
+        transition: width 0.4s;
+    }
+
+    /* ── Report modal ────────────────────────────────────────── */
+    .report-table { width: 100%; font-size: 0.9rem; }
+    .report-table th { font-weight: 700; padding: 0.5rem; }
+    .report-table td { padding: 0.5rem; }
+    .report-table .rate { font-weight: 800; color: var(--oasis-green-600); }
+
+    /* ── 3D Modal ────────────────────────────────────────────── */
+    .modal-viewer-body {
+        background: #1a1a2e;
+        border-radius: 12px;
+        position: relative;
+        height: 65vh;
+        min-height: 400px;
+    }
+    .modal-viewer-body canvas {
+        width: 100% !important;
+        height: 100% !important;
+        display: block;
+        border-radius: 12px;
+    }
+    .modal-scan-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 0 0;
+    }
+    .modal-scan-info .fname {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--oasis-gray-700);
+        flex-grow: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .modal-scan-info .hint {
+        font-size: 0.78rem;
+        color: var(--oasis-gray-500);
+    }
+
+    /* ── Loading ─────────────────────────────────────────────── */
+    .judge-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 60vh;
+        flex-direction: column;
+        gap: 1rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-3">
+    <!-- Loading -->
+    <div class="judge-loading" id="judgeLoading">
+        <div class="spinner-oasis"></div>
+        <h5 style="font-weight:700; color:var(--oasis-gray-700);">Loading validation data...</h5>
+        <p style="color:var(--oasis-gray-500);font-size:0.9rem">Computing similarity rankings for 60 test scans</p>
+    </div>
+
+    <!-- Main UI (hidden until loaded) -->
+    <div id="judgeUI" style="display:none">
+        <div class="judge-header">
+            <div>
+                <h4 style="margin:0; font-weight:800;">
+                    <i class="bi bi-clipboard2-pulse me-2" style="color:var(--oasis-green-500)"></i>Step 2 — Validation Judge
+                </h4>
+            </div>
+            <span class="counter" id="roundLabel">—</span>
+            <span class="counter" id="queryCounter">—</span>
+            <button class="btn btn-oasis-outline btn-sm" onclick="generateReport()" id="reportBtn" style="display:none">
+                <i class="bi bi-file-earmark-bar-graph me-1"></i>Generate Report
+            </button>
+        </div>
+
+        <div class="judge-wrapper">
+            <div class="judge-content">
+                <!-- Query row -->
+                <div class="section-label">
+                    <i class="bi bi-search"></i> Query Scan
+                    <span class="sep"></span>
+                    <span id="queryLabel" style="font-weight:600; font-size:0.82rem; color:var(--oasis-gray-500)">—</span>
+                </div>
+                <div class="row g-3 mb-3" id="queryRow"></div>
+
+                <!-- Results grid -->
+                <div class="section-label">
+                    <i class="bi bi-grid-3x3-gap"></i> <span id="resultsLabel">Top-K Results</span>
+                    <span class="sep"></span>
+                </div>
+                <div class="row g-3" id="resultsGrid"></div>
+
+                <!-- Verdict -->
+                <div class="verdict-bar">
+                    <button class="btn-pass" onclick="submitVerdict('pass')" id="passBtn">
+                        <i class="bi bi-check-circle me-2"></i>Pass (P)
+                    </button>
+                    <button class="btn-fail" onclick="submitVerdict('fail')" id="failBtn">
+                        <i class="bi bi-x-circle me-2"></i>Fail (F)
+                    </button>
+                </div>
+                <div class="key-hint">
+                    Press <kbd>P</kbd> to pass &nbsp;|&nbsp; <kbd>F</kbd> to fail &nbsp;|&nbsp;
+                    Click any card for interactive 3D view
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="judge-sidebar">
+                <h6 style="font-weight:700; margin-bottom:0.6rem; color:var(--oasis-gray-700); font-size:0.9rem;">
+                    <i class="bi bi-list-check me-1"></i>Rounds
+                </h6>
+                <div id="roundCards"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 3D Viewer Modal -->
+<div class="modal fade" id="viewerModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content" style="border-radius:16px; border:none;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title" style="font-weight:800;">
+                    <i class="bi bi-badge-3d me-2" style="color:var(--oasis-green-500)"></i>
+                    3D Scan Viewer
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-viewer-body" id="modalViewerPanel">
+                    <canvas id="modalCanvas"></canvas>
+                </div>
+                <div class="modal-scan-info">
+                    <span class="fname" id="modalFileName">—</span>
+                    <span class="hint"><i class="bi bi-mouse me-1"></i>Drag to rotate &bull; Scroll to zoom</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Report Modal -->
+<div class="modal fade" id="reportModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content" style="border-radius:16px; border:none;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title" style="font-weight:800;">
+                    <i class="bi bi-file-earmark-bar-graph me-2" style="color:var(--oasis-green-500)"></i>
+                    Validation Report
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="reportBody"></div>
+            <div class="modal-footer border-0 pt-0">
+                <button class="btn btn-oasis btn-sm" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ─── State ──────────────────────────────────────────────────────────
+const TOP_K_VALUES = [];
+let testScans = [];
+let rankings = {};
+let progress = {};
+
+let currentRoundIdx = 0;
+let currentQueryIdx = 0;
+let waitingVerdict = false;
+
+// ─── Shared thumbnail renderer (single WebGL context) ───────────────
+const THUMB_W = 480, THUMB_H = 440;
+const thumbRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+thumbRenderer.setSize(THUMB_W, THUMB_H);
+thumbRenderer.setPixelRatio(1);
+
+const thumbScene = new THREE.Scene();
+thumbScene.background = new THREE.Color(0x1a1a2e);
+thumbScene.add(new THREE.AmbientLight(0xffffff, 0.6));
+const tl1 = new THREE.DirectionalLight(0xffffff, 0.8);
+tl1.position.set(1, 1, 1); thumbScene.add(tl1);
+const tl2 = new THREE.DirectionalLight(0xffffff, 0.4);
+tl2.position.set(-1, -0.5, -1); thumbScene.add(tl2);
+const thumbCamera = new THREE.PerspectiveCamera(50, THUMB_W / THUMB_H, 0.1, 1000);
+
+const stlLoader = new STLLoader();
+const thumbCache = {};
+let renderQueueAbort = false;
+
+function stlUrl(filename) {
+    return `{{ url_for("validation.serve_stl", filename="__PH__") }}`
+        .replace('__PH__', encodeURIComponent(filename));
+}
+
+function loadSTLAsync(url) {
+    return new Promise((resolve, reject) => {
+        stlLoader.load(url, resolve, undefined, reject);
+    });
+}
+
+async function renderThumbnail(filename) {
+    if (thumbCache[filename]) return thumbCache[filename];
+
+    const geometry = await loadSTLAsync(stlUrl(filename));
+    geometry.computeVertexNormals();
+    geometry.center();
+    geometry.rotateX(-Math.PI / 2);
+
+    const material = new THREE.MeshPhongMaterial({
+        color: 0xc8ddf0, specular: 0x444444, shininess: 60
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    thumbScene.add(mesh);
+
+    const box = new THREE.Box3().setFromObject(mesh);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+    thumbCamera.position.set(center.x, center.y + maxDim * 0.3, center.z + maxDim * 1.4);
+    thumbCamera.lookAt(center);
+
+    thumbRenderer.render(thumbScene, thumbCamera);
+    const dataURL = thumbRenderer.domElement.toDataURL('image/png');
+
+    thumbScene.remove(mesh);
+    geometry.dispose();
+    material.dispose();
+
+    thumbCache[filename] = dataURL;
+    return dataURL;
+}
+
+// ─── Init ───────────────────────────────────────────────────────────
+async function init() {
+    try {
+        const resp = await fetch('{{ url_for("validation.api_judge_state") }}');
+        const data = await resp.json();
+        if (data.error) { alert(data.error); return; }
+
+        testScans = data.test_scans;
+        TOP_K_VALUES.push(...data.top_k_values);
+        rankings = data.rankings;
+        progress = data.progress || {};
+
+        findFirstIncomplete();
+
+        document.getElementById('judgeLoading').style.display = 'none';
+        document.getElementById('judgeUI').style.display = 'block';
+
+        renderSidebar();
+        loadCurrentQuery();
+
+    } catch(e) {
+        alert('Failed to load: ' + e.message);
+        console.error(e);
+    }
+}
+
+function findFirstIncomplete() {
+    for (let ri = 0; ri < TOP_K_VALUES.length; ri++) {
+        const key = `top_${TOP_K_VALUES[ri]}`;
+        const done = progress[key] || {};
+        for (let qi = 0; qi < testScans.length; qi++) {
+            if (!(testScans[qi] in done)) {
+                currentRoundIdx = ri;
+                currentQueryIdx = qi;
+                return;
+            }
+        }
+    }
+    currentRoundIdx = TOP_K_VALUES.length;
+    currentQueryIdx = 0;
+}
+
+function isAllDone() { return currentRoundIdx >= TOP_K_VALUES.length; }
+
+// ─── Build card HTML ────────────────────────────────────────────────
+function makeCard(id, filename, tag, tagClass, extra) {
+    const cached = thumbCache[filename];
+    const thumbHTML = cached
+        ? `<img src="${cached}" alt="scan">`
+        : `<i class="bi bi-hourglass-split thumb-loading"></i>`;
+
+    return `
+        <div class="scan-card-j" id="${id}" data-filename="${filename}">
+            <div class="thumb-box" id="tb_${id}">${thumbHTML}</div>
+            <span class="click-hint-j"><i class="bi bi-badge-3d"></i> Click for 3D</span>
+            <div class="card-info">
+                <span class="card-tag ${tagClass}">${tag}</span>
+                ${extra || ''}
+                <div class="card-name" title="${filename}">${filename}</div>
+            </div>
+        </div>
+    `;
+}
+
+// ─── Load current query cards ───────────────────────────────────────
+async function loadCurrentQuery() {
+    if (isAllDone()) { showAllDone(); return; }
+
+    renderQueueAbort = true;   // cancel any pending thumbnail renders
+    await new Promise(r => setTimeout(r, 0));  // yield so abort is picked up
+
+    const k = TOP_K_VALUES[currentRoundIdx];
+    const kKey = `top_${k}`;
+    const queryFile = testScans[currentQueryIdx];
+    const results = rankings[queryFile].slice(0, k);
+
+    // Header labels
+    document.getElementById('roundLabel').textContent = `Top-${k}`;
+    document.getElementById('queryCounter').textContent =
+        `Query ${currentQueryIdx + 1} / ${testScans.length}`;
+    document.getElementById('queryLabel').textContent = queryFile;
+    document.getElementById('resultsLabel').textContent = `Top-${k} Results`;
+
+    // Query row — single card, centred
+    const queryRow = document.getElementById('queryRow');
+    queryRow.innerHTML = `
+        <div class="col-6 col-md-4 col-lg-3 query-col">
+            ${makeCard('q_card', queryFile, 'QUERY', 'query-tag')}
+        </div>
+    `;
+    queryRow.querySelector('.scan-card-j').addEventListener('click', () => openModal(queryFile));
+
+    // Results grid — responsive columns
+    const resultsGrid = document.getElementById('resultsGrid');
+    resultsGrid.innerHTML = '';
+
+    const thumbTargets = [];
+
+    // Check if query thumb needs rendering
+    if (!thumbCache[queryFile]) {
+        thumbTargets.push({ el: document.getElementById('tb_q_card'), filename: queryFile, id: 'q_card' });
+    }
+
+    results.forEach((r, i) => {
+        const cardId = `r_card_${i}`;
+        const simPct = (r.similarity * 100).toFixed(1);
+        const col = document.createElement('div');
+        // For top-5: 3 columns on lg. For top-10: 4 columns on lg.
+        col.className = k <= 5
+            ? 'col-6 col-md-4 col-lg-4'
+            : 'col-6 col-md-4 col-lg-3 col-xl-2';
+        col.innerHTML = makeCard(
+            cardId, r.filename,
+            `#${i + 1}`, 'result-tag',
+            `<span class="card-sim">${simPct}%</span>`
+        );
+        resultsGrid.appendChild(col);
+
+        col.querySelector('.scan-card-j').addEventListener('click', () => openModal(r.filename));
+
+        if (!thumbCache[r.filename]) {
+            thumbTargets.push({ el: document.getElementById(`tb_${cardId}`), filename: r.filename, id: cardId });
+        }
+    });
+
+    waitingVerdict = true;
+    renderSidebar();
+
+    // Render thumbnails sequentially
+    if (thumbTargets.length > 0) {
+        renderThumbQueue(thumbTargets);
+    }
+}
+
+async function renderThumbQueue(targets) {
+    renderQueueAbort = false;
+    for (const t of targets) {
+        if (renderQueueAbort) return;
+        try {
+            const dataURL = await renderThumbnail(t.filename);
+            const el = document.getElementById(`tb_${t.id}`);
+            if (el) el.innerHTML = `<img src="${dataURL}" alt="scan">`;
+        } catch(e) {
+            console.warn('Thumb render failed:', t.filename, e);
+            const el = document.getElementById(`tb_${t.id}`);
+            if (el) el.innerHTML = `<i class="bi bi-exclamation-triangle thumb-loading"></i>`;
+        }
+    }
+}
+
+// ─── 3D Modal Viewer ────────────────────────────────────────────────
+let modalScene, modalCamera, modalRenderer, modalControls, modalAnimId;
+let modalInitialized = false;
+
+function initModalViewer() {
+    const canvas = document.getElementById('modalCanvas');
+    const panel = document.getElementById('modalViewerPanel');
+    const w = panel.clientWidth, h = panel.clientHeight;
+
+    modalScene = new THREE.Scene();
+    modalScene.background = new THREE.Color(0x1a1a2e);
+    modalScene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const d1 = new THREE.DirectionalLight(0xffffff, 0.8);
+    d1.position.set(1, 1, 1); modalScene.add(d1);
+    const d2 = new THREE.DirectionalLight(0xffffff, 0.4);
+    d2.position.set(-1, -0.5, -1); modalScene.add(d2);
+
+    modalCamera = new THREE.PerspectiveCamera(50, w / h, 0.1, 2000);
+    modalRenderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    modalRenderer.setSize(w, h);
+    modalRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    modalControls = new OrbitControls(modalCamera, canvas);
+    modalControls.enableDamping = true;
+    modalControls.dampingFactor = 0.1;
+    modalControls.autoRotate = true;
+    modalControls.autoRotateSpeed = 2.0;
+
+    modalInitialized = true;
+}
+
+function startModalAnimation() {
+    function animate() {
+        modalAnimId = requestAnimationFrame(animate);
+        modalControls.update();
+        modalRenderer.render(modalScene, modalCamera);
+    }
+    animate();
+}
+
+function stopModalAnimation() {
+    if (modalAnimId) { cancelAnimationFrame(modalAnimId); modalAnimId = null; }
+}
+
+function clearModalScene() {
+    if (!modalScene) return;
+    const toRemove = [];
+    modalScene.traverse(c => { if (c.isMesh) toRemove.push(c); });
+    toRemove.forEach(m => {
+        m.geometry.dispose();
+        m.material.dispose();
+        modalScene.remove(m);
+    });
+}
+
+async function openModal(filename) {
+    document.getElementById('modalFileName').textContent = filename;
+
+    const modalEl = document.getElementById('viewerModal');
+    const bsModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    bsModal.show();
+
+    await new Promise(r => modalEl.addEventListener('shown.bs.modal', r, { once: true }));
+
+    if (!modalInitialized) initModalViewer();
+
+    const panel = document.getElementById('modalViewerPanel');
+    const w = panel.clientWidth, h = panel.clientHeight;
+    modalCamera.aspect = w / h;
+    modalCamera.updateProjectionMatrix();
+    modalRenderer.setSize(w, h);
+
+    clearModalScene();
+    startModalAnimation();
+
+    try {
+        const geo = await loadSTLAsync(stlUrl(filename));
+        geo.computeVertexNormals();
+        geo.center();
+        geo.rotateX(-Math.PI / 2);
+
+        const mat = new THREE.MeshPhongMaterial({
+            color: 0xc8ddf0, specular: 0x444444, shininess: 60
+        });
+        const mesh = new THREE.Mesh(geo, mat);
+        modalScene.add(mesh);
+
+        const box = new THREE.Box3().setFromObject(mesh);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        modalCamera.position.set(center.x, center.y + maxDim * 0.3, center.z + maxDim * 1.4);
+        modalControls.target.copy(center);
+        modalControls.update();
+    } catch(e) {
+        console.error('Modal load failed:', filename, e);
+    }
+}
+
+document.getElementById('viewerModal').addEventListener('hidden.bs.modal', () => {
+    stopModalAnimation();
+    clearModalScene();
+});
+
+// ─── Verdict ────────────────────────────────────────────────────────
+async function submitVerdict(verdict) {
+    if (!waitingVerdict || isAllDone()) return;
+    waitingVerdict = false;
+
+    const k = TOP_K_VALUES[currentRoundIdx];
+    const kKey = `top_${k}`;
+    const queryFile = testScans[currentQueryIdx];
+    const results = rankings[queryFile].slice(0, k);
+
+    try {
+        await fetch('{{ url_for("validation.api_judge_verdict") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                top_k_key: kKey,
+                query_file: queryFile,
+                verdict: verdict,
+                results: results
+            })
+        });
+    } catch(e) {
+        console.error('Failed to save verdict:', e);
+    }
+
+    if (!progress[kKey]) progress[kKey] = {};
+    progress[kKey][queryFile] = { verdict, results };
+
+    advanceToNext();
+    loadCurrentQuery();
+}
+
+function advanceToNext() {
+    const k = TOP_K_VALUES[currentRoundIdx];
+    const kKey = `top_${k}`;
+    const done = progress[kKey] || {};
+
+    for (let qi = currentQueryIdx + 1; qi < testScans.length; qi++) {
+        if (!(testScans[qi] in done)) {
+            currentQueryIdx = qi;
+            return;
+        }
+    }
+
+    for (let ri = currentRoundIdx + 1; ri < TOP_K_VALUES.length; ri++) {
+        const key = `top_${TOP_K_VALUES[ri]}`;
+        const d = progress[key] || {};
+        for (let qi = 0; qi < testScans.length; qi++) {
+            if (!(testScans[qi] in d)) {
+                currentRoundIdx = ri;
+                currentQueryIdx = qi;
+                return;
+            }
+        }
+    }
+
+    currentRoundIdx = TOP_K_VALUES.length;
+    currentQueryIdx = 0;
+}
+
+function showAllDone() {
+    document.getElementById('queryLabel').textContent = 'All rounds complete!';
+    document.getElementById('resultsLabel').textContent = 'Done';
+    document.getElementById('roundLabel').textContent = 'Done';
+    document.getElementById('queryCounter').textContent = '';
+    document.getElementById('passBtn').disabled = true;
+    document.getElementById('failBtn').disabled = true;
+    document.getElementById('reportBtn').style.display = 'inline-block';
+    document.getElementById('queryRow').innerHTML = '';
+    document.getElementById('resultsGrid').innerHTML =
+        '<div class="col-12 text-center py-5"><h5 style="color:var(--oasis-gray-500)"><i class="bi bi-check-circle me-2"></i>All validation rounds complete. Generate your report above.</h5></div>';
+}
+
+// ─── Keyboard shortcuts ─────────────────────────────────────────────
+document.addEventListener('keydown', (e) => {
+    // Don't trigger while modal is open
+    if (document.querySelector('.modal.show')) return;
+    if (e.key === 'p' || e.key === 'P') submitVerdict('pass');
+    if (e.key === 'f' || e.key === 'F') submitVerdict('fail');
+});
+
+// ─── Sidebar ────────────────────────────────────────────────────────
+function renderSidebar() {
+    const container = document.getElementById('roundCards');
+    container.innerHTML = '';
+
+    TOP_K_VALUES.forEach((k, ri) => {
+        const key = `top_${k}`;
+        const done = progress[key] || {};
+        const count = Object.keys(done).length;
+        const passes = Object.values(done).filter(v => v.verdict === 'pass').length;
+        const pct = count > 0 ? (count / testScans.length * 100).toFixed(0) : 0;
+        const isActive = ri === currentRoundIdx;
+
+        const card = document.createElement('div');
+        card.className = `round-card${isActive ? ' active' : ''}`;
+        card.innerHTML = `
+            <div class="d-flex align-items-center justify-content-between">
+                <h6>Top-${k}</h6>
+                <span class="badge-oasis">${count}/${testScans.length}</span>
+            </div>
+            <div class="round-progress">
+                ${passes} pass / ${count - passes} fail
+                ${count > 0 ? ` — ${(passes/count*100).toFixed(1)}% pass rate` : ''}
+            </div>
+            <div class="progress-bar-mini">
+                <div class="fill" style="width:${pct}%"></div>
+            </div>
+        `;
+        container.appendChild(card);
+    });
+}
+
+// ─── Report ─────────────────────────────────────────────────────────
+async function generateReport() {
+    try {
+        const resp = await fetch('{{ url_for("validation.api_generate_report") }}', { method: 'POST' });
+        const data = await resp.json();
+        if (!data.ok) { alert(data.error || 'Failed'); return; }
+
+        const report = data.report;
+        let html = `<table class="report-table table"><thead><tr>
+            <th>Top-K</th><th>Queries</th><th>Pass</th><th>Fail</th><th>Rate</th>
+        </tr></thead><tbody>`;
+
+        for (const key of Object.keys(report.top_k_results).sort()) {
+            const r = report.top_k_results[key];
+            html += `<tr>
+                <td><strong>${key}</strong></td>
+                <td>${r.total_queries}</td>
+                <td style="color:#16a34a;font-weight:700">${r.passes}</td>
+                <td style="color:#dc2626;font-weight:700">${r.fails}</td>
+                <td class="rate">${r.pass_rate_percent.toFixed(1)}%</td>
+            </tr>`;
+        }
+        html += '</tbody></table>';
+        html += '<p class="text-muted mt-2" style="font-size:0.85rem"><i class="bi bi-check-circle me-1"></i>Report saved to <code>validation/validation_report.json</code></p>';
+
+        document.getElementById('reportBody').innerHTML = html;
+        new bootstrap.Modal(document.getElementById('reportModal')).show();
+    } catch(e) {
+        alert('Report generation failed: ' + e.message);
+    }
+}
+
+// Expose for onclick handlers
+window.submitVerdict = submitVerdict;
+window.generateReport = generateReport;
+
+// Boot
+init();
+</script>
+{% endblock %}

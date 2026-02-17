@@ -1,0 +1,617 @@
+{% extends "base.html" %}
+{% block title %}Validation — Pick Test Scans{% endblock %}
+
+{% block extra_css %}
+<style>
+    .scan-card {
+        background: white;
+        border: 1px solid var(--oasis-gray-200);
+        border-radius: 14px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        position: relative;
+    }
+    .scan-card:hover {
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        border-color: var(--oasis-green-300);
+    }
+    .scan-thumb {
+        width: 100%;
+        height: 180px;
+        background: #1a1a2e;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+    }
+    .scan-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    .scan-thumb .thumb-loading {
+        color: rgba(255,255,255,0.3);
+        font-size: 2rem;
+    }
+    .scan-info {
+        padding: 0.6rem 0.85rem;
+    }
+    .scan-info .scan-num {
+        font-weight: 700;
+        font-size: 0.75rem;
+        color: var(--oasis-green-600);
+    }
+    .scan-info .scan-name {
+        font-size: 0.72rem;
+        color: var(--oasis-gray-500);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .scan-badge-swap {
+        position: absolute;
+        top: 6px;
+        right: 6px;
+        z-index: 10;
+        background: rgba(255,152,0,0.9);
+        border: none;
+        border-radius: 8px;
+        color: white;
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.2rem 0.5rem;
+        opacity: 0;
+        transition: opacity 0.2s;
+        cursor: pointer;
+    }
+    .scan-card:hover .scan-badge-swap {
+        opacity: 1;
+    }
+    .scan-card .click-hint {
+        position: absolute;
+        bottom: 50px;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: rgba(255,255,255,0.7);
+        opacity: 0;
+        transition: opacity 0.2s;
+        pointer-events: none;
+    }
+    .scan-card:hover .click-hint { opacity: 1; }
+
+    /* Toolbar */
+    .pick-toolbar {
+        position: sticky;
+        top: 70px;
+        z-index: 100;
+        background: rgba(255,255,255,0.92);
+        backdrop-filter: blur(12px);
+        border: 1px solid var(--oasis-gray-200);
+        border-radius: 14px;
+        padding: 0.75rem 1.25rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+    }
+    .pick-toolbar .status {
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--oasis-gray-700);
+        flex-grow: 1;
+    }
+
+    /* Loading overlay */
+    .loading-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(255,255,255,0.85);
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .loading-overlay.hidden { display: none; }
+
+    /* Pagination */
+    .page-nav {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+        justify-content: center;
+        margin-top: 1.5rem;
+    }
+    .page-nav button {
+        border: 1px solid var(--oasis-gray-300);
+        background: white;
+        border-radius: 8px;
+        padding: 0.4rem 0.8rem;
+        font-weight: 600;
+        font-size: 0.85rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .page-nav button:hover { background: var(--oasis-green-50); border-color: var(--oasis-green-400); }
+    .page-nav button:disabled { opacity: 0.4; cursor: default; }
+    .page-nav .page-info { font-size: 0.85rem; color: var(--oasis-gray-500); }
+
+    /* 3D Modal */
+    .modal-viewer-body {
+        background: #1a1a2e;
+        border-radius: 12px;
+        position: relative;
+        height: 65vh;
+        min-height: 400px;
+    }
+    .modal-viewer-body canvas {
+        width: 100% !important;
+        height: 100% !important;
+        display: block;
+        border-radius: 12px;
+    }
+    .modal-scan-info {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        padding: 0.75rem 0 0;
+    }
+    .modal-scan-info .fname {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--oasis-gray-700);
+        flex-grow: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .modal-scan-info .hint {
+        font-size: 0.78rem;
+        color: var(--oasis-gray-500);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner-oasis"></div>
+    <h5 style="font-weight:700; color:var(--oasis-gray-700);">Loading scans...</h5>
+</div>
+
+<div class="container py-3">
+    <div class="page-header" style="padding-bottom:0.5rem">
+        <h1><i class="bi bi-clipboard-check me-2" style="color: var(--oasis-green-500);"></i>Step 1 — Pick 60 Test Scans</h1>
+        <p>Review the randomly selected scans below. Click a card to inspect it in 3D. Click <strong>Swap</strong> to replace a scan. When satisfied, click <strong>Confirm &amp; Save</strong>.</p>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="pick-toolbar">
+        <span class="status" id="statusLabel">Loading...</span>
+        <button class="btn btn-oasis-outline btn-sm" onclick="reshuffleAll()" id="reshuffleBtn" disabled>
+            <i class="bi bi-shuffle me-1"></i>Reshuffle All
+        </button>
+        <button class="btn btn-oasis btn-sm" onclick="confirmSave()" id="saveBtn" disabled>
+            <i class="bi bi-check-lg me-1"></i>Confirm &amp; Save
+        </button>
+    </div>
+
+    <!-- Grid -->
+    <div class="row g-3" id="scanGrid"></div>
+
+    <!-- Pagination -->
+    <div class="page-nav" id="pageNav" style="display:none">
+        <button onclick="changePage(-1)" id="prevBtn">&larr; Prev</button>
+        <span class="page-info" id="pageInfo">Page 1/3</span>
+        <button onclick="changePage(1)" id="nextBtn">Next &rarr;</button>
+    </div>
+</div>
+
+<!-- 3D Viewer Modal -->
+<div class="modal fade" id="viewerModal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-centered">
+        <div class="modal-content" style="border-radius:16px; border:none;">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title" style="font-weight:800;">
+                    <i class="bi bi-badge-3d me-2" style="color:var(--oasis-green-500)"></i>
+                    3D Scan Viewer
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="modal-viewer-body" id="modalViewerPanel">
+                    <canvas id="modalCanvas"></canvas>
+                </div>
+                <div class="modal-scan-info">
+                    <span class="fname" id="modalFileName">—</span>
+                    <span class="hint"><i class="bi bi-mouse me-1"></i>Drag to rotate &bull; Scroll to zoom</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const PAGE_SIZE = 24;
+const NUM_TEST = 60;
+const THUMB_W = 400, THUMB_H = 360;   // 2× card size for retina
+
+let allFilenames = [];
+let selected = [];
+let pool = [];
+let currentPage = 1;
+const thumbCache = {};   // filename -> dataURL
+
+// ─── Shared thumbnail renderer (single WebGL context) ───────────────
+const thumbRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+thumbRenderer.setSize(THUMB_W, THUMB_H);
+thumbRenderer.setPixelRatio(1);
+
+const thumbScene = new THREE.Scene();
+thumbScene.background = new THREE.Color(0x1a1a2e);
+thumbScene.add(new THREE.AmbientLight(0xffffff, 0.6));
+const tl1 = new THREE.DirectionalLight(0xffffff, 0.8);
+tl1.position.set(1, 1, 1); thumbScene.add(tl1);
+const tl2 = new THREE.DirectionalLight(0xffffff, 0.4);
+tl2.position.set(-1, -0.5, -1); thumbScene.add(tl2);
+const thumbCamera = new THREE.PerspectiveCamera(50, THUMB_W / THUMB_H, 0.1, 1000);
+
+const stlLoader = new STLLoader();
+let renderQueueAbort = false;  // flag to cancel current queue on page change
+
+function loadSTLAsync(url) {
+    return new Promise((resolve, reject) => {
+        stlLoader.load(url, resolve, undefined, reject);
+    });
+}
+
+function stlUrl(filename) {
+    return `{{ url_for("validation.serve_stl", filename="__PH__") }}`
+        .replace('__PH__', encodeURIComponent(filename));
+}
+
+async function renderThumbnail(filename) {
+    if (thumbCache[filename]) return thumbCache[filename];
+
+    const geometry = await loadSTLAsync(stlUrl(filename));
+    geometry.computeVertexNormals();
+    geometry.center();
+    geometry.rotateX(-Math.PI / 2);
+
+    const material = new THREE.MeshPhongMaterial({
+        color: 0xc8ddf0, specular: 0x444444, shininess: 100
+    });
+    const mesh = new THREE.Mesh(geometry, material);
+    thumbScene.add(mesh);
+
+    // Fit camera
+    const box = new THREE.Box3().setFromObject(mesh);
+    const size = box.getSize(new THREE.Vector3());
+    const center = box.getCenter(new THREE.Vector3());
+    const maxDim = Math.max(size.x, size.y, size.z);
+    thumbCamera.position.set(center.x, center.y + maxDim * 0.3, center.z + maxDim * 1.4);
+    thumbCamera.lookAt(center);
+
+    thumbRenderer.render(thumbScene, thumbCamera);
+    const dataURL = thumbRenderer.domElement.toDataURL('image/png');
+
+    // Cleanup
+    thumbScene.remove(mesh);
+    geometry.dispose();
+    material.dispose();
+
+    thumbCache[filename] = dataURL;
+    return dataURL;
+}
+
+// ─── Init ───────────────────────────────────────────────────────────
+async function init() {
+    try {
+        const resp = await fetch('{{ url_for("validation.api_filenames") }}');
+        const data = await resp.json();
+        if (data.error) { alert(data.error); return; }
+        allFilenames = data.filenames;
+
+        const shuffled = [...allFilenames].sort(() => Math.random() - 0.5);
+        selected = shuffled.slice(0, NUM_TEST);
+        pool = shuffled.slice(NUM_TEST);
+
+        document.getElementById('reshuffleBtn').disabled = false;
+        document.getElementById('saveBtn').disabled = false;
+        updateStatus();
+        renderPage();
+    } catch(e) {
+        alert('Failed to load filenames: ' + e.message);
+    } finally {
+        document.getElementById('loadingOverlay').classList.add('hidden');
+    }
+}
+
+// ─── Status ─────────────────────────────────────────────────────────
+function updateStatus() {
+    document.getElementById('statusLabel').textContent =
+        `${selected.length} selected  |  ${pool.length} in pool`;
+}
+
+// ─── Pagination ─────────────────────────────────────────────────────
+function totalPages() { return Math.ceil(selected.length / PAGE_SIZE); }
+
+function changePage(delta) {
+    currentPage = Math.max(1, Math.min(currentPage + delta, totalPages()));
+    renderPage();
+}
+
+function updatePageNav() {
+    const tp = totalPages();
+    const nav = document.getElementById('pageNav');
+    if (tp <= 1) { nav.style.display = 'none'; return; }
+    nav.style.display = 'flex';
+    document.getElementById('pageInfo').textContent = `Page ${currentPage} / ${tp}`;
+    document.getElementById('prevBtn').disabled = currentPage <= 1;
+    document.getElementById('nextBtn').disabled = currentPage >= tp;
+}
+
+// ─── Render page of cards ───────────────────────────────────────────
+function renderPage() {
+    renderQueueAbort = true;   // cancel any in-flight thumbnail renders
+    const grid = document.getElementById('scanGrid');
+    grid.innerHTML = '';
+
+    const start = (currentPage - 1) * PAGE_SIZE;
+    const end = Math.min(start + PAGE_SIZE, selected.length);
+
+    const thumbTargets = [];   // [{imgEl, filename}]
+
+    for (let i = start; i < end; i++) {
+        const fname = selected[i];
+        const globalIdx = i;
+
+        const col = document.createElement('div');
+        col.className = 'col-6 col-md-4 col-lg-3 col-xl-2';
+
+        const cached = thumbCache[fname];
+        const thumbHTML = cached
+            ? `<img src="${cached}" alt="scan">`
+            : `<i class="bi bi-hourglass-split thumb-loading"></i>`;
+
+        col.innerHTML = `
+            <div class="scan-card" id="card_${i}">
+                <button class="scan-badge-swap" data-idx="${globalIdx}">
+                    <i class="bi bi-arrow-repeat"></i> Swap
+                </button>
+                <div class="scan-thumb" id="thumb_${i}">${thumbHTML}</div>
+                <span class="click-hint"><i class="bi bi-badge-3d"></i> Click to view 3D</span>
+                <div class="scan-info">
+                    <div class="scan-num">#${i + 1}</div>
+                    <div class="scan-name" title="${fname}">${fname}</div>
+                </div>
+            </div>
+        `;
+        grid.appendChild(col);
+
+        // Swap button
+        col.querySelector('.scan-badge-swap').addEventListener('click', (e) => {
+            e.stopPropagation();
+            swapScan(globalIdx);
+        });
+
+        // Click card → open 3D modal
+        col.querySelector('.scan-card').addEventListener('click', () => {
+            openModal(fname);
+        });
+
+        if (!cached) {
+            const imgContainer = col.querySelector(`#thumb_${i}`);
+            thumbTargets.push({ el: imgContainer, filename: fname, idx: i });
+        }
+    }
+
+    updatePageNav();
+
+    // Sequentially render thumbnails (single WebGL context)
+    if (thumbTargets.length > 0) {
+        renderThumbQueue(thumbTargets);
+    }
+}
+
+async function renderThumbQueue(targets) {
+    renderQueueAbort = false;
+    for (const t of targets) {
+        if (renderQueueAbort) return;  // page changed, stop
+        try {
+            const dataURL = await renderThumbnail(t.filename);
+            // Make sure element is still in DOM (page might have changed)
+            const el = document.getElementById(`thumb_${t.idx}`);
+            if (el) el.innerHTML = `<img src="${dataURL}" alt="scan">`;
+        } catch(e) {
+            console.warn('Thumb render failed:', t.filename, e);
+            const el = document.getElementById(`thumb_${t.idx}`);
+            if (el) el.innerHTML = `<i class="bi bi-exclamation-triangle thumb-loading"></i>`;
+        }
+    }
+}
+
+// ─── 3D Modal Viewer ────────────────────────────────────────────────
+let modalScene, modalCamera, modalRenderer, modalControls, modalAnimId;
+let modalInitialized = false;
+
+function initModalViewer() {
+    const canvas = document.getElementById('modalCanvas');
+    const panel = document.getElementById('modalViewerPanel');
+    const w = panel.clientWidth, h = panel.clientHeight;
+
+    modalScene = new THREE.Scene();
+    modalScene.background = new THREE.Color(0x1a1a2e);
+    modalScene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    const d1 = new THREE.DirectionalLight(0xffffff, 0.8);
+    d1.position.set(1, 1, 1); modalScene.add(d1);
+    const d2 = new THREE.DirectionalLight(0xffffff, 0.4);
+    d2.position.set(-1, -0.5, -1); modalScene.add(d2);
+
+    modalCamera = new THREE.PerspectiveCamera(50, w / h, 0.1, 2000);
+    modalRenderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+    modalRenderer.setSize(w, h);
+    modalRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    modalControls = new OrbitControls(modalCamera, canvas);
+    modalControls.enableDamping = true;
+    modalControls.dampingFactor = 0.1;
+    modalControls.autoRotate = true;
+    modalControls.autoRotateSpeed = 2.0;
+
+    modalInitialized = true;
+}
+
+function startModalAnimation() {
+    function animate() {
+        modalAnimId = requestAnimationFrame(animate);
+        modalControls.update();
+        modalRenderer.render(modalScene, modalCamera);
+    }
+    animate();
+}
+
+function stopModalAnimation() {
+    if (modalAnimId) { cancelAnimationFrame(modalAnimId); modalAnimId = null; }
+}
+
+function clearModalScene() {
+    if (!modalScene) return;
+    const toRemove = [];
+    modalScene.traverse(c => { if (c.isMesh) toRemove.push(c); });
+    toRemove.forEach(m => {
+        m.geometry.dispose();
+        m.material.dispose();
+        modalScene.remove(m);
+    });
+}
+
+async function openModal(filename) {
+    document.getElementById('modalFileName').textContent = filename;
+
+    const modalEl = document.getElementById('viewerModal');
+    const bsModal = bootstrap.Modal.getOrCreateInstance(modalEl);
+    bsModal.show();
+
+    // Wait for modal to fully render so panel has dimensions
+    await new Promise(r => modalEl.addEventListener('shown.bs.modal', r, { once: true }));
+
+    if (!modalInitialized) initModalViewer();
+
+    // Resize to current panel size
+    const panel = document.getElementById('modalViewerPanel');
+    const w = panel.clientWidth, h = panel.clientHeight;
+    modalCamera.aspect = w / h;
+    modalCamera.updateProjectionMatrix();
+    modalRenderer.setSize(w, h);
+
+    clearModalScene();
+    startModalAnimation();
+
+    try {
+        const geo = await loadSTLAsync(stlUrl(filename));
+        geo.computeVertexNormals();
+        geo.center();
+        geo.rotateX(-Math.PI / 2);
+
+        const mat = new THREE.MeshPhongMaterial({
+            color: 0xc8ddf0, specular: 0x444444, shininess: 60
+        });
+        const mesh = new THREE.Mesh(geo, mat);
+        modalScene.add(mesh);
+
+        const box = new THREE.Box3().setFromObject(mesh);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+        modalCamera.position.set(center.x, center.y + maxDim * 0.3, center.z + maxDim * 1.4);
+        modalControls.target.copy(center);
+        modalControls.update();
+    } catch(e) {
+        console.error('Modal load failed:', filename, e);
+    }
+}
+
+// Stop animation when modal closes
+document.getElementById('viewerModal').addEventListener('hidden.bs.modal', () => {
+    stopModalAnimation();
+    clearModalScene();
+});
+
+// ─── Swap / Reshuffle / Save ────────────────────────────────────────
+function swapScan(idx) {
+    if (pool.length === 0) { alert('Pool is empty!'); return; }
+    const oldFile = selected[idx];
+    const randIdx = Math.floor(Math.random() * pool.length);
+    const newFile = pool[randIdx];
+    pool[randIdx] = oldFile;
+    selected[idx] = newFile;
+    updateStatus();
+    renderPage();
+}
+
+function reshuffleAll() {
+    if (!confirm('Reshuffle all 60 selections?')) return;
+    const all = [...selected, ...pool].sort(() => Math.random() - 0.5);
+    selected = all.slice(0, NUM_TEST);
+    pool = all.slice(NUM_TEST);
+    currentPage = 1;
+    updateStatus();
+    renderPage();
+}
+
+async function confirmSave() {
+    if (!confirm(`Save ${selected.length} test scans and ${pool.length} base scans?`)) return;
+    const saveBtn = document.getElementById('saveBtn');
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-1"></span>Saving...';
+    try {
+        const resp = await fetch('{{ url_for("validation.api_pick_save") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ test: selected, base: pool })
+        });
+        const data = await resp.json();
+        if (data.ok) {
+            alert(`Saved!\n\nTest scans: ${data.test_count}\nBase scans: ${data.base_count}\n\nProceed to Step 2: Validation Judge`);
+            window.location.href = '{{ url_for("validation.judge_page") }}';
+        } else {
+            alert('Error: ' + (data.error || 'Unknown'));
+        }
+    } catch(e) {
+        alert('Save failed: ' + e.message);
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<i class="bi bi-check-lg me-1"></i>Confirm & Save';
+    }
+}
+
+// Expose for inline onclick handlers
+window.changePage = changePage;
+window.reshuffleAll = reshuffleAll;
+window.confirmSave = confirmSave;
+
+// Boot
+init();
+</script>
+{% endblock %}
