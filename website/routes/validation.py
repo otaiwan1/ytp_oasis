@@ -1,16 +1,19 @@
 """
 validation.py — Temporary validation routes for the OASIS website.
 
-Step 1: /validation/pick   — Pick 60 test scans with 3D preview
-Step 2: /validation/judge  — Top-k validation with Pass/Fail verdicts
+/validation/judge  — Top-k validation with Pass/Fail verdicts
+
+Test/base scans are loaded from pre-existing JSON files:
+  validation/validation_test_scans.json  (60 test cases)
+  validation/validation_base_scans.json  (base cases)
 """
 
 import json
-import random
 import numpy as np
 from pathlib import Path
 from flask import (Blueprint, render_template, request, jsonify,
-                   send_from_directory, current_app, abort)
+                   send_from_directory, current_app, abort, redirect,
+                   url_for)
 
 validation_bp = Blueprint('validation', __name__, url_prefix='/validation')
 
@@ -42,53 +45,17 @@ TOP_K_VALUES = [1, 3, 5, 10]
 
 
 # ─────────────────────────────────────────────────────────────────────
-#  Step 1 — Pick test scans
+#  Legacy redirect — skip Step 1 (pick scans)
 # ─────────────────────────────────────────────────────────────────────
 
 @validation_bp.route('/pick')
 def pick_page():
-    """Render the scan picker page."""
-    return render_template('validation/pick.html')
-
-
-@validation_bp.route('/api/filenames')
-def api_filenames():
-    """Return all DINOv2-eligible filenames."""
-    path = _dinov2_filenames_path()
-    if not path.exists():
-        return jsonify({'error': 'dinov2_filenames.json not found'}), 404
-    with open(path) as f:
-        fnames = json.load(f)
-    return jsonify({'filenames': fnames, 'num_test': NUM_TEST})
-
-
-@validation_bp.route('/api/pick/save', methods=['POST'])
-def api_pick_save():
-    """Save the test/base split."""
-    data = request.get_json()
-    if not data or 'test' not in data or 'base' not in data:
-        return jsonify({'error': 'Missing test/base arrays'}), 400
-
-    test_scans = sorted(data['test'])
-    base_scans = sorted(data['base'])
-
-    vdir = _validation_dir()
-    vdir.mkdir(parents=True, exist_ok=True)
-
-    with open(vdir / 'validation_test_scans.json', 'w') as f:
-        json.dump(test_scans, f, indent=2)
-    with open(vdir / 'validation_base_scans.json', 'w') as f:
-        json.dump(base_scans, f, indent=2)
-
-    return jsonify({
-        'ok': True,
-        'test_count': len(test_scans),
-        'base_count': len(base_scans)
-    })
+    """Redirect to judge page (Step 1 skipped — using pre-saved JSON files)."""
+    return redirect(url_for('validation.judge_page'))
 
 
 # ─────────────────────────────────────────────────────────────────────
-#  Step 2 — Top-k validation (judge)
+#  Top-k validation (judge)
 # ─────────────────────────────────────────────────────────────────────
 
 @validation_bp.route('/judge')
