@@ -47,8 +47,9 @@ def main():
     parser.add_argument(
         "--output-dir",
         type=str,
-        default=str(_PROJECT_ROOT / "train"),
-        help="Output directory for embeddings and filenames.",
+        default=None,
+        help="Output directory for embeddings and filenames "
+             "(default: <project>/train/<model>/).",
     )
     parser.add_argument(
         "--whiten",
@@ -58,10 +59,13 @@ def main():
     args = parser.parse_args()
 
     stl_dir = Path(args.stl_dir)
-    output_dir = Path(args.output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
-
     model_name = args.model
+
+    if args.output_dir is not None:
+        output_dir = Path(args.output_dir)
+    else:
+        output_dir = _PROJECT_ROOT / "train" / model_name
+    output_dir.mkdir(parents=True, exist_ok=True)
 
     # ─── Collect file list ───────────────────────────────────────────
     # All models use first_scans.json (one scan per patient)

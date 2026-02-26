@@ -13,4 +13,5 @@ uv.lock
 .venv
 __pycache__/
 mae_dataset.npy
-train/best_point_mae_ddp.pth
+train/mae/best_point_mae_ddp.pth
+normalization/teeth3ds_mae_dataset.npy

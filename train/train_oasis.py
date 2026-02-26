@@ -40,7 +40,7 @@ config = {
 current_folder = Path(__file__).parent.resolve()
 project_root = current_folder.parent
 DATA_PATH = project_root / "normalization" / "simclr_dataset.npy"
-MODEL_SAVE_PATH = current_folder / "best_dental_simclr_multi_gpu.pth"
+MODEL_SAVE_PATH = current_folder / "simclr" / "best_dental_simclr_multi_gpu.pth"
 
 # ==========================================
 # 1. DATASET

@@ -9,8 +9,8 @@ PROJECT_ROOT = Path(__file__).parent.parent.resolve()
 STL_DIR = PROJECT_ROOT / "collecting-data" / "stlFiles"
 
 # ─── Checkpoint paths ────────────────────────────────────────────────
-SIMCLR_CHECKPOINT = PROJECT_ROOT / "train" / "best_dental_simclr_multi_gpu.pth"
-MAE_CHECKPOINT = PROJECT_ROOT / "train" / "best_point_mae_ddp.pth"
+SIMCLR_CHECKPOINT = PROJECT_ROOT / "train" / "simclr" / "best_dental_simclr_multi_gpu.pth"
+MAE_CHECKPOINT = PROJECT_ROOT / "train" / "mae" / "best_point_mae_ddp.pth"
 
 # ─── Normalization / cache outputs ───────────────────────────────────
 NORMALIZATION_DIR = PROJECT_ROOT / "normalization"

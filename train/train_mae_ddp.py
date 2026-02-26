@@ -43,7 +43,7 @@ config = {
 current_folder = Path(__file__).parent.resolve()
 project_root = current_folder.parent
 DATA_PATH = project_root / "normalization" / "mae_dataset.npy"
-MODEL_SAVE_PATH = current_folder / "best_point_mae_ddp.pth"
+MODEL_SAVE_PATH = current_folder / "mae" / "best_point_mae_ddp.pth"
 
 # ==========================================
 # 2. DDP 初始化與工具

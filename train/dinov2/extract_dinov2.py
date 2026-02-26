@@ -18,7 +18,7 @@ IMG_SIZE = 224
 
 # 路徑
 current_folder = Path(__file__).parent.resolve()
-project_root = current_folder.parent
+project_root = current_folder.parent.parent
 rendered_dir = project_root / "collecting-data" / "rendered_images"
 json_path = project_root / "collecting-data" / "first_scans.json"
 output_emb_path = current_folder / "dinov2_embeddings.npy"

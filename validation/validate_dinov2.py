@@ -30,13 +30,13 @@ SCRIPT_DIR = Path(__file__).parent.resolve()
 PROJECT_ROOT = SCRIPT_DIR.parent
 
 STL_DIR = PROJECT_ROOT / "collecting-data" / "stlFiles"
-EMB_PATH = PROJECT_ROOT / "train" / "dinov2_embeddings.npy"
-IDS_PATH = PROJECT_ROOT / "train" / "dinov2_filenames.json"
+EMB_PATH = PROJECT_ROOT / "train" / "dinov2" / "dinov2_embeddings.npy"
+IDS_PATH = PROJECT_ROOT / "train" / "dinov2" / "dinov2_filenames.json"
 
 TEST_SCANS = SCRIPT_DIR / "validation_test_scans.json"
 BASE_SCANS = SCRIPT_DIR / "validation_base_scans.json"
-PROGRESS_FILE = SCRIPT_DIR / "validation_progress.json"
-REPORT_FILE = SCRIPT_DIR / "validation_report.json"
+PROGRESS_FILE = SCRIPT_DIR / "progress" / "validation_progress_dinov2.json"
+REPORT_FILE = SCRIPT_DIR / "reports" / "validation_report_dinov2.json"
 
 # ─── Visual settings ────────────────────────────────────────────────
 OFFSET_STEP = 30.0

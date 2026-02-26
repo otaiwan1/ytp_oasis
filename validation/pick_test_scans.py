@@ -22,7 +22,7 @@ from pathlib import Path
 SCRIPT_DIR = Path(__file__).parent.resolve()
 PROJECT_ROOT = SCRIPT_DIR.parent
 
-DINOV2_FILENAMES = PROJECT_ROOT / "train" / "dinov2_filenames.json"
+DINOV2_FILENAMES = PROJECT_ROOT / "train" / "dinov2" / "dinov2_filenames.json"
 OUTPUT_TEST = SCRIPT_DIR / "validation_test_scans.json"
 OUTPUT_BASE = SCRIPT_DIR / "validation_base_scans.json"
 

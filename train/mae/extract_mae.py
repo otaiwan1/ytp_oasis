@@ -32,11 +32,12 @@ os.environ["OMP_NUM_THREADS"] = "1"
 os.environ["MKL_NUM_THREADS"] = "1"
 
 current_folder = Path(__file__).parent.resolve()
-project_root = current_folder.parent
+project_root = current_folder.parent.parent
+train_dir = project_root / "train"
 if str(project_root) not in sys.path:
     sys.path.insert(0, str(project_root))
-if str(current_folder) not in sys.path:
-    sys.path.insert(0, str(current_folder))
+if str(train_dir) not in sys.path:
+    sys.path.insert(0, str(train_dir))
 
 from embed.config import STL_DIR, FIRST_SCANS_JSON, MAE_INITIAL_SAMPLE, NUM_POINTS
 

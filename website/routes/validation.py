@@ -10,8 +10,8 @@ Test/base scans are loaded from pre-existing JSON files:
   validation/validation_base_scans.json  (base cases)
 
 Per-model files:
-  validation/validation_progress_{model}.json
-  validation/validation_report_{model}.json
+  validation/progress/validation_progress_{model}.json
+  validation/reports/validation_report_{model}.json
 """
 
 import json
@@ -46,19 +46,19 @@ def _validation_dir():
 
 
 def _embeddings_path(model_name):
-    return _project_root() / 'train' / f'{model_name}_embeddings.npy'
+    return _project_root() / 'train' / model_name / f'{model_name}_embeddings.npy'
 
 
 def _filenames_path(model_name):
-    return _project_root() / 'train' / f'{model_name}_filenames.json'
+    return _project_root() / 'train' / model_name / f'{model_name}_filenames.json'
 
 
 def _progress_path(model_name):
-    return _validation_dir() / f'validation_progress_{model_name}.json'
+    return _validation_dir() / 'progress' / f'validation_progress_{model_name}.json'
 
 
 def _report_path(model_name):
-    return _validation_dir() / f'validation_report_{model_name}.json'
+    return _validation_dir() / 'reports' / f'validation_report_{model_name}.json'
 
 
 NUM_TEST = 60

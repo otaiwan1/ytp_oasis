@@ -835,7 +835,7 @@ async function generateReport() {
             </tr>`;
         }
         html += '</tbody></table>';
-        html += `<p class="text-muted mt-2" style="font-size:0.85rem"><i class="bi bi-check-circle me-1"></i>Report saved to <code>validation/validation_report_${MODEL_NAME}.json</code></p>`;
+        html += `<p class="text-muted mt-2" style="font-size:0.85rem"><i class="bi bi-check-circle me-1"></i>Report saved to <code>validation/reports/validation_report_${MODEL_NAME}.json</code></p>`;
 
         document.getElementById('reportBody').innerHTML = html;
         new bootstrap.Modal(document.getElementById('reportModal')).show();

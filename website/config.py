@@ -26,8 +26,8 @@ class Config:
     EMBEDDING_DIM = 1024  # dinov2_vitl14 output dimension
 
     # Pre-computed DINOv2 embeddings (database)
-    EMBEDDINGS_CACHE = str(PROJECT_ROOT / 'train' / 'dinov2_embeddings.npy')
-    FILENAMES_CACHE = str(PROJECT_ROOT / 'train' / 'dinov2_filenames.json')
+    EMBEDDINGS_CACHE = str(PROJECT_ROOT / 'train' / 'dinov2' / 'dinov2_embeddings.npy')
+    FILENAMES_CACHE = str(PROJECT_ROOT / 'train' / 'dinov2' / 'dinov2_filenames.json')
 
     # Rendering settings (must match render_multiview_final.py)
     RENDER_IMG_SIZE = 512
