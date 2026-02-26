@@ -242,15 +242,19 @@
     <div class="judge-loading" id="judgeLoading">
         <div class="spinner-oasis"></div>
         <h5 style="font-weight:700; color:var(--oasis-gray-700);">Loading validation data...</h5>
-        <p style="color:var(--oasis-gray-500);font-size:0.9rem">Computing similarity rankings for 60 test scans</p>
+        <p style="color:var(--oasis-gray-500);font-size:0.9rem">Computing similarity rankings for {{ model_label }} (60 test scans)</p>
     </div>
 
     <!-- Main UI (hidden until loaded) -->
     <div id="judgeUI" style="display:none">
         <div class="judge-header">
+            <a href="{{ url_for('validation.model_select_page') }}" class="btn btn-oasis-outline btn-sm" style="margin-right:0.25rem;">
+                <i class="bi bi-arrow-left me-1"></i>Models
+            </a>
             <div>
                 <h4 style="margin:0; font-weight:800;">
-                    <i class="bi bi-clipboard2-pulse me-2" style="color:var(--oasis-green-500)"></i>Validation Judge
+                    <i class="bi bi-clipboard2-pulse me-2" style="color:var(--oasis-green-500)"></i>{{ model_label }}
+                    <span style="font-size:0.75rem; font-weight:600; color:var(--oasis-gray-500); vertical-align:middle; margin-left:0.5rem;">Validation</span>
                 </h4>
             </div>
             <span class="counter" id="roundLabel">—</span>
@@ -334,7 +338,7 @@
             <div class="modal-header border-0 pb-0">
                 <h5 class="modal-title" style="font-weight:800;">
                     <i class="bi bi-file-earmark-bar-graph me-2" style="color:var(--oasis-green-500)"></i>
-                    Validation Report
+                    {{ model_label }} — Validation Report
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -363,6 +367,8 @@ import { STLLoader } from 'three/addons/loaders/STLLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 // ─── State ──────────────────────────────────────────────────────────
+const MODEL_NAME = '{{ model_name }}';
+const MODEL_LABEL = '{{ model_label }}';
 const TOP_K_VALUES = [];
 let testScans = [];
 let rankings = {};
@@ -437,7 +443,7 @@ async function renderThumbnail(filename) {
 // ─── Init ───────────────────────────────────────────────────────────
 async function init() {
     try {
-        const resp = await fetch('{{ url_for("validation.api_judge_state") }}');
+        const resp = await fetch('{{ url_for("validation.api_judge_state") }}?model=' + encodeURIComponent(MODEL_NAME));
         const data = await resp.json();
         if (data.error) { alert(data.error); return; }
 
@@ -703,6 +709,7 @@ async function submitVerdict(verdict) {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+                model: MODEL_NAME,
                 top_k_key: kKey,
                 query_file: queryFile,
                 verdict: verdict,
@@ -804,7 +811,11 @@ function renderSidebar() {
 // ─── Report ─────────────────────────────────────────────────────────
 async function generateReport() {
     try {
-        const resp = await fetch('{{ url_for("validation.api_generate_report") }}', { method: 'POST' });
+        const resp = await fetch('{{ url_for("validation.api_generate_report") }}', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ model: MODEL_NAME })
+        });
         const data = await resp.json();
         if (!data.ok) { alert(data.error || 'Failed'); return; }
 
@@ -824,7 +835,7 @@ async function generateReport() {
             </tr>`;
         }
         html += '</tbody></table>';
-        html += '<p class="text-muted mt-2" style="font-size:0.85rem"><i class="bi bi-check-circle me-1"></i>Report saved to <code>validation/validation_report.json</code></p>';
+        html += `<p class="text-muted mt-2" style="font-size:0.85rem"><i class="bi bi-check-circle me-1"></i>Report saved to <code>validation/validation_report_${MODEL_NAME}.json</code></p>`;
 
         document.getElementById('reportBody').innerHTML = html;
         new bootstrap.Modal(document.getElementById('reportModal')).show();
