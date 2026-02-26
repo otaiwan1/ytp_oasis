@@ -21,8 +21,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 current_folder = Path(__file__).parent.resolve()
 project_root = current_folder.parent
 SOURCE_FOLDER = project_root / "collecting-data" / "stlFiles"
-OUTPUT_FILENAME = current_folder / "teeth3ds_mae_dataset.npy"
-INDEX_FILENAME = current_folder / "teeth3ds_mae_filenames.json"
+OUTPUT_FILENAME = current_folder / "mae_dataset.npy"
+INDEX_FILENAME = current_folder / "mae_filenames.json"
 TEMP_DIR = current_folder / "temp_npy"
 
 # ==========================================

@@ -42,7 +42,7 @@ config = {
 # 路徑設定
 current_folder = Path(__file__).parent.resolve()
 project_root = current_folder.parent
-DATA_PATH = project_root / "normalization" / "teeth3ds_mae_dataset.npy"
+DATA_PATH = project_root / "normalization" / "mae_dataset.npy"
 MODEL_SAVE_PATH = current_folder / "best_point_mae_ddp.pth"
 
 # ==========================================

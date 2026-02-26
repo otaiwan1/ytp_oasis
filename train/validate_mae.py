@@ -25,8 +25,8 @@ project_root = current_folder.parent
 MODEL_PATH = current_folder / "best_point_mae_ddp.pth"
 # 預處理好的數據 (必須是 6-channel 的那份)
 NORMALIZATION_DIR = project_root / "normalization"
-DATASET_PATH = NORMALIZATION_DIR / "teeth3ds_mae_dataset.npy"     
-FILENAMES_PATH = NORMALIZATION_DIR / "teeth3ds_mae_filenames.json"
+DATASET_PATH = NORMALIZATION_DIR / "mae_dataset.npy"
+FILENAMES_PATH = NORMALIZATION_DIR / "mae_filenames.json"
 # 原始 STL 資料夾 (用來讀取並顯示 3D 模型)
 STL_ROOT_DIR = project_root / "collecting-data" / "stlFiles"      
 

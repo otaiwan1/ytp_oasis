@@ -1,140 +1,24 @@
 import os
+import sys
 import json
-import copy
-import tempfile
 import numpy as np
-import torch
-import torch.nn.functional as F
-import torchvision.transforms as T
-from PIL import Image
 from flask import Blueprint, render_template, request, jsonify, current_app
 from flask_login import login_required, current_user
 from werkzeug.utils import secure_filename
 from pathlib import Path
+
+# Ensure the project root is importable so we can use the embed module
+_project_root = Path(__file__).parent.parent.parent.resolve()
+if str(_project_root) not in sys.path:
+    sys.path.insert(0, str(_project_root))
+
+from embed import embed_stl  # noqa: E402
 
 search_bp = Blueprint('search', __name__, url_prefix='/search')
 
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in current_app.config['ALLOWED_EXTENSIONS']
-
-
-# ─── DINOv2 model loading ───────────────────────────────────────────
-
-def load_dinov2_model(model_name, device):
-    """Load DINOv2 model from PyTorch Hub."""
-    model = torch.hub.load('facebookresearch/dinov2', model_name)
-    model.to(device)
-    model.eval()
-    return model
-
-
-def get_dinov2_transforms(img_size=224):
-    """Standard DINOv2 preprocessing (ImageNet normalization)."""
-    return T.Compose([
-        T.Resize((img_size, img_size)),
-        T.ToTensor(),
-        T.Normalize(mean=[0.485, 0.456, 0.406],
-                    std=[0.229, 0.224, 0.225])
-    ])
-
-
-# ─── STL → multi-view rendering ─────────────────────────────────────
-
-def _get_combined_rotation_matrix(base_euler_deg, roll_deg):
-    """Compute combined rotation matrix from Euler angles + roll."""
-    rx, ry, rz = np.deg2rad(base_euler_deg)
-    import open3d as o3d
-    R_base = o3d.geometry.get_rotation_matrix_from_xyz((rx, ry, rz))
-    roll_rad = np.deg2rad(roll_deg)
-    R_roll = np.array([
-        [np.cos(roll_rad), -np.sin(roll_rad), 0],
-        [np.sin(roll_rad),  np.cos(roll_rad), 0],
-        [0,                 0,                1]
-    ])
-    return np.matmul(R_roll, R_base)
-
-
-def _render_view(renderer, mesh, view_cfg, fov_deg):
-    """Render a single view of a mesh using offscreen renderer."""
-    import open3d as o3d
-    import open3d.visualization.rendering as rendering
-
-    mesh_copy = copy.deepcopy(mesh)
-    R = _get_combined_rotation_matrix(view_cfg["base"], view_cfg["roll"])
-    mesh_copy.rotate(R, center=(0, 0, 0))
-
-    renderer.scene.clear_geometry()
-    mat = rendering.MaterialRecord()
-    mat.shader = "defaultUnlit"
-    renderer.scene.add_geometry("tooth", mesh_copy, mat)
-
-    bounds = mesh_copy.get_axis_aligned_bounding_box()
-    center = bounds.get_center()
-    extent = bounds.get_max_bound() - bounds.get_min_bound()
-    max_len = np.max(extent)
-    dist = (max_len / 2.0) / np.tan(np.deg2rad(fov_deg / 2.0)) * 1.2
-    eye = center + np.array([0, 0, dist])
-    up = np.array([0, 1, 0])
-
-    renderer.setup_camera(fov_deg,
-                          center.astype(np.float32),
-                          eye.astype(np.float32),
-                          up.astype(np.float32))
-    img = renderer.render_to_image()
-    return np.asarray(img)
-
-
-def render_stl_multiview(stl_path, views_config, views_order, render_size=512, fov_deg=60.0):
-    """Render an STL file from multiple viewpoints.
-
-    Returns a list of PIL Images (RGB) in the order given by *views_order*.
-    """
-    import open3d as o3d
-    import open3d.visualization.rendering as rendering
-
-    mesh = o3d.io.read_triangle_mesh(str(stl_path))
-    if len(mesh.vertices) == 0:
-        raise ValueError(f"Empty mesh: {stl_path}")
-
-    mesh.compute_vertex_normals()
-    mesh.translate(-mesh.get_center())
-    normals = np.asarray(mesh.vertex_normals)
-    colors = (normals + 1) / 2.0
-    mesh.vertex_colors = o3d.utility.Vector3dVector(colors)
-
-    renderer = rendering.OffscreenRenderer(render_size, render_size)
-    renderer.scene.set_background([0.0, 0.0, 0.0, 1.0])
-
-    images = []
-    for view_name in views_order:
-        cfg = views_config[view_name]
-        img_np = _render_view(renderer, mesh, cfg, fov_deg)
-        images.append(Image.fromarray(img_np).convert('RGB'))
-
-    return images
-
-
-# ─── Embedding computation ───────────────────────────────────────────
-
-def get_dinov2_embedding(model, pil_images, transform, device):
-    """Compute a single DINOv2 embedding from a list of view images.
-
-    Mirrors the approach in extract_dinov2.py:
-      1. Transform each view image
-      2. Forward through DINOv2 as a batch
-      3. Mean-pool across views
-      4. L2-normalize
-    """
-    tensors = [transform(img) for img in pil_images]
-    batch = torch.stack(tensors).to(device)
-
-    with torch.no_grad():
-        outputs = model(batch)                       # (N_views, emb_dim)
-        embedding = torch.mean(outputs, dim=0)       # (emb_dim,)
-        embedding = F.normalize(embedding, p=2, dim=0)
-
-    return embedding.cpu().numpy()
 
 
 # ─── Database embeddings ─────────────────────────────────────────────
@@ -185,25 +69,6 @@ def search_similar(query_embedding, db_embeddings, db_filenames, top_k=5):
     return results
 
 
-# ─── Global model cache (singleton) ──────────────────────────────────
-
-_model_cache = {}
-
-
-def get_cached_model():
-    """Get or load the DINOv2 model (singleton)."""
-    if 'model' not in _model_cache:
-        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-        model_name = current_app.config['DINOV2_MODEL_NAME']
-        model = load_dinov2_model(model_name, device)
-        img_size = current_app.config['DINOV2_IMG_SIZE']
-        transform = get_dinov2_transforms(img_size)
-        _model_cache['model'] = model
-        _model_cache['device'] = device
-        _model_cache['transform'] = transform
-    return _model_cache['model'], _model_cache['device'], _model_cache['transform']
-
-
 # ─── Flask routes ────────────────────────────────────────────────────
 
 @search_bp.route('/')
@@ -233,20 +98,9 @@ def query():
                                    f'query_{current_user.id}_{filename}')
         file.save(upload_path)
 
-        # Load DINOv2 model
-        model, device, transform = get_cached_model()
-
-        # Render uploaded STL → multi-view images
-        views_config = current_app.config['RENDER_VIEWS_CONFIG']
-        views_order = current_app.config['DINOV2_VIEWS']
-        render_size = current_app.config['RENDER_IMG_SIZE']
-        fov_deg = current_app.config['RENDER_FOV_DEG']
-
-        pil_images = render_stl_multiview(upload_path, views_config,
-                                          views_order, render_size, fov_deg)
-
-        # Compute query embedding
-        query_embedding = get_dinov2_embedding(model, pil_images, transform, device)
+        # Compute query embedding via embed module
+        result = embed_stl(upload_path, model="dinov2")
+        query_embedding = result["embedding"]
 
         # Load pre-computed database embeddings
         db_embeddings, db_filenames = load_embeddings_db()

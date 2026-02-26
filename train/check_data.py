@@ -4,7 +4,7 @@ from pathlib import Path
 # 設定路徑
 current_folder = Path(__file__).parent.resolve()
 project_root = current_folder.parent
-DATA_PATH = project_root / "normalization" / "teeth3ds_mae_dataset.npy"
+DATA_PATH = project_root / "normalization" / "mae_dataset.npy"
 
 def check():
     if not DATA_PATH.exists():

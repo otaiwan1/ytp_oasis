@@ -3,7 +3,7 @@ collecting-data/scanfiles
 collecting-data/stlFiles
 collecting-data/rendered_images
 normalization/data_part_1
-normalization/teeth3ds_dataset.npy
+normalization/simclr_dataset.npy
 venv/
 .env
 .vscode
@@ -12,5 +12,5 @@ pyproject.toml
 uv.lock
 .venv
 __pycache__/
-teeth3ds_mae_dataset.npy
+mae_dataset.npy
 train/best_point_mae_ddp.pth

@@ -6,11 +6,12 @@ import torch
 import torch.multiprocessing as mp
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from tqdm import tqdm
+from pathlib import Path
 
 # --- CONFIGURATION ---
-SOURCE_FOLDER = "../collecting-data/stlFiles" 
-OUTPUT_FILENAME = "teeth3ds_dataset.npy"
-INDEX_FILENAME = "teeth3ds_filenames.json"
+SOURCE_FOLDER = str(Path(__file__).parent.parent.resolve() / "collecting-data" / "stlFiles")
+OUTPUT_FILENAME = "simclr_dataset.npy"
+INDEX_FILENAME = "simclr_filenames.json"
 NUM_POINTS = 4096
 # Increase this if you want safer sample before FPS
 INITIAL_SAMPLE = 100000 
