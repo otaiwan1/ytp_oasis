@@ -28,6 +28,7 @@ SUPPORTED_MODELS = {
     'dinov2': {'label': 'DINOv2',    'dim': 1024, 'desc': 'Vision Transformer (multi-view images)'},
     'simclr': {'label': 'SimCLR',    'dim': 512,  'desc': 'Contrastive learning (3D point cloud)'},
     'mae':    {'label': 'Point-MAE', 'dim': 384,  'desc': 'Masked autoencoder (3D point cloud + normals)'},
+    'dinov3': {'label': 'DINOv3',    'dim': 1024, 'desc': 'DINOv3 ViT-L/16 (multi-view, Gram Anchoring)'},
 }
 
 # ─── Paths (relative to project root) ────────────────────────────────

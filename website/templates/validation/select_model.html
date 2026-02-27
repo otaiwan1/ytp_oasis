@@ -72,6 +72,10 @@
         background: linear-gradient(135deg, #fb923c, #f97316);
         color: white;
     }
+    .model-icon.dinov3 {
+        background: linear-gradient(135deg, #a78bfa, #7c3aed);
+        color: white;
+    }
 
     .model-card h5 {
         font-weight: 800;
@@ -192,6 +196,8 @@
                     <i class="bi bi-box"></i>
                 {% elif m.name == 'mae' %}
                     <i class="bi bi-grid-3x3"></i>
+                {% elif m.name == 'dinov3' %}
+                    <i class="bi bi-stars"></i>
                 {% endif %}
             </div>
 

@@ -3,11 +3,11 @@
 embed/batch_embed.py — CLI script to batch-embed all STL files.
 
 Usage:
-    # Single GPU (default: auto-detect)
+    # Single GPU, auto-detect
     python -m embed.batch_embed --model dinov3
 
-    # Multi-GPU parallel (e.g. GPU 1, 2, 3)
-    python -m embed.batch_embed --model dinov3 --gpus 1,2,3
+    # Specify GPU + parallel workers (recommended)
+    python -m embed.batch_embed --model dinov3 --gpu 1 --workers 4
 
 Outputs:
     {output_dir}/{model}_embeddings.npy   — (N, D) float32 array
@@ -21,9 +21,6 @@ import sys
 import numpy as np
 from pathlib import Path
 
-# Suppress Open3D INFO before any imports
-os.environ["OPEN3D_VERBOSITY_LEVEL"] = "Warning"
-
 # Ensure project root is importable
 _PROJECT_ROOT = Path(__file__).parent.parent.resolve()
 if str(_PROJECT_ROOT) not in sys.path:
@@ -32,49 +29,34 @@ if str(_PROJECT_ROOT) not in sys.path:
 from embed.config import STL_DIR, FIRST_SCANS_JSON
 
 
-# ─── Standalone worker function for multi-GPU (called via spawn) ─────
+# ─── Worker for parallel rendering + inference ──────────────────────
 
-def _gpu_worker(gpu_id, file_chunk, stl_dir, model_name, result_dir):
+def _worker(args):
+    """Process a single STL file. Runs in a spawned subprocess."""
+    stl_path, model_name, gpu_id = args
+    import torch
+    from embed import embed_stl
+
+    device = torch.device(f"cuda:{gpu_id}")
+    try:
+        result = embed_stl(stl_path, model=model_name, device=device)
+        return (result["filename"], result["embedding"], None)
+    except Exception as e:
+        return (Path(stl_path).name, None, str(e))
+
+
+def _worker_init(gpu_id):
     """
-    Process a chunk of files on one GPU.
-    Writes results to a temp file to avoid pickling large arrays.
+    Set EGL_DEVICE_ID BEFORE importing open3d so that
+    Filament/EGL renders on the specified GPU.
     """
+    os.environ["EGL_DEVICE_ID"] = str(gpu_id)
     os.environ["OPEN3D_VERBOSITY_LEVEL"] = "Warning"
     try:
         import open3d as o3d
         o3d.utility.set_verbosity_level(o3d.utility.VerbosityLevel.Warning)
     except Exception:
         pass
-
-    import torch
-    from embed import embed_stl
-
-    device = torch.device(f"cuda:{gpu_id}")
-    embeddings = []
-    filenames = []
-    failed = []
-
-    for fname in file_chunk:
-        stl_path = str(Path(stl_dir) / fname)
-        try:
-            result = embed_stl(stl_path, model=model_name, device=device)
-            embeddings.append(result["embedding"])
-            filenames.append(result["filename"])
-        except Exception as e:
-            failed.append((fname, str(e)))
-
-    # Save to temp files
-    out_prefix = Path(result_dir) / f"gpu_{gpu_id}"
-    if embeddings:
-        np.save(str(out_prefix) + "_emb.npy",
-                np.stack(embeddings).astype(np.float32))
-        with open(str(out_prefix) + "_fnames.json", "w") as f:
-            json.dump(filenames, f)
-    with open(str(out_prefix) + "_failed.json", "w") as f:
-        json.dump(failed, f)
-
-    print(f"  GPU {gpu_id}: {len(embeddings)} done, {len(failed)} failed",
-          flush=True)
 
 
 def main():
@@ -97,10 +79,23 @@ def main():
         help="Apply whitening post-processing (useful for MAE).",
     )
     parser.add_argument(
-        "--gpus", type=str, default=None,
-        help="Comma-separated GPU IDs (e.g. '1,2,3').",
+        "--gpu", type=int, default=None,
+        help="GPU ID for both CUDA inference and EGL rendering "
+             "(default: auto-detect).",
     )
+    parser.add_argument(
+        "--workers", type=int, default=1,
+        help="Number of parallel worker processes (default: 1). "
+             "Each worker renders + infers independently.",
+    )
+    # Keep --gpus for backward compat but use first one only
+    parser.add_argument("--gpus", type=str, default=None, help=argparse.SUPPRESS)
     args = parser.parse_args()
+
+    # Handle --gpus backward compat
+    gpu_id = args.gpu
+    if gpu_id is None and args.gpus:
+        gpu_id = int(args.gpus.split(",")[0].strip())
 
     stl_dir = Path(args.stl_dir)
     model_name = args.model
@@ -125,118 +120,77 @@ def main():
         print("No STL files found. Exiting.")
         return
 
-    # ─── Parse GPU IDs ───────────────────────────────────────────────
-    gpu_ids = None
-    if args.gpus:
-        gpu_ids = [int(g.strip()) for g in args.gpus.split(",")]
+    stl_paths = [str(stl_dir / fn) for fn in file_list]
+    effective_gpu = gpu_id if gpu_id is not None else 0
 
-    # ─── Suppress Open3D in main process ─────────────────────────────
-    try:
-        import open3d as o3d
-        o3d.utility.set_verbosity_level(o3d.utility.VerbosityLevel.Warning)
-    except Exception:
-        pass
+    # ─── Single worker (sequential) ──────────────────────────────────
+    if args.workers <= 1:
+        # Set EGL GPU in main process
+        os.environ["EGL_DEVICE_ID"] = str(effective_gpu)
+        os.environ["OPEN3D_VERBOSITY_LEVEL"] = "Warning"
+        try:
+            import open3d as o3d
+            o3d.utility.set_verbosity_level(o3d.utility.VerbosityLevel.Warning)
+        except Exception:
+            pass
 
-    # ─── Single GPU mode ─────────────────────────────────────────────
-    if gpu_ids is None or len(gpu_ids) <= 1:
         from tqdm import tqdm
         from embed import embed_stl
         import torch
 
-        device = None
-        if gpu_ids and len(gpu_ids) == 1:
-            device = torch.device(f"cuda:{gpu_ids[0]}")
+        device = torch.device(f"cuda:{effective_gpu}")
+        print(f"GPU {effective_gpu} (CUDA + EGL rendering)")
 
         embeddings = []
         filenames = []
         failed = 0
 
-        for fname in tqdm(file_list, desc=f"Embedding ({model_name})"):
-            stl_path = stl_dir / fname
+        for stl_path in tqdm(stl_paths, desc=f"Embedding ({model_name})"):
             try:
-                result = embed_stl(str(stl_path), model=model_name, device=device)
+                result = embed_stl(stl_path, model=model_name, device=device)
                 embeddings.append(result["embedding"])
                 filenames.append(result["filename"])
             except Exception as e:
-                tqdm.write(f"  Failed: {fname} — {e}")
+                tqdm.write(f"  Failed: {Path(stl_path).name} — {e}")
                 failed += 1
 
-    # ─── Multi-GPU mode ──────────────────────────────────────────────
+    # ─── Multi-worker (parallel rendering + inference) ───────────────
     else:
         import torch.multiprocessing as mp
-        import tempfile
+        from tqdm import tqdm
 
-        num_gpus = len(gpu_ids)
-        print(f"Multi-GPU mode: {num_gpus} GPUs {gpu_ids}")
+        num_workers = args.workers
+        print(f"GPU {effective_gpu} (CUDA + EGL) × {num_workers} workers")
 
-        # Split files round-robin
-        chunks = [[] for _ in range(num_gpus)]
-        for i, fname in enumerate(file_list):
-            chunks[i % num_gpus].append(fname)
+        mp.set_start_method("spawn", force=True)
 
-        for i, gpu_id in enumerate(gpu_ids):
-            print(f"  GPU {gpu_id}: {len(chunks[i])} files")
+        task_args = [(p, model_name, effective_gpu) for p in stl_paths]
 
-        # Use a temp dir for inter-process communication
-        with tempfile.TemporaryDirectory() as tmpdir:
-            # Launch one process per GPU using spawn
-            mp.set_start_method("spawn", force=True)
-            processes = []
-            for i, gpu_id in enumerate(gpu_ids):
-                if not chunks[i]:
-                    continue
-                p = mp.Process(
-                    target=_gpu_worker,
-                    args=(gpu_id, chunks[i], str(stl_dir), model_name, tmpdir),
-                )
-                p.start()
-                processes.append((p, gpu_id))
-
-            # Wait for all to finish
-            for p, gpu_id in processes:
-                p.join()
-                if p.exitcode != 0:
-                    print(f"  ⚠ GPU {gpu_id} worker exited with code {p.exitcode}")
-
-            # Collect results from temp files
+        ctx = mp.get_context("spawn")
+        with ctx.Pool(
+            processes=num_workers,
+            initializer=_worker_init,
+            initargs=(effective_gpu,),
+        ) as pool:
             embeddings = []
             filenames = []
             failed = 0
 
-            for _, gpu_id in processes:
-                prefix = Path(tmpdir) / f"gpu_{gpu_id}"
-                emb_f = str(prefix) + "_emb.npy"
-                fn_f = str(prefix) + "_fnames.json"
-                fail_f = str(prefix) + "_failed.json"
-
-                if os.path.exists(emb_f):
-                    emb = np.load(emb_f)
-                    with open(fn_f) as f:
-                        fns = json.load(f)
+            results_iter = pool.imap_unordered(_worker, task_args)
+            for fname, emb, err in tqdm(results_iter, total=len(task_args),
+                                        desc=f"Embedding ({model_name})"):
+                if err is not None:
+                    tqdm.write(f"  Failed: {fname} — {err}")
+                    failed += 1
+                else:
                     embeddings.append(emb)
-                    filenames.extend(fns)
+                    filenames.append(fname)
 
-                if os.path.exists(fail_f):
-                    with open(fail_f) as f:
-                        fails = json.load(f)
-                    for fname, err in fails:
-                        print(f"  Failed (GPU {gpu_id}): {fname} — {err}")
-                    failed += len(fails)
-
-        if embeddings:
-            embeddings = [np.concatenate(embeddings, axis=0)]
-
-    if not embeddings and not filenames:
+    if not embeddings:
         print("No successful embeddings. Exiting.")
         return
 
-    if isinstance(embeddings, list) and len(embeddings) > 0:
-        if isinstance(embeddings[0], np.ndarray) and embeddings[0].ndim == 2:
-            emb_array = embeddings[0]
-        else:
-            emb_array = np.stack(embeddings).astype(np.float32)
-    else:
-        emb_array = np.stack(embeddings).astype(np.float32)
+    emb_array = np.stack(embeddings).astype(np.float32)
 
     # ─── Sort by filename for consistent ordering ────────────────────
     sorted_pairs = sorted(zip(filenames, range(len(filenames))))
