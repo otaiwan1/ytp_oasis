@@ -20,6 +20,13 @@ DINOV2_MODEL_NAME = "dinov2_vitl14"
 DINOV2_IMG_SIZE = 224
 DINOV2_EMBEDDING_DIM = 1024
 
+# ─── DINOv3 settings ─────────────────────────────────────────────────
+DINOV3_REPO_DIR = str(PROJECT_ROOT / "train" / "dinov3" / "dinov3_repo")
+DINOV3_CHECKPOINT = PROJECT_ROOT / "train" / "dinov3" / "dinov3_vitl16_pretrain_lvd1689m-8aa4cbdd.pth"
+DINOV3_HUB_MODEL = "dinov3_vitl16"      # torch.hub entry point name
+DINOV3_IMG_SIZE = 256   # Official default for DINOv3
+DINOV3_EMBEDDING_DIM = 1024
+
 # ─── View rendering settings (matches render_multiview_final.py) ─────
 RENDER_IMG_SIZE = 512
 RENDER_FOV_DEG = 60.0
@@ -35,6 +42,9 @@ RENDER_VIEWS_CONFIG = {
 
 # Views used for DINOv2 embedding (no "back")
 DINOV2_VIEWS = ["front", "left", "right", "top", "bottom"]
+
+# Views used for DINOv3 embedding (same as DINOv2)
+DINOV3_VIEWS = ["front", "left", "right", "top", "bottom"]
 
 # ─── Point cloud settings ────────────────────────────────────────────
 NUM_POINTS = 4096

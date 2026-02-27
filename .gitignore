@@ -15,3 +15,5 @@ __pycache__/
 mae_dataset.npy
 train/mae/best_point_mae_ddp.pth
 normalization/teeth3ds_mae_dataset.npy
+train/dinov3/dinov3_repo
+train/dinov3/dinov3_vitl16_pretrain_lvd1689m-8aa4cbdd.pth

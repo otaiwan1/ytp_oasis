@@ -8,7 +8,7 @@ Public API:
 Example:
     >>> from embed import embed_stl, list_models
     >>> print(list_models())
-    ['simclr', 'mae', 'dinov2']
+    ['simclr', 'mae', 'dinov2', 'dinov3']
     >>> result = embed_stl("collecting-data/stlFiles/abc_1.stl", model="dinov2")
     >>> print(result["embedding"].shape, result["filename"])
 """
@@ -16,19 +16,21 @@ Example:
 from pathlib import Path
 import numpy as np
 
-from .models import get_model, infer_simclr, infer_mae, infer_dinov2
+from .models import get_model, infer_simclr, infer_mae, infer_dinov2, infer_dinov3
 from .preprocessing import preprocess_simclr, preprocess_mae, preprocess_dinov2
-from .config import RENDER_VIEWS_CONFIG, DINOV2_VIEWS, RENDER_IMG_SIZE, RENDER_FOV_DEG
+from .config import (RENDER_VIEWS_CONFIG, DINOV2_VIEWS, DINOV3_VIEWS,
+                      RENDER_IMG_SIZE, RENDER_FOV_DEG)
 
 __all__ = ["embed_stl", "list_models"]
 
-_SUPPORTED_MODELS = ["simclr", "mae", "dinov2"]
+_SUPPORTED_MODELS = ["simclr", "mae", "dinov2", "dinov3"]
 
 # Expected output dimensions per model
 _EMBED_DIMS = {
     "simclr": 512,
     "mae": 384,
     "dinov2": 1024,
+    "dinov3": 1024,
 }
 
 
@@ -86,6 +88,16 @@ def embed_stl(stl_path, model="dinov2", device=None) -> dict:
             fov_deg=RENDER_FOV_DEG,
         )
         embedding = infer_dinov2(net, pil_images, dev)
+
+    elif model_name == "dinov3":
+        pil_images = preprocess_dinov2(
+            stl_path,
+            views_config=RENDER_VIEWS_CONFIG,
+            views_order=DINOV3_VIEWS,
+            render_size=RENDER_IMG_SIZE,
+            fov_deg=RENDER_FOV_DEG,
+        )
+        embedding = infer_dinov3(net, pil_images, dev)
 
     return {
         "embedding": embedding,

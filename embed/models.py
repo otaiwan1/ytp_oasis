@@ -1,10 +1,11 @@
 """
-embed/models.py — Model loading & inference for SimCLR, PointMAE, and DINOv2.
+embed/models.py — Model loading & inference for SimCLR, PointMAE, DINOv2, and DINOv3.
 
 Provides:
     infer_simclr(model, point_cloud, device) → np.ndarray (512,)
     infer_mae(model, point_cloud, device) → np.ndarray (384,)
     infer_dinov2(model, pil_images, device) → np.ndarray (1024,)
+    infer_dinov3(model, pil_images, device) → np.ndarray (1024,)
 
 Models are cached in _model_cache so they are loaded once per process.
 """
@@ -21,6 +22,10 @@ from .config import (
     MAE_CHECKPOINT,
     DINOV2_MODEL_NAME,
     DINOV2_IMG_SIZE,
+    DINOV3_REPO_DIR,
+    DINOV3_CHECKPOINT,
+    DINOV3_HUB_MODEL,
+    DINOV3_IMG_SIZE,
     PROJECT_ROOT,
 )
 
@@ -152,6 +157,57 @@ def infer_dinov2(model, pil_images, device):
     return embedding.cpu().numpy()
 
 
+# ─── DINOv3 ──────────────────────────────────────────────────────────
+
+def _load_dinov3(device):
+    """Load DINOv3 ViT-L/16 via torch.hub from local repo + checkpoint."""
+    model = torch.hub.load(
+        DINOV3_REPO_DIR,
+        DINOV3_HUB_MODEL,
+        source='local',
+        weights=str(DINOV3_CHECKPOINT),
+    )
+    model.to(device)
+    model.eval()
+    return model
+
+
+def _get_dinov3_transform():
+    """DINOv3 preprocessing (ImageNet normalization, resize to 256)."""
+    return T.Compose([
+        T.Resize((DINOV3_IMG_SIZE, DINOV3_IMG_SIZE), antialias=True),
+        T.ToTensor(),
+        T.Normalize(mean=[0.485, 0.456, 0.406],
+                    std=[0.229, 0.224, 0.225]),
+    ])
+
+
+def infer_dinov3(model, pil_images, device):
+    """
+    Compute a DINOv3 embedding from multi-view PIL images.
+
+    Pipeline: transform → batch forward → mean-pool → L2-normalize.
+    Same as DINOv2 — torch.hub model returns CLS token directly.
+
+    Args:
+        model: DINOv3 nn.Module (loaded via torch.hub).
+        pil_images: list[PIL.Image] (RGB).
+        device: torch.device.
+    Returns:
+        np.ndarray of shape (1024,), L2-normalized.
+    """
+    transform = _get_dinov3_transform()
+    tensors = [transform(img) for img in pil_images]
+    batch = torch.stack(tensors).to(device)
+
+    with torch.no_grad():
+        outputs = model(batch)                           # (N_views, 1024)
+        embedding = torch.mean(outputs, dim=0)           # (1024,)
+        embedding = F.normalize(embedding, p=2, dim=0)
+
+    return embedding.cpu().numpy()
+
+
 # ─── Cached loader ───────────────────────────────────────────────────
 
 def get_model(model_name: str, device=None):
@@ -173,6 +229,7 @@ def get_model(model_name: str, device=None):
             "simclr": _load_simclr,
             "mae": _load_mae,
             "dinov2": _load_dinov2,
+            "dinov3": _load_dinov3,
         }
         if model_name not in loaders:
             raise ValueError(f"Unknown model: {model_name}. Choose from {list(loaders)}")

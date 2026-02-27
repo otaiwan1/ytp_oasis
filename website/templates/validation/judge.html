@@ -159,6 +159,63 @@
         color: var(--oasis-gray-700);
     }
 
+    /* ── Navigation bar ──────────────────────────────────────── */
+    .nav-bar {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5rem 0;
+    }
+    .btn-nav {
+        background: white;
+        border: 1px solid var(--oasis-gray-300);
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        padding: 0.55rem 1.3rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: var(--oasis-gray-700);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+    .btn-nav:hover:not(:disabled) {
+        background: var(--oasis-green-50);
+        border-color: var(--oasis-green-400);
+        color: var(--oasis-green-700);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 10px rgba(34, 197, 94, 0.15);
+    }
+    .btn-nav:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+    .nav-indicator {
+        font-size: 0.85rem;
+        font-weight: 600;
+        color: var(--oasis-gray-500);
+        min-width: 80px;
+        text-align: center;
+    }
+    .existing-verdict-badge {
+        display: inline-block;
+        font-size: 0.78rem;
+        font-weight: 700;
+        border-radius: 8px;
+        padding: 0.2rem 0.6rem;
+        margin-left: 0.5rem;
+    }
+    .existing-verdict-badge.pass {
+        background: #dcfce7;
+        color: #16a34a;
+    }
+    .existing-verdict-badge.fail {
+        background: #fee2e2;
+        color: #dc2626;
+    }
+
     /* ── Sidebar ─────────────────────────────────────────────── */
     .round-card {
         background: white;
@@ -281,6 +338,17 @@
                 </div>
                 <div class="row g-3" id="resultsGrid"></div>
 
+                <!-- Navigation -->
+                <div class="nav-bar" id="navBar">
+                    <button class="btn-nav" id="prevBtn" onclick="goToPrev()" disabled>
+                        <i class="bi bi-chevron-left"></i> Previous
+                    </button>
+                    <span class="nav-indicator" id="navIndicator">—</span>
+                    <button class="btn-nav" id="nextBtn" onclick="goToNext()" disabled>
+                        Next <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+
                 <!-- Verdict -->
                 <div class="verdict-bar">
                     <button class="btn-pass" onclick="submitVerdict('pass')" id="passBtn">
@@ -292,6 +360,7 @@
                 </div>
                 <div class="key-hint">
                     Press <kbd>P</kbd> to pass &nbsp;|&nbsp; <kbd>F</kbd> to fail &nbsp;|&nbsp;
+                    <kbd>&larr;</kbd> previous &nbsp;|&nbsp; <kbd>&rarr;</kbd> next &nbsp;|&nbsp;
                     Click any card for interactive 3D view
                 </div>
             </div>
@@ -522,6 +591,23 @@ async function loadCurrentQuery() {
         `Query ${currentQueryIdx + 1} / ${testScans.length}`;
     document.getElementById('queryLabel').textContent = queryFile;
     document.getElementById('resultsLabel').textContent = `Top-${k} Results`;
+
+    // Show existing verdict badge if already judged
+    const existingVerdict = (progress[kKey] && progress[kKey][queryFile])
+        ? progress[kKey][queryFile].verdict : null;
+    let verdictBadge = '';
+    if (existingVerdict) {
+        const label = existingVerdict === 'pass' ? 'PASSED' : 'FAILED';
+        verdictBadge = `<span class="existing-verdict-badge ${existingVerdict}">${label}</span>`;
+    }
+    document.getElementById('queryLabel').innerHTML =
+        `${queryFile}${verdictBadge}`;
+
+    // Update navigation buttons
+    document.getElementById('prevBtn').disabled = (currentQueryIdx <= 0);
+    document.getElementById('nextBtn').disabled = (currentQueryIdx >= testScans.length - 1);
+    document.getElementById('navIndicator').textContent =
+        `${currentQueryIdx + 1} / ${testScans.length}`;
 
     // Query row — single card, centred
     const queryRow = document.getElementById('queryRow');
@@ -762,10 +848,26 @@ function showAllDone() {
     document.getElementById('queryCounter').textContent = '';
     document.getElementById('passBtn').disabled = true;
     document.getElementById('failBtn').disabled = true;
+    document.getElementById('prevBtn').disabled = true;
+    document.getElementById('nextBtn').disabled = true;
+    document.getElementById('navBar').style.display = 'none';
     document.getElementById('reportBtn').style.display = 'inline-block';
     document.getElementById('queryRow').innerHTML = '';
     document.getElementById('resultsGrid').innerHTML =
         '<div class="col-12 text-center py-5"><h5 style="color:var(--oasis-gray-500)"><i class="bi bi-check-circle me-2"></i>All validation rounds complete. Generate your report above.</h5></div>';
+}
+
+// ─── Navigation ─────────────────────────────────────────────────────
+function goToPrev() {
+    if (isAllDone() || currentQueryIdx <= 0) return;
+    currentQueryIdx--;
+    loadCurrentQuery();
+}
+
+function goToNext() {
+    if (isAllDone() || currentQueryIdx >= testScans.length - 1) return;
+    currentQueryIdx++;
+    loadCurrentQuery();
 }
 
 // ─── Keyboard shortcuts ─────────────────────────────────────────────
@@ -774,6 +876,8 @@ document.addEventListener('keydown', (e) => {
     if (document.querySelector('.modal.show')) return;
     if (e.key === 'p' || e.key === 'P') submitVerdict('pass');
     if (e.key === 'f' || e.key === 'F') submitVerdict('fail');
+    if (e.key === 'ArrowLeft') goToPrev();
+    if (e.key === 'ArrowRight') goToNext();
 });
 
 // ─── Sidebar ────────────────────────────────────────────────────────
@@ -847,6 +951,8 @@ async function generateReport() {
 // Expose for onclick handlers
 window.submitVerdict = submitVerdict;
 window.generateReport = generateReport;
+window.goToPrev = goToPrev;
+window.goToNext = goToNext;
 
 // Boot
 init();
