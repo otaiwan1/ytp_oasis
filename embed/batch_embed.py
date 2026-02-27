@@ -63,7 +63,7 @@ def main():
     parser = argparse.ArgumentParser(description="Batch embed STL files.")
     parser.add_argument(
         "--model", type=str, required=True,
-        choices=["simclr", "mae", "dinov2", "dinov3"],
+        choices=["simclr", "mae", "dinov2", "dinov3", "dinov3_gallery"],
         help="Embedding model to use.",
     )
     parser.add_argument(

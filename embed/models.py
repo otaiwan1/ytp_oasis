@@ -208,6 +208,40 @@ def infer_dinov3(model, pil_images, device):
     return embedding.cpu().numpy()
 
 
+def infer_dinov3_hybrid(model, pil_images, device):
+    """
+    Compute a DINOv3 embedding using CLS + mean(patch) hybrid pooling.
+
+    Uses forward_features() to access both CLS token (global semantics)
+    and patch tokens (local geometric detail), concatenated → 2048-dim.
+
+    Pipeline: transform → batch forward_features → CLS + mean(patch)
+              → concat → mean-pool views → L2-normalize.
+
+    Args:
+        model: DINOv3 nn.Module (loaded via torch.hub).
+        pil_images: list[PIL.Image] (RGB).
+        device: torch.device.
+    Returns:
+        np.ndarray of shape (2048,), L2-normalized.
+    """
+    transform = _get_dinov3_transform()
+    tensors = [transform(img) for img in pil_images]
+    batch = torch.stack(tensors).to(device)
+
+    with torch.no_grad():
+        out = model.forward_features(batch)       # dict
+        cls = out["x_norm_clstoken"]              # (N_views, 1024)
+        patches = out["x_norm_patchtokens"]       # (N_views, n_patches, 1024)
+        patch_mean = patches.mean(dim=1)          # (N_views, 1024)
+
+        combined = torch.cat([cls, patch_mean], dim=-1)  # (N_views, 2048)
+        embedding = combined.mean(dim=0)          # (2048,)
+        embedding = F.normalize(embedding, p=2, dim=0)
+
+    return embedding.cpu().numpy()
+
+
 # ─── Cached loader ───────────────────────────────────────────────────
 
 def get_model(model_name: str, device=None):
@@ -230,6 +264,7 @@ def get_model(model_name: str, device=None):
             "mae": _load_mae,
             "dinov2": _load_dinov2,
             "dinov3": _load_dinov3,
+            "dinov3_gallery": _load_dinov3,
         }
         if model_name not in loaders:
             raise ValueError(f"Unknown model: {model_name}. Choose from {list(loaders)}")

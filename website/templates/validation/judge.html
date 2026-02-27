@@ -4,11 +4,11 @@
 {% block extra_css %}
 <style>
     /* ── Page layout ─────────────────────────────────────────── */
-    .judge-wrapper {
+    .judge-outer {
         display: flex;
         gap: 1rem;
     }
-    .judge-content { flex: 1; min-width: 0; }
+    .judge-main { flex: 1; min-width: 0; }
     .judge-sidebar {
         width: 260px;
         flex-shrink: 0;
@@ -32,79 +32,86 @@
         color: var(--oasis-gray-500);
     }
 
-    /* ── Scan card (shared for query & results) ──────────────── */
-    .scan-card-j {
-        background: white;
-        border: 1px solid var(--oasis-gray-200);
+    /* ── Two-panel layout ────────────────────────────────────── */
+    .judge-panels {
+        display: flex;
+        gap: 1.5rem;
+        align-items: flex-start;
+    }
+    .panel-query, .panel-result {
+        flex: 1;
+        min-width: 0;
+    }
+
+    /* ── 3D viewer box ───────────────────────────────────────── */
+    .viewer-box {
+        width: 100%;
+        height: 520px;
+        background: #1a1a2e;
         border-radius: 14px;
         overflow: hidden;
-        transition: all 0.25s;
-        cursor: pointer;
+        position: relative;
+        border: 1px solid var(--oasis-gray-200);
     }
-    .scan-card-j:hover {
-        box-shadow: 0 4px 18px rgba(0,0,0,0.1);
-        border-color: var(--oasis-green-300);
+    .viewer-box canvas {
+        width: 100% !important;
+        height: 100% !important;
+        display: block;
+        border-radius: 14px;
     }
-    .scan-card-j .thumb-box {
-        width: 100%;
-        height: 440px;
-        background: #1a1a2e;
+    .viewer-box .viewer-loading {
+        position: absolute;
+        inset: 0;
         display: flex;
         align-items: center;
         justify-content: center;
-        overflow: hidden;
-    }
-    .scan-card-j .thumb-box img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-    }
-    .scan-card-j .thumb-loading {
         color: rgba(255,255,255,0.3);
         font-size: 2rem;
+        pointer-events: none;
+        z-index: 2;
     }
-    .scan-card-j .card-info {
-        padding: 0.5rem 0.75rem;
+    .viewer-box .viewer-loading.hidden { display: none; }
+    .panel-query .viewer-box { border-color: #fbbf24; border-width: 2px; }
+    .viewer-hint {
+        position: absolute;
+        bottom: 8px; left: 0; right: 0;
+        text-align: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: rgba(255,255,255,0.45);
+        pointer-events: none;
+        z-index: 3;
     }
-    .scan-card-j .card-tag {
+
+    /* ── Card info strip below viewer ────────────────────────── */
+    .card-info-strip {
+        padding: 0.4rem 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .card-tag {
         font-weight: 800;
         font-size: 0.72rem;
         border-radius: 6px;
         padding: 0.15rem 0.5rem;
         display: inline-block;
-        margin-bottom: 0.25rem;
     }
     .card-tag.query-tag { background: #fef3c7; color: #92400e; }
     .card-tag.result-tag { background: #dbeafe; color: #1e40af; }
-    .scan-card-j .card-name {
+    .card-name {
         font-size: 0.72rem;
         color: var(--oasis-gray-500);
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        flex: 1;
     }
-    .scan-card-j .card-sim {
+    .card-sim {
         font-weight: 700;
         font-size: 0.78rem;
         color: var(--oasis-green-600);
     }
-    .scan-card-j .click-hint-j {
-        position: absolute;
-        bottom: 60px; left: 0; right: 0;
-        text-align: center;
-        font-size: 0.7rem;
-        font-weight: 600;
-        color: rgba(255,255,255,0.7);
-        opacity: 0;
-        transition: opacity 0.2s;
-        pointer-events: none;
-    }
-    .scan-card-j { position: relative; }
-    .scan-card-j:hover .click-hint-j { opacity: 1; }
-
-    /* Query card is larger */
-    .query-col .thumb-box { height: 420px; }
-    .query-col .scan-card-j { border-color: #fbbf24; border-width: 2px; }
 
     /* ── Section labels ──────────────────────────────────────── */
     .section-label {
@@ -122,34 +129,112 @@
         background: var(--oasis-gray-200);
     }
 
-    /* ── Verdict bar ─────────────────────────────────────────── */
-    .verdict-bar {
+    /* ── Result navigation ───────────────────────────────────── */
+    .result-nav {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        align-items: center;
+        padding: 0.75rem 0 0.25rem;
+    }
+    .btn-rnav {
+        background: white;
+        border: 1px solid var(--oasis-gray-300);
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 0.5rem 1.1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: var(--oasis-gray-700);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    .btn-rnav:hover:not(:disabled) {
+        background: var(--oasis-green-50);
+        border-color: var(--oasis-green-400);
+        color: var(--oasis-green-700);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(34,197,94,0.12);
+    }
+    .btn-rnav:disabled { opacity: 0.3; cursor: not-allowed; }
+    .rnav-indicator {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--oasis-gray-600);
+        min-width: 100px;
+        text-align: center;
+    }
+
+    /* ── Action buttons ──────────────────────────────────────── */
+    .action-bar {
         display: flex;
         gap: 0.75rem;
-        padding: 1rem 0 0.25rem;
+        padding: 0.75rem 0 0.25rem;
         justify-content: center;
         align-items: center;
     }
     .btn-pass {
         background: linear-gradient(135deg, #22c55e, #16a34a);
         color: white; border: none; border-radius: 12px;
-        font-weight: 700; font-size: 1.1rem; padding: 0.75rem 2rem;
+        font-weight: 700; font-size: 1.05rem; padding: 0.65rem 1.8rem;
         transition: all 0.2s; cursor: pointer;
     }
-    .btn-pass:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(34,197,94,0.4); }
+    .btn-pass:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(34,197,94,0.4); }
+    .btn-pass:disabled { opacity: 0.35; cursor: not-allowed; }
     .btn-fail {
         background: linear-gradient(135deg, #ef4444, #dc2626);
         color: white; border: none; border-radius: 12px;
-        font-weight: 700; font-size: 1.1rem; padding: 0.75rem 2rem;
+        font-weight: 700; font-size: 1.05rem; padding: 0.65rem 1.8rem;
         transition: all 0.2s; cursor: pointer;
     }
-    .btn-fail:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(239,68,68,0.4); }
+    .btn-fail:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(239,68,68,0.4); }
+    .btn-fail:disabled { opacity: 0.35; cursor: not-allowed; }
+
+    /* ── Query navigation ────────────────────────────────────── */
+    .query-nav {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5rem 0;
+        margin-top: 0.5rem;
+        border-top: 1px solid var(--oasis-gray-200);
+    }
+    .btn-qnav {
+        background: white;
+        border: 1px solid var(--oasis-gray-300);
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.82rem;
+        padding: 0.4rem 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: var(--oasis-gray-600);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    .btn-qnav:hover:not(:disabled) {
+        background: var(--oasis-green-50);
+        border-color: var(--oasis-green-400);
+        color: var(--oasis-green-700);
+    }
+    .btn-qnav:disabled { opacity: 0.3; cursor: not-allowed; }
+    .qnav-indicator {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--oasis-gray-500);
+        min-width: 80px;
+        text-align: center;
+    }
 
     .key-hint {
-        font-size: 0.8rem;
+        font-size: 0.78rem;
         color: var(--oasis-gray-500);
         text-align: center;
-        margin-top: 0.25rem;
+        margin-top: 0.3rem;
     }
     .key-hint kbd {
         background: var(--oasis-gray-200);
@@ -159,47 +244,8 @@
         color: var(--oasis-gray-700);
     }
 
-    /* ── Navigation bar ──────────────────────────────────────── */
-    .nav-bar {
-        display: flex;
-        gap: 0.5rem;
-        justify-content: center;
-        align-items: center;
-        padding: 0.5rem 0;
-    }
-    .btn-nav {
-        background: white;
-        border: 1px solid var(--oasis-gray-300);
-        border-radius: 10px;
-        font-weight: 700;
-        font-size: 0.9rem;
-        padding: 0.55rem 1.3rem;
-        cursor: pointer;
-        transition: all 0.2s;
-        color: var(--oasis-gray-700);
-        display: inline-flex;
-        align-items: center;
-        gap: 0.35rem;
-    }
-    .btn-nav:hover:not(:disabled) {
-        background: var(--oasis-green-50);
-        border-color: var(--oasis-green-400);
-        color: var(--oasis-green-700);
-        transform: translateY(-1px);
-        box-shadow: 0 2px 10px rgba(34, 197, 94, 0.15);
-    }
-    .btn-nav:disabled {
-        opacity: 0.35;
-        cursor: not-allowed;
-    }
-    .nav-indicator {
-        font-size: 0.85rem;
-        font-weight: 600;
-        color: var(--oasis-gray-500);
-        min-width: 80px;
-        text-align: center;
-    }
-    .existing-verdict-badge {
+    /* ── Verdict badge ───────────────────────────────────────── */
+    .verdict-badge {
         display: inline-block;
         font-size: 0.78rem;
         font-weight: 700;
@@ -207,26 +253,19 @@
         padding: 0.2rem 0.6rem;
         margin-left: 0.5rem;
     }
-    .existing-verdict-badge.pass {
-        background: #dcfce7;
-        color: #16a34a;
-    }
-    .existing-verdict-badge.fail {
-        background: #fee2e2;
-        color: #dc2626;
-    }
+    .verdict-badge.pass { background: #dcfce7; color: #16a34a; }
+    .verdict-badge.fail { background: #fee2e2; color: #dc2626; }
 
     /* ── Sidebar ─────────────────────────────────────────────── */
-    .round-card {
+    .stat-card {
         background: white;
         border: 1px solid var(--oasis-gray-200);
         border-radius: 12px;
         padding: 0.85rem;
         margin-bottom: 0.6rem;
     }
-    .round-card.active { border-color: var(--oasis-green-500); box-shadow: 0 0 0 2px var(--oasis-green-200); }
-    .round-card h6 { font-weight: 700; margin: 0 0 0.2rem; font-size: 0.9rem; }
-    .round-progress { font-size: 0.75rem; color: var(--oasis-gray-500); }
+    .stat-card h6 { font-weight: 700; margin: 0 0 0.2rem; font-size: 0.9rem; }
+    .stat-progress { font-size: 0.75rem; color: var(--oasis-gray-500); }
     .progress-bar-mini {
         height: 5px;
         background: var(--oasis-gray-200);
@@ -247,40 +286,6 @@
     .report-table td { padding: 0.5rem; }
     .report-table .rate { font-weight: 800; color: var(--oasis-green-600); }
 
-    /* ── 3D Modal ────────────────────────────────────────────── */
-    .modal-viewer-body {
-        background: #1a1a2e;
-        border-radius: 12px;
-        position: relative;
-        height: 65vh;
-        min-height: 400px;
-    }
-    .modal-viewer-body canvas {
-        width: 100% !important;
-        height: 100% !important;
-        display: block;
-        border-radius: 12px;
-    }
-    .modal-scan-info {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-        padding: 0.75rem 0 0;
-    }
-    .modal-scan-info .fname {
-        font-weight: 600;
-        font-size: 0.9rem;
-        color: var(--oasis-gray-700);
-        flex-grow: 1;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    .modal-scan-info .hint {
-        font-size: 0.78rem;
-        color: var(--oasis-gray-500);
-    }
-
     /* ── Loading ─────────────────────────────────────────────── */
     .judge-loading {
         display: flex;
@@ -289,6 +294,14 @@
         height: 60vh;
         flex-direction: column;
         gap: 1rem;
+    }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 992px) {
+        .judge-panels { flex-direction: column; }
+        .judge-outer  { flex-direction: column; }
+        .judge-sidebar { width: 100%; max-height: none; position: static; }
+        .viewer-box { height: 360px; }
     }
 </style>
 {% endblock %}
@@ -302,7 +315,7 @@
         <p style="color:var(--oasis-gray-500);font-size:0.9rem">Computing similarity rankings for {{ model_label }} (60 test scans)</p>
     </div>
 
-    <!-- Main UI (hidden until loaded) -->
+    <!-- Main UI -->
     <div id="judgeUI" style="display:none">
         <div class="judge-header">
             <a href="{{ url_for('validation.model_select_page') }}" class="btn btn-oasis-outline btn-sm" style="margin-right:0.25rem;">
@@ -314,87 +327,102 @@
                     <span style="font-size:0.75rem; font-weight:600; color:var(--oasis-gray-500); vertical-align:middle; margin-left:0.5rem;">Validation</span>
                 </h4>
             </div>
-            <span class="counter" id="roundLabel">—</span>
-            <span class="counter" id="queryCounter">—</span>
+            <span class="counter" id="queryCounter">&mdash;</span>
             <button class="btn btn-oasis-outline btn-sm" onclick="generateReport()" id="reportBtn" style="display:none">
                 <i class="bi bi-file-earmark-bar-graph me-1"></i>Generate Report
             </button>
         </div>
 
-        <div class="judge-wrapper">
-            <div class="judge-content">
-                <!-- Query row -->
-                <div class="section-label">
-                    <i class="bi bi-search"></i> Query Scan
-                    <span class="sep"></span>
-                    <span id="queryLabel" style="font-weight:600; font-size:0.82rem; color:var(--oasis-gray-500)">—</span>
-                </div>
-                <div class="row g-3 mb-3" id="queryRow"></div>
+        <div class="judge-outer">
+            <div class="judge-main">
+                <div class="judge-panels">
+                    <!-- LEFT: Query scan -->
+                    <div class="panel-query">
+                        <div class="section-label">
+                            <i class="bi bi-search"></i> Query Scan
+                            <span class="sep"></span>
+                        </div>
+                        <div class="viewer-box" id="queryViewerBox">
+                            <canvas id="queryCanvas"></canvas>
+                            <div class="viewer-loading" id="queryLoading"><i class="bi bi-hourglass-split"></i></div>
+                            <div class="viewer-hint"><i class="bi bi-arrows-move me-1"></i>Drag to rotate &bull; Scroll to zoom</div>
+                        </div>
+                        <div class="card-info-strip" id="queryInfo">
+                            <span class="card-tag query-tag">QUERY</span>
+                            <span class="card-name" id="queryFileName">&mdash;</span>
+                        </div>
+                        <div class="section-label" style="margin-top:0.25rem; font-size:0.82rem;">
+                            <span id="queryLabel" style="font-weight:600; color:var(--oasis-gray-500)">&mdash;</span>
+                        </div>
+                    </div>
 
-                <!-- Results grid -->
-                <div class="section-label">
-                    <i class="bi bi-grid-3x3-gap"></i> <span id="resultsLabel">Top-K Results</span>
-                    <span class="sep"></span>
-                </div>
-                <div class="row g-3" id="resultsGrid"></div>
+                    <!-- RIGHT: Result scan -->
+                    <div class="panel-result">
+                        <div class="section-label">
+                            <i class="bi bi-trophy"></i> <span id="resultLabel">Result #1</span>
+                            <span class="sep"></span>
+                            <span id="resultSim" style="font-weight:700; font-size:0.82rem; color:var(--oasis-green-600)">&mdash;</span>
+                        </div>
+                        <div class="viewer-box" id="resultViewerBox">
+                            <canvas id="resultCanvas"></canvas>
+                            <div class="viewer-loading" id="resultLoading"><i class="bi bi-hourglass-split"></i></div>
+                            <div class="viewer-hint"><i class="bi bi-arrows-move me-1"></i>Drag to rotate &bull; Scroll to zoom</div>
+                        </div>
+                        <div class="card-info-strip" id="resultInfo">
+                            <span class="card-tag result-tag" id="resultRankTag">#1</span>
+                            <span class="card-name" id="resultFileName">&mdash;</span>
+                            <span class="card-sim" id="resultSimSmall">&mdash;</span>
+                        </div>
 
-                <!-- Navigation -->
-                <div class="nav-bar" id="navBar">
-                    <button class="btn-nav" id="prevBtn" onclick="goToPrev()" disabled>
-                        <i class="bi bi-chevron-left"></i> Previous
+                        <!-- Result navigation -->
+                        <div class="result-nav">
+                            <button class="btn-rnav" id="resultPrevBtn" onclick="resultPrev()">
+                                <i class="bi bi-chevron-left"></i> Prev
+                            </button>
+                            <span class="rnav-indicator" id="resultNavLabel">1 / 10</span>
+                            <button class="btn-rnav" id="resultNextBtn" onclick="resultNext()">
+                                Next <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+
+                        <!-- Action buttons -->
+                        <div class="action-bar" id="actionBar">
+                            <button class="btn-pass" id="passBtn" onclick="passCurrentResult()">
+                                <i class="bi bi-check-circle me-2"></i>Pass #<span id="passRankLabel">1</span> (P)
+                            </button>
+                            <button class="btn-fail" id="failBtn" onclick="failAll()" style="display:none">
+                                <i class="bi bi-x-circle me-2"></i>Fail All (F)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Query navigation -->
+                <div class="query-nav" id="queryNav">
+                    <button class="btn-qnav" id="qPrevBtn" onclick="queryPrev()">
+                        <i class="bi bi-skip-backward"></i> Prev Query
                     </button>
-                    <span class="nav-indicator" id="navIndicator">—</span>
-                    <button class="btn-nav" id="nextBtn" onclick="goToNext()" disabled>
-                        Next <i class="bi bi-chevron-right"></i>
+                    <span class="qnav-indicator" id="qNavLabel">1 / 60</span>
+                    <button class="btn-qnav" id="qNextBtn" onclick="queryNext()">
+                        Next Query <i class="bi bi-skip-forward"></i>
                     </button>
                 </div>
 
-                <!-- Verdict -->
-                <div class="verdict-bar">
-                    <button class="btn-pass" onclick="submitVerdict('pass')" id="passBtn">
-                        <i class="bi bi-check-circle me-2"></i>Pass (P)
-                    </button>
-                    <button class="btn-fail" onclick="submitVerdict('fail')" id="failBtn">
-                        <i class="bi bi-x-circle me-2"></i>Fail (F)
-                    </button>
-                </div>
                 <div class="key-hint">
-                    Press <kbd>P</kbd> to pass &nbsp;|&nbsp; <kbd>F</kbd> to fail &nbsp;|&nbsp;
-                    <kbd>&larr;</kbd> previous &nbsp;|&nbsp; <kbd>&rarr;</kbd> next &nbsp;|&nbsp;
-                    Click any card for interactive 3D view
+                    <kbd>&larr;</kbd> / <kbd>&rarr;</kbd> navigate results &nbsp;|&nbsp;
+                    <kbd>P</kbd> pass current result &nbsp;|&nbsp;
+                    <kbd>F</kbd> fail all (on #10) &nbsp;|&nbsp;
+                    <kbd>Shift+&larr;</kbd> / <kbd>Shift+&rarr;</kbd> navigate queries &nbsp;|&nbsp;
+                    Drag to rotate &bull; Scroll to zoom (synchronized)
                 </div>
             </div>
 
             <!-- Sidebar -->
             <div class="judge-sidebar">
                 <h6 style="font-weight:700; margin-bottom:0.6rem; color:var(--oasis-gray-700); font-size:0.9rem;">
-                    <i class="bi bi-list-check me-1"></i>Rounds
+                    <i class="bi bi-bar-chart me-1"></i>Progress
                 </h6>
-                <div id="roundCards"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- 3D Viewer Modal -->
-<div class="modal fade" id="viewerModal" tabindex="-1">
-    <div class="modal-dialog modal-xl modal-dialog-centered">
-        <div class="modal-content" style="border-radius:16px; border:none;">
-            <div class="modal-header border-0 pb-0">
-                <h5 class="modal-title" style="font-weight:800;">
-                    <i class="bi bi-badge-3d me-2" style="color:var(--oasis-green-500)"></i>
-                    3D Scan Viewer
-                </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-            <div class="modal-body">
-                <div class="modal-viewer-body" id="modalViewerPanel">
-                    <canvas id="modalCanvas"></canvas>
-                </div>
-                <div class="modal-scan-info">
-                    <span class="fname" id="modalFileName">—</span>
-                    <span class="hint"><i class="bi bi-mouse me-1"></i>Drag to rotate &bull; Scroll to zoom</span>
-                </div>
+                <div id="sidebarCards"></div>
             </div>
         </div>
     </div>
@@ -432,103 +460,222 @@
 
 <script type="module">
 import * as THREE from 'three';
-import { STLLoader } from 'three/addons/loaders/STLLoader.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
+// ─── Constants ──────────────────────────────────────────────────────
+const MODEL_NAME   = '{{ model_name }}';
+const MODEL_LABEL  = '{{ model_label }}';
+const TOP_K_VALUES = [1, 3, 5, 10];
+const MAX_RESULTS  = 10;
+
 // ─── State ──────────────────────────────────────────────────────────
-const MODEL_NAME = '{{ model_name }}';
-const MODEL_LABEL = '{{ model_label }}';
-const TOP_K_VALUES = [];
 let testScans = [];
-let rankings = {};
-let progress = {};
+let rankings  = {};
+let progress  = {};
 
-let currentRoundIdx = 0;
-let currentQueryIdx = 0;
-let waitingVerdict = false;
+let currentQueryIdx  = 0;
+let currentResultIdx = 0;
 
-// ─── Shared thumbnail renderer (single WebGL context) ───────────────
-const THUMB_W = 480, THUMB_H = 440;
-const thumbRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
-thumbRenderer.setSize(THUMB_W, THUMB_H);
-thumbRenderer.setPixelRatio(1);
+// ─── GLB loader & geometry cache ────────────────────────────────────
+const glbLoader = new GLTFLoader();
+const geoCache  = {};   // filename -> THREE.BufferGeometry (centered + rotated)
 
-const thumbScene = new THREE.Scene();
-thumbScene.background = new THREE.Color(0x1a1a2e);
-thumbScene.add(new THREE.AmbientLight(0xffffff, 0.6));
-const tl1 = new THREE.DirectionalLight(0xffffff, 0.8);
-tl1.position.set(1, 1, 1); thumbScene.add(tl1);
-const tl2 = new THREE.DirectionalLight(0xffffff, 0.4);
-tl2.position.set(-1, -0.5, -1); thumbScene.add(tl2);
-const thumbCamera = new THREE.PerspectiveCamera(50, THUMB_W / THUMB_H, 0.1, 1000);
-
-const stlLoader = new STLLoader();
-const thumbCache = {};
-let renderQueueAbort = false;
-
-function stlUrl(filename) {
-    return `{{ url_for("validation.serve_stl", filename="__PH__") }}`
-        .replace('__PH__', encodeURIComponent(filename));
+function glbUrl(filename) {
+    // filename is like "scan_xyz.stl" → strip .stl, request .glb
+    var stem = filename.replace(/\.stl$/i, '');
+    return `{{ url_for("validation.serve_glb", filename="__PH__") }}`
+        .replace('__PH__', encodeURIComponent(stem + '.glb'));
 }
 
-function loadSTLAsync(url) {
-    return new Promise((resolve, reject) => {
-        stlLoader.load(url, resolve, undefined, reject);
+function loadGLBAsync(url) {
+    return new Promise(function(resolve, reject) {
+        glbLoader.load(url, resolve, undefined, reject);
     });
 }
 
-async function renderThumbnail(filename) {
-    if (thumbCache[filename]) return thumbCache[filename];
+/** Load and cache geometry from GLB. Returns a clone each time. */
+async function getGeometry(filename) {
+    if (!geoCache[filename]) {
+        var gltf = await loadGLBAsync(glbUrl(filename));
+        // Extract the first mesh geometry from the GLB scene
+        var geo = null;
+        gltf.scene.traverse(function(child) {
+            if (!geo && child.isMesh && child.geometry) {
+                geo = child.geometry;
+            }
+        });
+        if (!geo) throw new Error('No mesh found in GLB: ' + filename);
+        geo.computeVertexNormals();
+        geo.center();
+        geo.rotateX(-Math.PI / 2);
+        geoCache[filename] = geo;
+    }
+    return geoCache[filename].clone();
+}
 
-    const geometry = await loadSTLAsync(stlUrl(filename));
-    geometry.computeVertexNormals();
-    geometry.center();
-    geometry.rotateX(-Math.PI / 2);
+// ─── Dual inline 3D viewers ────────────────────────────────────────
+// Each viewer: { scene, camera, renderer, controls, mesh, animId }
+var queryViewer  = null;
+var resultViewer = null;
+var syncing = false;   // prevent infinite sync loops
 
-    const material = new THREE.MeshPhongMaterial({
+function createViewer(canvasId, boxId) {
+    var canvas = document.getElementById(canvasId);
+    var box    = document.getElementById(boxId);
+    var w = box.clientWidth, h = box.clientHeight;
+
+    var scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x1a1a2e);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    var d1 = new THREE.DirectionalLight(0xffffff, 0.8);
+    d1.position.set(1, 1, 1); scene.add(d1);
+    var d2 = new THREE.DirectionalLight(0xffffff, 0.4);
+    d2.position.set(-1, -0.5, -1); scene.add(d2);
+
+    var camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 2000);
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+    renderer.setSize(w, h);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    var controls = new OrbitControls(camera, canvas);
+    controls.enableDamping   = true;
+    controls.dampingFactor   = 0.1;
+    controls.autoRotate      = false;
+
+    var viewer = {
+        scene: scene, camera: camera, renderer: renderer,
+        controls: controls, mesh: null, animId: null,
+        boxId: boxId, canvasId: canvasId
+    };
+
+    // Start animation loop
+    function animate() {
+        viewer.animId = requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+    }
+    animate();
+
+    return viewer;
+}
+
+/** Synchronize: copy camera state from src to dst. */
+function syncCamera(src, dst) {
+    if (syncing) return;
+    syncing = true;
+    dst.controls.target.copy(src.controls.target);
+    dst.camera.position.copy(src.camera.position);
+    dst.camera.quaternion.copy(src.camera.quaternion);
+    dst.controls.update();
+    syncing = false;
+}
+
+function setupSync() {
+    queryViewer.controls.addEventListener('change', function() {
+        syncCamera(queryViewer, resultViewer);
+    });
+    resultViewer.controls.addEventListener('change', function() {
+        syncCamera(resultViewer, queryViewer);
+    });
+}
+
+function handleResize() {
+    [queryViewer, resultViewer].forEach(function(v) {
+        if (!v) return;
+        var box = document.getElementById(v.boxId);
+        var w = box.clientWidth, h = box.clientHeight;
+        v.camera.aspect = w / h;
+        v.camera.updateProjectionMatrix();
+        v.renderer.setSize(w, h);
+    });
+}
+
+/** Clear mesh from a viewer. */
+function clearViewer(v) {
+    if (!v || !v.mesh) return;
+    v.scene.remove(v.mesh);
+    v.mesh.geometry.dispose();
+    v.mesh.material.dispose();
+    v.mesh = null;
+}
+
+/** Load an STL into a viewer, returns camera-fitting info. */
+async function loadIntoViewer(v, filename, loadingId) {
+    var loadingEl = document.getElementById(loadingId);
+    if (loadingEl) loadingEl.classList.remove('hidden');
+
+    clearViewer(v);
+
+    var geo = await getGeometry(filename);
+    var mat = new THREE.MeshPhongMaterial({
         color: 0xc8ddf0, specular: 0x444444, shininess: 60
     });
-    const mesh = new THREE.Mesh(geometry, material);
-    thumbScene.add(mesh);
+    var mesh = new THREE.Mesh(geo, mat);
+    v.scene.add(mesh);
+    v.mesh = mesh;
 
-    const box = new THREE.Box3().setFromObject(mesh);
-    const size = box.getSize(new THREE.Vector3());
-    const center = box.getCenter(new THREE.Vector3());
-    const maxDim = Math.max(size.x, size.y, size.z);
-    thumbCamera.position.set(center.x, center.y + maxDim * 0.3, center.z + maxDim * 1.4);
-    thumbCamera.lookAt(center);
+    // Compute camera fit
+    var box    = new THREE.Box3().setFromObject(mesh);
+    var center = box.getCenter(new THREE.Vector3());
+    var size   = box.getSize(new THREE.Vector3());
+    var maxDim = Math.max(size.x, size.y, size.z);
 
-    thumbRenderer.render(thumbScene, thumbCamera);
-    const dataURL = thumbRenderer.domElement.toDataURL('image/png');
+    if (loadingEl) loadingEl.classList.add('hidden');
 
-    thumbScene.remove(mesh);
-    geometry.dispose();
-    material.dispose();
+    return { center: center, maxDim: maxDim };
+}
 
-    thumbCache[filename] = dataURL;
-    return dataURL;
+/** Position camera for a viewer given fit info. */
+function fitCamera(v, center, maxDim) {
+    v.camera.position.set(center.x, center.y + maxDim * 0.3, center.z + maxDim * 1.4);
+    v.controls.target.copy(center);
+    v.controls.update();
+}
+
+// ─── Helpers ────────────────────────────────────────────────────────
+function isQueryJudged(queryFile) {
+    return !!(progress.top_1 && progress.top_1[queryFile]);
+}
+
+function getChosenRank(queryFile) {
+    if (!isQueryJudged(queryFile)) return null;
+    return progress.top_1[queryFile].chosen_rank;
+}
+
+function judgedCount() {
+    if (!progress.top_1) return 0;
+    return Object.keys(progress.top_1).length;
+}
+
+function isAllDone() {
+    return judgedCount() >= testScans.length;
 }
 
 // ─── Init ───────────────────────────────────────────────────────────
 async function init() {
     try {
-        const resp = await fetch('{{ url_for("validation.api_judge_state") }}?model=' + encodeURIComponent(MODEL_NAME));
-        const data = await resp.json();
+        var resp = await fetch('{{ url_for("validation.api_judge_state") }}?model=' + encodeURIComponent(MODEL_NAME));
+        var data = await resp.json();
         if (data.error) { alert(data.error); return; }
 
         testScans = data.test_scans;
-        TOP_K_VALUES.push(...data.top_k_values);
-        rankings = data.rankings;
-        progress = data.progress || {};
+        rankings  = data.rankings;
+        progress  = data.progress || {};
 
         findFirstIncomplete();
 
         document.getElementById('judgeLoading').style.display = 'none';
         document.getElementById('judgeUI').style.display = 'block';
 
-        renderSidebar();
-        loadCurrentQuery();
+        // Create inline 3D viewers
+        queryViewer  = createViewer('queryCanvas',  'queryViewerBox');
+        resultViewer = createViewer('resultCanvas', 'resultViewerBox');
+        setupSync();
+        window.addEventListener('resize', handleResize);
 
+        renderSidebar();
+        await loadQuery();
     } catch(e) {
         alert('Failed to load: ' + e.message);
         console.error(e);
@@ -536,378 +683,291 @@ async function init() {
 }
 
 function findFirstIncomplete() {
-    for (let ri = 0; ri < TOP_K_VALUES.length; ri++) {
-        const key = `top_${TOP_K_VALUES[ri]}`;
-        const done = progress[key] || {};
-        for (let qi = 0; qi < testScans.length; qi++) {
-            if (!(testScans[qi] in done)) {
-                currentRoundIdx = ri;
-                currentQueryIdx = qi;
-                return;
-            }
+    for (var i = 0; i < testScans.length; i++) {
+        if (!isQueryJudged(testScans[i])) {
+            currentQueryIdx = i;
+            currentResultIdx = 0;
+            return;
         }
     }
-    currentRoundIdx = TOP_K_VALUES.length;
     currentQueryIdx = 0;
+    currentResultIdx = 0;
 }
 
-function isAllDone() { return currentRoundIdx >= TOP_K_VALUES.length; }
+// ─── Load current query (left panel + first result) ─────────────────
+var queryLoadGen = 0;  // generation counter to discard stale loads
 
-// ─── Build card HTML ────────────────────────────────────────────────
-function makeCard(id, filename, tag, tagClass, extra) {
-    const cached = thumbCache[filename];
-    const thumbHTML = cached
-        ? `<img src="${cached}" alt="scan">`
-        : `<i class="bi bi-hourglass-split thumb-loading"></i>`;
-
-    return `
-        <div class="scan-card-j" id="${id}" data-filename="${filename}">
-            <div class="thumb-box" id="tb_${id}">${thumbHTML}</div>
-            <span class="click-hint-j"><i class="bi bi-badge-3d"></i> Click for 3D</span>
-            <div class="card-info">
-                <span class="card-tag ${tagClass}">${tag}</span>
-                ${extra || ''}
-                <div class="card-name" title="${filename}">${filename}</div>
-            </div>
-        </div>
-    `;
-}
-
-// ─── Load current query cards ───────────────────────────────────────
-async function loadCurrentQuery() {
+async function loadQuery() {
     if (isAllDone()) { showAllDone(); return; }
 
-    renderQueueAbort = true;   // cancel any pending thumbnail renders
-    await new Promise(r => setTimeout(r, 0));  // yield so abort is picked up
+    var gen = ++queryLoadGen;
+    var queryFile = testScans[currentQueryIdx];
+    var results   = rankings[queryFile];
 
-    const k = TOP_K_VALUES[currentRoundIdx];
-    const kKey = `top_${k}`;
-    const queryFile = testScans[currentQueryIdx];
-    const results = rankings[queryFile].slice(0, k);
-
-    // Header labels
-    document.getElementById('roundLabel').textContent = `Top-${k}`;
+    // Header
     document.getElementById('queryCounter').textContent =
-        `Query ${currentQueryIdx + 1} / ${testScans.length}`;
-    document.getElementById('queryLabel').textContent = queryFile;
-    document.getElementById('resultsLabel').textContent = `Top-${k} Results`;
+        'Query ' + (currentQueryIdx + 1) + ' / ' + testScans.length;
 
-    // Show existing verdict badge if already judged
-    const existingVerdict = (progress[kKey] && progress[kKey][queryFile])
-        ? progress[kKey][queryFile].verdict : null;
-    let verdictBadge = '';
-    if (existingVerdict) {
-        const label = existingVerdict === 'pass' ? 'PASSED' : 'FAILED';
-        verdictBadge = `<span class="existing-verdict-badge ${existingVerdict}">${label}</span>`;
+    // Query label + verdict badge
+    var rank = getChosenRank(queryFile);
+    var badge = '';
+    if (rank !== null) {
+        badge = rank === 0
+            ? '<span class="verdict-badge fail">FAILED</span>'
+            : '<span class="verdict-badge pass">PASSED #' + rank + '</span>';
     }
-    document.getElementById('queryLabel').innerHTML =
-        `${queryFile}${verdictBadge}`;
+    document.getElementById('queryLabel').innerHTML = queryFile + badge;
+    document.getElementById('queryFileName').textContent = queryFile;
 
-    // Update navigation buttons
-    document.getElementById('prevBtn').disabled = (currentQueryIdx <= 0);
-    document.getElementById('nextBtn').disabled = (currentQueryIdx >= testScans.length - 1);
-    document.getElementById('navIndicator').textContent =
-        `${currentQueryIdx + 1} / ${testScans.length}`;
+    // Query nav
+    document.getElementById('qPrevBtn').disabled = (currentQueryIdx <= 0);
+    document.getElementById('qNextBtn').disabled = (currentQueryIdx >= testScans.length - 1);
+    document.getElementById('qNavLabel').textContent = (currentQueryIdx + 1) + ' / ' + testScans.length;
 
-    // Query row — single card, centred
-    const queryRow = document.getElementById('queryRow');
-    queryRow.innerHTML = `
-        <div class="col-6 col-md-4 col-lg-3 query-col">
-            ${makeCard('q_card', queryFile, 'QUERY', 'query-tag')}
-        </div>
-    `;
-    queryRow.querySelector('.scan-card-j').addEventListener('click', () => openModal(queryFile));
+    // Show panels
+    document.getElementById('actionBar').style.display = '';
+    document.querySelector('.result-nav').style.display = '';
+    document.getElementById('queryNav').style.display = '';
 
-    // Results grid — responsive columns
-    const resultsGrid = document.getElementById('resultsGrid');
-    resultsGrid.innerHTML = '';
-
-    const thumbTargets = [];
-
-    // Check if query thumb needs rendering
-    if (!thumbCache[queryFile]) {
-        thumbTargets.push({ el: document.getElementById('tb_q_card'), filename: queryFile, id: 'q_card' });
-    }
-
-    results.forEach((r, i) => {
-        const cardId = `r_card_${i}`;
-        const simPct = (r.similarity * 100).toFixed(1);
-        const col = document.createElement('div');
-        // For top-5: 3 columns on lg. For top-10: 4 columns on lg.
-        col.className = k <= 5
-            ? 'col-6 col-md-4 col-lg-4'
-            : 'col-6 col-md-4 col-lg-3 col-xl-2';
-        col.innerHTML = makeCard(
-            cardId, r.filename,
-            `#${i + 1}`, 'result-tag',
-            `<span class="card-sim">${simPct}%</span>`
-        );
-        resultsGrid.appendChild(col);
-
-        col.querySelector('.scan-card-j').addEventListener('click', () => openModal(r.filename));
-
-        if (!thumbCache[r.filename]) {
-            thumbTargets.push({ el: document.getElementById(`tb_${cardId}`), filename: r.filename, id: cardId });
-        }
-    });
-
-    waitingVerdict = true;
     renderSidebar();
 
-    // Render thumbnails sequentially
-    if (thumbTargets.length > 0) {
-        renderThumbQueue(thumbTargets);
+    // Load query STL into left viewer
+    try {
+        var qFit = await loadIntoViewer(queryViewer, queryFile, 'queryLoading');
+        if (gen !== queryLoadGen) return; // stale
+        fitCamera(queryViewer, qFit.center, qFit.maxDim);
+        // Sync result camera to match
+        syncCamera(queryViewer, resultViewer);
+    } catch(e) {
+        console.error('Failed to load query STL:', e);
     }
-}
 
-async function renderThumbQueue(targets) {
-    renderQueueAbort = false;
-    for (const t of targets) {
-        if (renderQueueAbort) return;
-        try {
-            const dataURL = await renderThumbnail(t.filename);
-            const el = document.getElementById(`tb_${t.id}`);
-            if (el) el.innerHTML = `<img src="${dataURL}" alt="scan">`;
-        } catch(e) {
-            console.warn('Thumb render failed:', t.filename, e);
-            const el = document.getElementById(`tb_${t.id}`);
-            if (el) el.innerHTML = `<i class="bi bi-exclamation-triangle thumb-loading"></i>`;
+    // Load first result
+    currentResultIdx = 0;
+    await loadResult();
+
+    // Prefetch remaining result geometries in background
+    for (var i = 1; i < results.length; i++) {
+        if (gen !== queryLoadGen) return;
+        var fn = results[i].filename;
+        if (!geoCache[fn]) {
+            getGeometry(fn).catch(function() {});
         }
     }
 }
 
-// ─── 3D Modal Viewer ────────────────────────────────────────────────
-let modalScene, modalCamera, modalRenderer, modalControls, modalAnimId;
-let modalInitialized = false;
+// ─── Load current result (right panel) ──────────────────────────────
+async function loadResult() {
+    var queryFile = testScans[currentQueryIdx];
+    var results   = rankings[queryFile];
+    var r         = results[currentResultIdx];
+    var rank      = currentResultIdx + 1;
 
-function initModalViewer() {
-    const canvas = document.getElementById('modalCanvas');
-    const panel = document.getElementById('modalViewerPanel');
-    const w = panel.clientWidth, h = panel.clientHeight;
+    // Labels
+    document.getElementById('resultLabel').textContent = 'Result #' + rank;
+    document.getElementById('resultSim').textContent =
+        (r.similarity * 100).toFixed(1) + '% similarity';
+    document.getElementById('resultRankTag').textContent = '#' + rank;
+    document.getElementById('resultFileName').textContent = r.filename;
+    document.getElementById('resultSimSmall').textContent =
+        (r.similarity * 100).toFixed(1) + '%';
 
-    modalScene = new THREE.Scene();
-    modalScene.background = new THREE.Color(0x1a1a2e);
-    modalScene.add(new THREE.AmbientLight(0xffffff, 0.6));
-    const d1 = new THREE.DirectionalLight(0xffffff, 0.8);
-    d1.position.set(1, 1, 1); modalScene.add(d1);
-    const d2 = new THREE.DirectionalLight(0xffffff, 0.4);
-    d2.position.set(-1, -0.5, -1); modalScene.add(d2);
+    // Nav buttons
+    document.getElementById('resultPrevBtn').disabled = (currentResultIdx <= 0);
+    document.getElementById('resultNextBtn').disabled = (currentResultIdx >= MAX_RESULTS - 1);
+    document.getElementById('resultNavLabel').textContent = rank + ' / ' + MAX_RESULTS;
+    document.getElementById('passRankLabel').textContent = rank;
 
-    modalCamera = new THREE.PerspectiveCamera(50, w / h, 0.1, 2000);
-    modalRenderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-    modalRenderer.setSize(w, h);
-    modalRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    // Fail button only on #10
+    document.getElementById('passBtn').style.display = '';
+    document.getElementById('failBtn').style.display =
+        (currentResultIdx === MAX_RESULTS - 1) ? '' : 'none';
 
-    modalControls = new OrbitControls(modalCamera, canvas);
-    modalControls.enableDamping = true;
-    modalControls.dampingFactor = 0.1;
-    modalControls.autoRotate = true;
-    modalControls.autoRotateSpeed = 2.0;
+    // Disable actions if already judged
+    var alreadyJudged = isQueryJudged(queryFile);
+    document.getElementById('passBtn').disabled = alreadyJudged;
+    document.getElementById('failBtn').disabled = alreadyJudged;
 
-    modalInitialized = true;
-}
-
-function startModalAnimation() {
-    function animate() {
-        modalAnimId = requestAnimationFrame(animate);
-        modalControls.update();
-        modalRenderer.render(modalScene, modalCamera);
-    }
-    animate();
-}
-
-function stopModalAnimation() {
-    if (modalAnimId) { cancelAnimationFrame(modalAnimId); modalAnimId = null; }
-}
-
-function clearModalScene() {
-    if (!modalScene) return;
-    const toRemove = [];
-    modalScene.traverse(c => { if (c.isMesh) toRemove.push(c); });
-    toRemove.forEach(m => {
-        m.geometry.dispose();
-        m.material.dispose();
-        modalScene.remove(m);
-    });
-}
-
-async function openModal(filename) {
-    document.getElementById('modalFileName').textContent = filename;
-
-    const modalEl = document.getElementById('viewerModal');
-    const bsModal = bootstrap.Modal.getOrCreateInstance(modalEl);
-    bsModal.show();
-
-    await new Promise(r => modalEl.addEventListener('shown.bs.modal', r, { once: true }));
-
-    if (!modalInitialized) initModalViewer();
-
-    const panel = document.getElementById('modalViewerPanel');
-    const w = panel.clientWidth, h = panel.clientHeight;
-    modalCamera.aspect = w / h;
-    modalCamera.updateProjectionMatrix();
-    modalRenderer.setSize(w, h);
-
-    clearModalScene();
-    startModalAnimation();
-
+    // Load result STL — preserve current camera orientation
     try {
-        const geo = await loadSTLAsync(stlUrl(filename));
-        geo.computeVertexNormals();
-        geo.center();
-        geo.rotateX(-Math.PI / 2);
-
-        const mat = new THREE.MeshPhongMaterial({
-            color: 0xc8ddf0, specular: 0x444444, shininess: 60
-        });
-        const mesh = new THREE.Mesh(geo, mat);
-        modalScene.add(mesh);
-
-        const box = new THREE.Box3().setFromObject(mesh);
-        const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3());
-        const maxDim = Math.max(size.x, size.y, size.z);
-        modalCamera.position.set(center.x, center.y + maxDim * 0.3, center.z + maxDim * 1.4);
-        modalControls.target.copy(center);
-        modalControls.update();
+        var rFit = await loadIntoViewer(resultViewer, r.filename, 'resultLoading');
+        // Don't reset camera — keep synced orientation from query
     } catch(e) {
-        console.error('Modal load failed:', filename, e);
+        console.error('Failed to load result STL:', e);
     }
 }
 
-document.getElementById('viewerModal').addEventListener('hidden.bs.modal', () => {
-    stopModalAnimation();
-    clearModalScene();
-});
+// ─── Result navigation ──────────────────────────────────────────────
+function resultPrev() {
+    if (currentResultIdx <= 0) return;
+    currentResultIdx--;
+    loadResult();
+}
 
-// ─── Verdict ────────────────────────────────────────────────────────
-async function submitVerdict(verdict) {
-    if (!waitingVerdict || isAllDone()) return;
-    waitingVerdict = false;
+function resultNext() {
+    if (currentResultIdx >= MAX_RESULTS - 1) return;
+    currentResultIdx++;
+    loadResult();
+}
 
-    const k = TOP_K_VALUES[currentRoundIdx];
-    const kKey = `top_${k}`;
-    const queryFile = testScans[currentQueryIdx];
-    const results = rankings[queryFile].slice(0, k);
+// ─── Query navigation ───────────────────────────────────────────────
+function queryPrev() {
+    if (currentQueryIdx <= 0) return;
+    currentQueryIdx--;
+    currentResultIdx = 0;
+    loadQuery();
+}
+
+function queryNext() {
+    if (currentQueryIdx >= testScans.length - 1) return;
+    currentQueryIdx++;
+    currentResultIdx = 0;
+    loadQuery();
+}
+
+// ─── Verdict submission ─────────────────────────────────────────────
+async function passCurrentResult() {
+    var queryFile = testScans[currentQueryIdx];
+    if (isQueryJudged(queryFile)) return;
+    await submitVerdict(queryFile, currentResultIdx + 1);
+}
+
+async function failAll() {
+    var queryFile = testScans[currentQueryIdx];
+    if (isQueryJudged(queryFile)) return;
+    await submitVerdict(queryFile, 0);
+}
+
+async function submitVerdict(queryFile, chosenRank) {
+    var results = rankings[queryFile];
 
     try {
-        await fetch('{{ url_for("validation.api_judge_verdict") }}', {
+        var resp = await fetch('{{ url_for("validation.api_judge_verdict") }}', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 model: MODEL_NAME,
-                top_k_key: kKey,
                 query_file: queryFile,
-                verdict: verdict,
+                chosen_rank: chosenRank,
                 results: results
             })
         });
+        var data = await resp.json();
+        if (!data.ok) { console.error('Save failed:', data); return; }
+
+        var verdicts = data.verdicts;
+        for (var key of Object.keys(verdicts)) {
+            if (!progress[key]) progress[key] = {};
+            var kVal = parseInt(key.split('_')[1]);
+            progress[key][queryFile] = {
+                verdict: verdicts[key],
+                chosen_rank: chosenRank,
+                results: results.slice(0, kVal)
+            };
+        }
     } catch(e) {
         console.error('Failed to save verdict:', e);
+        return;
     }
 
-    if (!progress[kKey]) progress[kKey] = {};
-    progress[kKey][queryFile] = { verdict, results };
+    renderSidebar();
 
-    advanceToNext();
-    loadCurrentQuery();
-}
+    if (isAllDone()) { loadQuery(); return; }
 
-function advanceToNext() {
-    const k = TOP_K_VALUES[currentRoundIdx];
-    const kKey = `top_${k}`;
-    const done = progress[kKey] || {};
-
-    for (let qi = currentQueryIdx + 1; qi < testScans.length; qi++) {
-        if (!(testScans[qi] in done)) {
-            currentQueryIdx = qi;
+    // Advance to next unjudged
+    for (var i = currentQueryIdx + 1; i < testScans.length; i++) {
+        if (!isQueryJudged(testScans[i])) {
+            currentQueryIdx = i;
+            currentResultIdx = 0;
+            loadQuery();
             return;
         }
     }
-
-    for (let ri = currentRoundIdx + 1; ri < TOP_K_VALUES.length; ri++) {
-        const key = `top_${TOP_K_VALUES[ri]}`;
-        const d = progress[key] || {};
-        for (let qi = 0; qi < testScans.length; qi++) {
-            if (!(testScans[qi] in d)) {
-                currentRoundIdx = ri;
-                currentQueryIdx = qi;
-                return;
-            }
+    for (var i = 0; i <= currentQueryIdx; i++) {
+        if (!isQueryJudged(testScans[i])) {
+            currentQueryIdx = i;
+            currentResultIdx = 0;
+            loadQuery();
+            return;
         }
     }
-
-    currentRoundIdx = TOP_K_VALUES.length;
-    currentQueryIdx = 0;
+    loadQuery();
 }
 
+// ─── All done ───────────────────────────────────────────────────────
 function showAllDone() {
-    document.getElementById('queryLabel').textContent = 'All rounds complete!';
-    document.getElementById('resultsLabel').textContent = 'Done';
-    document.getElementById('roundLabel').textContent = 'Done';
-    document.getElementById('queryCounter').textContent = '';
-    document.getElementById('passBtn').disabled = true;
-    document.getElementById('failBtn').disabled = true;
-    document.getElementById('prevBtn').disabled = true;
-    document.getElementById('nextBtn').disabled = true;
-    document.getElementById('navBar').style.display = 'none';
+    document.getElementById('queryCounter').textContent = 'All 60 queries judged!';
     document.getElementById('reportBtn').style.display = 'inline-block';
-    document.getElementById('queryRow').innerHTML = '';
-    document.getElementById('resultsGrid').innerHTML =
-        '<div class="col-12 text-center py-5"><h5 style="color:var(--oasis-gray-500)"><i class="bi bi-check-circle me-2"></i>All validation rounds complete. Generate your report above.</h5></div>';
-}
-
-// ─── Navigation ─────────────────────────────────────────────────────
-function goToPrev() {
-    if (isAllDone() || currentQueryIdx <= 0) return;
-    currentQueryIdx--;
-    loadCurrentQuery();
-}
-
-function goToNext() {
-    if (isAllDone() || currentQueryIdx >= testScans.length - 1) return;
-    currentQueryIdx++;
-    loadCurrentQuery();
+    document.getElementById('actionBar').style.display = 'none';
+    document.querySelector('.result-nav').style.display = 'none';
+    document.getElementById('queryNav').style.display = 'none';
+    document.getElementById('queryLabel').textContent = 'Complete!';
+    document.getElementById('resultLabel').textContent = 'Done';
+    document.getElementById('resultSim').textContent = '';
+    document.getElementById('queryFileName').textContent = 'All queries complete!';
+    document.getElementById('resultFileName').textContent = 'Generate report above.';
+    clearViewer(queryViewer);
+    clearViewer(resultViewer);
+    renderSidebar();
 }
 
 // ─── Keyboard shortcuts ─────────────────────────────────────────────
-document.addEventListener('keydown', (e) => {
-    // Don't trigger while modal is open
+document.addEventListener('keydown', function(e) {
     if (document.querySelector('.modal.show')) return;
-    if (e.key === 'p' || e.key === 'P') submitVerdict('pass');
-    if (e.key === 'f' || e.key === 'F') submitVerdict('fail');
-    if (e.key === 'ArrowLeft') goToPrev();
-    if (e.key === 'ArrowRight') goToNext();
+
+    if (e.key === 'ArrowLeft' && e.shiftKey)       { queryPrev(); e.preventDefault(); }
+    else if (e.key === 'ArrowRight' && e.shiftKey)  { queryNext(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft')                  { resultPrev(); e.preventDefault(); }
+    else if (e.key === 'ArrowRight')                 { resultNext(); e.preventDefault(); }
+    else if (e.key === 'p' || e.key === 'P')         { passCurrentResult(); }
+    else if (e.key === 'f' || e.key === 'F') {
+        if (currentResultIdx === MAX_RESULTS - 1) failAll();
+    }
 });
 
 // ─── Sidebar ────────────────────────────────────────────────────────
 function renderSidebar() {
-    const container = document.getElementById('roundCards');
+    var container = document.getElementById('sidebarCards');
     container.innerHTML = '';
 
-    TOP_K_VALUES.forEach((k, ri) => {
-        const key = `top_${k}`;
-        const done = progress[key] || {};
-        const count = Object.keys(done).length;
-        const passes = Object.values(done).filter(v => v.verdict === 'pass').length;
-        const pct = count > 0 ? (count / testScans.length * 100).toFixed(0) : 0;
-        const isActive = ri === currentRoundIdx;
+    var total = testScans.length;
+    var done  = judgedCount();
+    var pct   = total > 0 ? (done / total * 100).toFixed(0) : 0;
 
-        const card = document.createElement('div');
-        card.className = `round-card${isActive ? ' active' : ''}`;
-        card.innerHTML = `
-            <div class="d-flex align-items-center justify-content-between">
-                <h6>Top-${k}</h6>
-                <span class="badge-oasis">${count}/${testScans.length}</span>
-            </div>
-            <div class="round-progress">
-                ${passes} pass / ${count - passes} fail
-                ${count > 0 ? ` — ${(passes/count*100).toFixed(1)}% pass rate` : ''}
-            </div>
-            <div class="progress-bar-mini">
-                <div class="fill" style="width:${pct}%"></div>
-            </div>
-        `;
+    var overallCard = document.createElement('div');
+    overallCard.className = 'stat-card';
+    overallCard.style.borderColor = 'var(--oasis-green-400)';
+    overallCard.innerHTML = '<div class="d-flex align-items-center justify-content-between">'
+        + '<h6><i class="bi bi-clipboard-check me-1" style="color:var(--oasis-green-500)"></i>Overall</h6>'
+        + '<span class="badge-oasis">' + done + '/' + total + '</span>'
+        + '</div>'
+        + '<div class="progress-bar-mini" style="margin-top:0.5rem">'
+        + '<div class="fill" style="width:' + pct + '%"></div>'
+        + '</div>';
+    container.appendChild(overallCard);
+
+    TOP_K_VALUES.forEach(function(k) {
+        var key    = 'top_' + k;
+        var d      = progress[key] || {};
+        var count  = Object.keys(d).length;
+        var passes = Object.values(d).filter(function(v) { return v.verdict === 'pass'; }).length;
+        var fails  = count - passes;
+        var rate   = count > 0 ? (passes / count * 100).toFixed(1) : '\u2014';
+
+        var card = document.createElement('div');
+        card.className = 'stat-card';
+        card.innerHTML = '<div class="d-flex align-items-center justify-content-between">'
+            + '<h6>Top-' + k + '</h6>'
+            + '<span style="font-size:0.78rem;font-weight:700;color:' + (passes > fails ? 'var(--oasis-green-600)' : 'var(--oasis-gray-500)') + '">' + rate + '%</span>'
+            + '</div>'
+            + '<div class="stat-progress">'
+            + '<span style="color:#16a34a;font-weight:600">' + passes + ' pass</span> / '
+            + '<span style="color:#dc2626;font-weight:600">' + fails + ' fail</span>'
+            + ' (' + count + '/' + total + ' judged)'
+            + '</div>'
+            + '<div class="progress-bar-mini">'
+            + '<div class="fill" style="width:' + (total > 0 ? (count/total*100).toFixed(0) : 0) + '%"></div>'
+            + '</div>';
         container.appendChild(card);
     });
 }
@@ -915,31 +975,35 @@ function renderSidebar() {
 // ─── Report ─────────────────────────────────────────────────────────
 async function generateReport() {
     try {
-        const resp = await fetch('{{ url_for("validation.api_generate_report") }}', {
+        var resp = await fetch('{{ url_for("validation.api_generate_report") }}', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ model: MODEL_NAME })
         });
-        const data = await resp.json();
+        var data = await resp.json();
         if (!data.ok) { alert(data.error || 'Failed'); return; }
 
-        const report = data.report;
-        let html = `<table class="report-table table"><thead><tr>
-            <th>Top-K</th><th>Queries</th><th>Pass</th><th>Fail</th><th>Rate</th>
-        </tr></thead><tbody>`;
+        var report = data.report;
+        var html = '<table class="report-table table"><thead><tr>'
+            + '<th>Top-K</th><th>Queries</th><th>Pass</th><th>Fail</th><th>Rate</th>'
+            + '</tr></thead><tbody>';
 
-        for (const key of Object.keys(report.top_k_results).sort()) {
-            const r = report.top_k_results[key];
-            html += `<tr>
-                <td><strong>${key}</strong></td>
-                <td>${r.total_queries}</td>
-                <td style="color:#16a34a;font-weight:700">${r.passes}</td>
-                <td style="color:#dc2626;font-weight:700">${r.fails}</td>
-                <td class="rate">${r.pass_rate_percent.toFixed(1)}%</td>
-            </tr>`;
+        var keys = Object.keys(report.top_k_results).sort();
+        for (var i = 0; i < keys.length; i++) {
+            var key = keys[i];
+            var r = report.top_k_results[key];
+            html += '<tr>'
+                + '<td><strong>' + key + '</strong></td>'
+                + '<td>' + r.total_queries + '</td>'
+                + '<td style="color:#16a34a;font-weight:700">' + r.passes + '</td>'
+                + '<td style="color:#dc2626;font-weight:700">' + r.fails + '</td>'
+                + '<td class="rate">' + r.pass_rate_percent.toFixed(1) + '%</td>'
+                + '</tr>';
         }
         html += '</tbody></table>';
-        html += `<p class="text-muted mt-2" style="font-size:0.85rem"><i class="bi bi-check-circle me-1"></i>Report saved to <code>validation/reports/validation_report_${MODEL_NAME}.json</code></p>`;
+        html += '<p class="text-muted mt-2" style="font-size:0.85rem">'
+            + '<i class="bi bi-check-circle me-1"></i>Report saved to '
+            + '<code>validation/reports/validation_report_' + MODEL_NAME + '.json</code></p>';
 
         document.getElementById('reportBody').innerHTML = html;
         new bootstrap.Modal(document.getElementById('reportModal')).show();
@@ -948,11 +1012,14 @@ async function generateReport() {
     }
 }
 
-// Expose for onclick handlers
-window.submitVerdict = submitVerdict;
+// ─── Expose for onclick handlers ────────────────────────────────────
+window.passCurrentResult = passCurrentResult;
+window.failAll       = failAll;
+window.resultPrev    = resultPrev;
+window.resultNext    = resultNext;
+window.queryPrev     = queryPrev;
+window.queryNext     = queryNext;
 window.generateReport = generateReport;
-window.goToPrev = goToPrev;
-window.goToNext = goToNext;
 
 // Boot
 init();

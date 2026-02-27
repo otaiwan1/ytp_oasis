@@ -11,6 +11,7 @@ import copy
 import numpy as np
 import trimesh
 import torch
+from pathlib import Path
 from PIL import Image
 
 from .config import (
@@ -239,5 +240,52 @@ def preprocess_dinov2(
         cfg = views_config[view_name]
         img_np = _render_view(renderer, mesh, cfg, fov_deg)
         images.append(Image.fromarray(img_np).convert("RGB"))
+
+    return images
+
+
+# ─── DINOv3 Gallery preprocessing (iTero penta photos) ──────────────
+
+def preprocess_dinov3_gallery(stl_path):
+    """
+    Extract 5 iTero penta gallery photos from the scan zip file.
+
+    STL filename: ``{patient_uuid}_{scan_id}.stl``
+    Zip location: ``scanfiles/{patient_uuid}/OrthoCAD_Export_{scan_id}.zip``
+    Gallery files inside zip: ``gallery_#{scan_id}_penta_{view}_m.jpg``
+
+    Returns:
+        list[PIL.Image] — 5 RGB images (original 1920×1080).
+    """
+    import zipfile
+    import io
+    from .config import SCANFILES_DIR, DINOV3_GALLERY_PENTA_VIEWS
+
+    stl_path = Path(str(stl_path))
+    stem = stl_path.stem                         # e.g. "04f8f1b3-..._99098472"
+    parts = stem.rsplit("_", 1)
+    if len(parts) != 2:
+        raise ValueError(f"Cannot parse patient_uuid / scan_id from: {stl_path.name}")
+    patient_uuid, scan_id = parts
+
+    # Locate zip
+    zip_path = SCANFILES_DIR / patient_uuid / f"OrthoCAD_Export_{scan_id}.zip"
+    if not zip_path.exists():
+        raise FileNotFoundError(f"Zip not found: {zip_path}")
+
+    # Build expected filenames inside the zip
+    gallery_names = [f"gallery_#{scan_id}_{view}.jpg" for view in DINOV3_GALLERY_PENTA_VIEWS]
+
+    images = []
+    with zipfile.ZipFile(str(zip_path), "r") as zf:
+        zip_contents = set(zf.namelist())
+        for gname in gallery_names:
+            if gname not in zip_contents:
+                raise FileNotFoundError(
+                    f"Gallery image '{gname}' not found in {zip_path.name}"
+                )
+            with zf.open(gname) as f:
+                img = Image.open(io.BytesIO(f.read())).convert("RGB")
+                images.append(img)
 
     return images

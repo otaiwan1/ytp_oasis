@@ -2,6 +2,7 @@
 collecting-data/scanfiles
 collecting-data/stlFiles
 collecting-data/rendered_images
+collecting-data/glbFiles
 normalization/data_part_1
 normalization/simclr_dataset.npy
 venv/

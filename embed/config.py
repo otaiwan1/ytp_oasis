@@ -7,6 +7,7 @@ from pathlib import Path
 # ─── Project layout ──────────────────────────────────────────────────
 PROJECT_ROOT = Path(__file__).parent.parent.resolve()
 STL_DIR = PROJECT_ROOT / "collecting-data" / "stlFiles"
+SCANFILES_DIR = PROJECT_ROOT / "collecting-data" / "scanfiles"
 
 # ─── Checkpoint paths ────────────────────────────────────────────────
 SIMCLR_CHECKPOINT = PROJECT_ROOT / "train" / "simclr" / "best_dental_simclr_multi_gpu.pth"
@@ -45,6 +46,15 @@ DINOV2_VIEWS = ["front", "left", "right", "top", "bottom"]
 
 # Views used for DINOv3 embedding (same as DINOv2)
 DINOV3_VIEWS = ["front", "left", "right", "top", "bottom"]
+
+# ─── DINOv3 Gallery settings (iTero penta photos) ───────────────────
+DINOV3_GALLERY_PENTA_VIEWS = [
+    "penta_front_m",
+    "penta_patientleft_m",
+    "penta_patientright_m",
+    "penta_upper_m",
+    "penta_lower_m",
+]
 
 # ─── Point cloud settings ────────────────────────────────────────────
 NUM_POINTS = 4096

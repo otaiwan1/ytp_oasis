@@ -29,6 +29,7 @@ SUPPORTED_MODELS = {
     'simclr': {'label': 'SimCLR',    'dim': 512,  'desc': 'Contrastive learning (3D point cloud)'},
     'mae':    {'label': 'Point-MAE', 'dim': 384,  'desc': 'Masked autoencoder (3D point cloud + normals)'},
     'dinov3': {'label': 'DINOv3',    'dim': 1024, 'desc': 'DINOv3 ViT-L/16 (multi-view, Gram Anchoring)'},
+    'dinov3_gallery': {'label': 'DINOv3 Gallery', 'dim': 2048, 'desc': 'DINOv3 hybrid pooling (iTero gallery photos)'},
 }
 
 # ─── Paths (relative to project root) ────────────────────────────────
@@ -40,6 +41,10 @@ def _project_root():
 
 def _stl_dir():
     return _project_root() / 'collecting-data' / 'stlFiles'
+
+
+def _glb_dir():
+    return _project_root() / 'collecting-data' / 'glbFiles'
 
 
 def _validation_dir():
@@ -93,8 +98,8 @@ def model_select_page():
             try:
                 with open(prog_path) as f:
                     prog = json.load(f)
-                total_verdicts = sum(len(v) for v in prog.values())
-                progress_summary = total_verdicts
+                # Count unique queries judged (check top_1 key)
+                progress_summary = len(prog.get('top_1', {}))
             except Exception:
                 pass
 
@@ -229,7 +234,15 @@ def api_judge_state():
 
 @validation_bp.route('/api/judge/verdict', methods=['POST'])
 def api_judge_verdict():
-    """Save a single verdict for a specific model."""
+    """Save verdicts for a query based on the chosen rank.
+
+    Accepts chosen_rank (1-10) or 0 for fail-all.  Rules:
+      rank 1       → pass top-1,3,5,10
+      rank 2-3     → pass top-3,5,10; fail top-1
+      rank 4-5     → pass top-5,10; fail top-1,3
+      rank 6-10    → pass top-10; fail top-1,3,5
+      rank 0 (fail)→ fail all
+    """
     data = request.get_json()
     if not data:
         return jsonify({'error': 'No data'}), 400
@@ -238,33 +251,58 @@ def api_judge_verdict():
     if not _validate_model(model_name):
         return jsonify({'error': f'Unknown model: {model_name}'}), 400
 
-    top_k_key = data.get('top_k_key')      # e.g. "top_1"
     query_file = data.get('query_file')
-    verdict = data.get('verdict')            # "pass" or "fail"
-    results = data.get('results', [])
+    chosen_rank = data.get('chosen_rank')  # 1-10 or 0
+    results = data.get('results', [])      # full top-10 results
 
-    if not all([top_k_key, query_file, verdict]):
+    if not query_file or chosen_rank is None:
         return jsonify({'error': 'Missing fields'}), 400
 
-    progress_path = _progress_path(model_name)
+    chosen_rank = int(chosen_rank)
 
+    # Determine verdict for each top-k
+    verdicts = {}
+    for k in TOP_K_VALUES:
+        if chosen_rank == 0:
+            verdicts[f'top_{k}'] = 'fail'
+        elif chosen_rank <= k:
+            verdicts[f'top_{k}'] = 'pass'
+        else:
+            verdicts[f'top_{k}'] = 'fail'
+
+    progress_path = _progress_path(model_name)
     progress = {}
     if progress_path.exists():
         with open(progress_path) as f:
             progress = json.load(f)
 
-    if top_k_key not in progress:
-        progress[top_k_key] = {}
-
-    progress[top_k_key][query_file] = {
-        'verdict': verdict,
-        'results': results
-    }
+    for key, verdict in verdicts.items():
+        if key not in progress:
+            progress[key] = {}
+        k_val = int(key.split('_')[1])
+        progress[key][query_file] = {
+            'verdict': verdict,
+            'chosen_rank': chosen_rank,
+            'results': results[:k_val]
+        }
 
     with open(progress_path, 'w') as f:
         json.dump(progress, f, indent=2)
 
-    return jsonify({'ok': True})
+    return jsonify({'ok': True, 'verdicts': verdicts})
+
+
+@validation_bp.route('/review')
+def review_page():
+    """Render the validation review page for a specific model."""
+    model_name = request.args.get('model', 'dinov2')
+    if not _validate_model(model_name):
+        return redirect(url_for('validation.model_select_page'))
+
+    meta = SUPPORTED_MODELS[model_name]
+    return render_template('validation/review.html',
+                           model_name=model_name,
+                           model_label=meta['label'])
 
 
 @validation_bp.route('/api/judge/report', methods=['POST'])
@@ -332,8 +370,31 @@ def api_reset_progress():
 
 
 # ─────────────────────────────────────────────────────────────────────
-#  Serve STL files for 3D viewing
+#  Serve 3D model files for viewing
 # ─────────────────────────────────────────────────────────────────────
+
+@validation_bp.route('/glb/<filename>')
+def serve_glb(filename):
+    """Serve a pre-compressed GLB file (gzip-compressed on disk).
+
+    The files are stored as gzip-compressed GLB.  We set the appropriate
+    Content-Encoding header so the browser decompresses transparently.
+    """
+    from flask import make_response
+    glb_dir = _glb_dir()
+    # Filename coming in is like "scan_name.glb", stored as "scan_name.glb" (gzipped)
+    stem = filename.replace('.glb', '')
+    disk_name = stem + '.glb'
+    fpath = glb_dir / disk_name
+    if not fpath.exists():
+        abort(404)
+    data = fpath.read_bytes()
+    resp = make_response(data)
+    resp.headers['Content-Type'] = 'model/gltf-binary'
+    resp.headers['Content-Encoding'] = 'gzip'
+    resp.headers['Cache-Control'] = 'public, max-age=604800'  # 7 days
+    return resp
+
 
 @validation_bp.route('/stl/<filename>')
 def serve_stl(filename):

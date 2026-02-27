@@ -76,6 +76,10 @@
         background: linear-gradient(135deg, #a78bfa, #7c3aed);
         color: white;
     }
+    .model-icon.dinov3_gallery {
+        background: linear-gradient(135deg, #2dd4bf, #14b8a6);
+        color: white;
+    }
 
     .model-card h5 {
         font-weight: 800;
@@ -198,6 +202,8 @@
                     <i class="bi bi-grid-3x3"></i>
                 {% elif m.name == 'dinov3' %}
                     <i class="bi bi-stars"></i>
+                {% elif m.name == 'dinov3_gallery' %}
+                    <i class="bi bi-camera"></i>
                 {% endif %}
             </div>
 
@@ -210,7 +216,7 @@
                 {% if m.progress_count is not none %}
                 <div class="model-progress">
                     <i class="bi bi-check2-circle prog-icon"></i>
-                    {{ m.progress_count }} verdicts recorded
+                    {{ m.progress_count }} / 60 queries judged
                 </div>
                 {% endif %}
 
@@ -240,6 +246,11 @@
                         <i class="bi bi-play-fill me-1"></i>
                         {% if m.progress_count %}Continue{% else %}Start{% endif %} Validation
                     </a>
+                    {% if m.progress_count and m.progress_count >= 60 %}
+                    <a class="btn-reset" href="{{ url_for('validation.review_page', model=m.name) }}" style="border-color:var(--oasis-green-400); color:var(--oasis-green-600); text-decoration:none;">
+                        <i class="bi bi-search me-1"></i>Review
+                    </a>
+                    {% endif %}
                     {% if m.progress_count %}
                     <button class="btn-reset" onclick="resetModel('{{ m.name }}', '{{ m.label }}')">
                         <i class="bi bi-arrow-counterclockwise me-1"></i>Reset

@@ -1,0 +1,871 @@
+{% extends "base.html" %}
+{% block title %}Validation — Review{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ── Page layout ─────────────────────────────────────────── */
+    .review-outer {
+        display: flex;
+        gap: 1rem;
+    }
+    .review-main { flex: 1; min-width: 0; }
+    .review-sidebar {
+        width: 280px;
+        flex-shrink: 0;
+        overflow-y: auto;
+        max-height: calc(100vh - 140px);
+        position: sticky;
+        top: 90px;
+    }
+
+    /* ── Header bar ──────────────────────────────────────────── */
+    .review-header {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 0.75rem;
+        flex-wrap: wrap;
+    }
+    .review-header .counter {
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: var(--oasis-gray-500);
+    }
+
+    /* ── Two-panel layout ────────────────────────────────────── */
+    .review-panels {
+        display: flex;
+        gap: 1.5rem;
+        align-items: flex-start;
+    }
+    .panel-query, .panel-result {
+        flex: 1;
+        min-width: 0;
+    }
+
+    /* ── 3D viewer box ───────────────────────────────────────── */
+    .viewer-box {
+        width: 100%;
+        height: 520px;
+        background: #1a1a2e;
+        border-radius: 14px;
+        overflow: hidden;
+        position: relative;
+        border: 1px solid var(--oasis-gray-200);
+    }
+    .viewer-box canvas {
+        width: 100% !important;
+        height: 100% !important;
+        display: block;
+        border-radius: 14px;
+    }
+    .viewer-box .viewer-loading {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: rgba(255,255,255,0.3);
+        font-size: 2rem;
+        pointer-events: none;
+        z-index: 2;
+    }
+    .viewer-box .viewer-loading.hidden { display: none; }
+    .panel-query .viewer-box { border-color: #fbbf24; border-width: 2px; }
+    .viewer-hint {
+        position: absolute;
+        bottom: 8px; left: 0; right: 0;
+        text-align: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: rgba(255,255,255,0.45);
+        pointer-events: none;
+        z-index: 3;
+    }
+
+    /* ── Card info strip ─────────────────────────────────────── */
+    .card-info-strip {
+        padding: 0.4rem 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .card-tag {
+        font-weight: 800;
+        font-size: 0.72rem;
+        border-radius: 6px;
+        padding: 0.15rem 0.5rem;
+        display: inline-block;
+    }
+    .card-tag.query-tag { background: #fef3c7; color: #92400e; }
+    .card-tag.result-tag { background: #dbeafe; color: #1e40af; }
+    .card-name {
+        font-size: 0.72rem;
+        color: var(--oasis-gray-500);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        flex: 1;
+    }
+    .card-sim {
+        font-weight: 700;
+        font-size: 0.78rem;
+        color: var(--oasis-green-600);
+    }
+
+    /* ── Section labels ──────────────────────────────────────── */
+    .section-label {
+        font-weight: 800;
+        font-size: 0.95rem;
+        margin-bottom: 0.5rem;
+        color: var(--oasis-gray-700);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .section-label .sep {
+        flex: 1;
+        height: 1px;
+        background: var(--oasis-gray-200);
+    }
+
+    /* ── Verdict badge ───────────────────────────────────────── */
+    .verdict-badge {
+        display: inline-block;
+        font-size: 0.78rem;
+        font-weight: 700;
+        border-radius: 8px;
+        padding: 0.2rem 0.6rem;
+        margin-left: 0.5rem;
+    }
+    .verdict-badge.pass { background: #dcfce7; color: #16a34a; }
+    .verdict-badge.fail { background: #fee2e2; color: #dc2626; }
+
+    /* ── Big verdict banner on query card ─────────────────────── */
+    .verdict-banner {
+        text-align: center;
+        padding: 0.5rem;
+        border-radius: 10px;
+        font-weight: 800;
+        font-size: 1rem;
+        margin-top: 0.4rem;
+    }
+    .verdict-banner.fail-all {
+        background: linear-gradient(135deg, #fee2e2, #fecaca);
+        color: #dc2626;
+        border: 2px solid #fca5a5;
+    }
+    .verdict-banner.pass-rank {
+        background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+        color: #16a34a;
+        border: 2px solid #86efac;
+    }
+
+    /* ── Result navigation ───────────────────────────────────── */
+    .result-nav {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        align-items: center;
+        padding: 0.75rem 0 0.25rem;
+    }
+    .btn-rnav {
+        background: white;
+        border: 1px solid var(--oasis-gray-300);
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 0.5rem 1.1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: var(--oasis-gray-700);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    .btn-rnav:hover:not(:disabled) {
+        background: var(--oasis-green-50);
+        border-color: var(--oasis-green-400);
+        color: var(--oasis-green-700);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(34,197,94,0.12);
+    }
+    .btn-rnav:disabled { opacity: 0.3; cursor: not-allowed; }
+    .rnav-indicator {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--oasis-gray-600);
+        min-width: 100px;
+        text-align: center;
+    }
+
+    /* ── Result pass/fail indicator ───────────────────────────── */
+    .result-verdict-indicator {
+        text-align: center;
+        font-weight: 700;
+        font-size: 0.85rem;
+        padding: 0.3rem 0;
+    }
+    .result-verdict-indicator.is-chosen {
+        color: #16a34a;
+    }
+    .result-verdict-indicator.not-chosen {
+        color: var(--oasis-gray-400);
+    }
+
+    /* ── Query navigation ────────────────────────────────────── */
+    .query-nav {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        align-items: center;
+        padding: 0.5rem 0;
+        margin-top: 0.5rem;
+        border-top: 1px solid var(--oasis-gray-200);
+    }
+    .btn-qnav {
+        background: white;
+        border: 1px solid var(--oasis-gray-300);
+        border-radius: 10px;
+        font-weight: 700;
+        font-size: 0.82rem;
+        padding: 0.4rem 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        color: var(--oasis-gray-600);
+        display: inline-flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    .btn-qnav:hover:not(:disabled) {
+        background: var(--oasis-green-50);
+        border-color: var(--oasis-green-400);
+        color: var(--oasis-green-700);
+    }
+    .btn-qnav:disabled { opacity: 0.3; cursor: not-allowed; }
+    .qnav-indicator {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: var(--oasis-gray-500);
+        min-width: 80px;
+        text-align: center;
+    }
+
+    .key-hint {
+        font-size: 0.78rem;
+        color: var(--oasis-gray-500);
+        text-align: center;
+        margin-top: 0.3rem;
+    }
+    .key-hint kbd {
+        background: var(--oasis-gray-200);
+        border-radius: 4px;
+        padding: 0.1rem 0.4rem;
+        font-weight: 700;
+        color: var(--oasis-gray-700);
+    }
+
+    /* ── Sidebar ─────────────────────────────────────────────── */
+    .sidebar-item {
+        background: white;
+        border: 1px solid var(--oasis-gray-200);
+        border-radius: 10px;
+        padding: 0.5rem 0.7rem;
+        margin-bottom: 0.35rem;
+        cursor: pointer;
+        transition: all 0.2s;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.78rem;
+    }
+    .sidebar-item:hover {
+        border-color: var(--oasis-green-400);
+        background: var(--oasis-green-50);
+    }
+    .sidebar-item.active {
+        border-color: var(--oasis-green-500);
+        background: var(--oasis-green-50);
+        box-shadow: 0 2px 8px rgba(34,197,94,0.15);
+    }
+    .sidebar-item .si-rank {
+        font-weight: 800;
+        min-width: 22px;
+        text-align: center;
+    }
+    .sidebar-item .si-rank.rank-fail { color: #dc2626; }
+    .sidebar-item .si-rank.rank-pass { color: #16a34a; }
+    .sidebar-item .si-name {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--oasis-gray-600);
+    }
+    .sidebar-item .si-badge {
+        font-size: 0.68rem;
+        font-weight: 700;
+        border-radius: 6px;
+        padding: 0.1rem 0.4rem;
+    }
+    .sidebar-item .si-badge.fail { background: #fee2e2; color: #dc2626; }
+    .sidebar-item .si-badge.pass { background: #dcfce7; color: #16a34a; }
+
+    /* ── Loading ─────────────────────────────────────────────── */
+    .review-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 60vh;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    /* ── Responsive ──────────────────────────────────────────── */
+    @media (max-width: 992px) {
+        .review-panels { flex-direction: column; }
+        .review-outer  { flex-direction: column; }
+        .review-sidebar { width: 100%; max-height: none; position: static; }
+        .viewer-box { height: 360px; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid px-4 py-3">
+    <!-- Loading -->
+    <div class="review-loading" id="reviewLoading">
+        <div class="spinner-oasis"></div>
+        <h5 style="font-weight:700; color:var(--oasis-gray-700);">Loading review data...</h5>
+        <p style="color:var(--oasis-gray-500);font-size:0.9rem">Loading results for {{ model_label }}</p>
+    </div>
+
+    <!-- Main UI -->
+    <div id="reviewUI" style="display:none">
+        <div class="review-header">
+            <a href="{{ url_for('validation.model_select_page') }}" class="btn btn-oasis-outline btn-sm" style="margin-right:0.25rem;">
+                <i class="bi bi-arrow-left me-1"></i>Models
+            </a>
+            <div>
+                <h4 style="margin:0; font-weight:800;">
+                    <i class="bi bi-search me-2" style="color:var(--oasis-green-500)"></i>{{ model_label }}
+                    <span style="font-size:0.75rem; font-weight:600; color:var(--oasis-gray-500); vertical-align:middle; margin-left:0.5rem;">Validation Review</span>
+                </h4>
+            </div>
+            <span class="counter" id="queryCounter">&mdash;</span>
+            <span class="counter" style="margin-left:auto; font-size:0.78rem; color:var(--oasis-gray-400)">
+                Sorted worst → best
+            </span>
+        </div>
+
+        <div class="review-outer">
+            <div class="review-main">
+                <div class="review-panels">
+                    <!-- LEFT: Query scan -->
+                    <div class="panel-query">
+                        <div class="section-label">
+                            <i class="bi bi-search"></i> Query Scan
+                            <span class="sep"></span>
+                        </div>
+                        <div class="viewer-box" id="queryViewerBox">
+                            <canvas id="queryCanvas"></canvas>
+                            <div class="viewer-loading" id="queryLoading"><i class="bi bi-hourglass-split"></i></div>
+                            <div class="viewer-hint"><i class="bi bi-arrows-move me-1"></i>Drag to rotate &bull; Scroll to zoom</div>
+                        </div>
+                        <div class="card-info-strip" id="queryInfo">
+                            <span class="card-tag query-tag">QUERY</span>
+                            <span class="card-name" id="queryFileName">&mdash;</span>
+                        </div>
+                        <div id="verdictBanner"></div>
+                    </div>
+
+                    <!-- RIGHT: Result scan -->
+                    <div class="panel-result">
+                        <div class="section-label">
+                            <i class="bi bi-trophy"></i> <span id="resultLabel">Result #1</span>
+                            <span class="sep"></span>
+                            <span id="resultSim" style="font-weight:700; font-size:0.82rem; color:var(--oasis-green-600)">&mdash;</span>
+                        </div>
+                        <div class="viewer-box" id="resultViewerBox">
+                            <canvas id="resultCanvas"></canvas>
+                            <div class="viewer-loading" id="resultLoading"><i class="bi bi-hourglass-split"></i></div>
+                            <div class="viewer-hint"><i class="bi bi-arrows-move me-1"></i>Drag to rotate &bull; Scroll to zoom</div>
+                        </div>
+                        <div class="card-info-strip" id="resultInfo">
+                            <span class="card-tag result-tag" id="resultRankTag">#1</span>
+                            <span class="card-name" id="resultFileName">&mdash;</span>
+                            <span class="card-sim" id="resultSimSmall">&mdash;</span>
+                        </div>
+                        <div id="resultVerdictIndicator" class="result-verdict-indicator"></div>
+
+                        <!-- Result navigation -->
+                        <div class="result-nav">
+                            <button class="btn-rnav" id="resultPrevBtn" onclick="resultPrev()">
+                                <i class="bi bi-chevron-left"></i> Prev
+                            </button>
+                            <span class="rnav-indicator" id="resultNavLabel">1 / 10</span>
+                            <button class="btn-rnav" id="resultNextBtn" onclick="resultNext()">
+                                Next <i class="bi bi-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Query navigation -->
+                <div class="query-nav" id="queryNav">
+                    <button class="btn-qnav" id="qPrevBtn" onclick="queryPrev()">
+                        <i class="bi bi-skip-backward"></i> Prev Query
+                    </button>
+                    <span class="qnav-indicator" id="qNavLabel">1 / 60</span>
+                    <button class="btn-qnav" id="qNextBtn" onclick="queryNext()">
+                        Next Query <i class="bi bi-skip-forward"></i>
+                    </button>
+                </div>
+
+                <div class="key-hint">
+                    <kbd>&larr;</kbd> / <kbd>&rarr;</kbd> navigate results &nbsp;|&nbsp;
+                    <kbd>Shift+&larr;</kbd> / <kbd>Shift+&rarr;</kbd> navigate queries &nbsp;|&nbsp;
+                    Drag to rotate &bull; Scroll to zoom (synchronized)
+                </div>
+            </div>
+
+            <!-- Sidebar: sorted query list -->
+            <div class="review-sidebar">
+                <h6 style="font-weight:700; margin-bottom:0.6rem; color:var(--oasis-gray-700); font-size:0.9rem;">
+                    <i class="bi bi-sort-down me-1"></i>Queries (worst → best)
+                </h6>
+                <div id="sidebarList"></div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+// ─── Constants ──────────────────────────────────────────────────────
+const MODEL_NAME  = '{{ model_name }}';
+const MODEL_LABEL = '{{ model_label }}';
+const MAX_RESULTS = 10;
+
+// ─── State ──────────────────────────────────────────────────────────
+let sortedQueries = [];   // [{filename, chosen_rank}, ...] sorted worst→best
+let rankings      = {};
+let progress      = {};
+
+let currentQueryIdx  = 0;
+let currentResultIdx = 0;
+
+// ─── GLB loader & geometry cache ────────────────────────────────────
+const glbLoader = new GLTFLoader();
+const geoCache  = {};
+
+function glbUrl(filename) {
+    var stem = filename.replace(/\.stl$/i, '');
+    return `{{ url_for("validation.serve_glb", filename="__PH__") }}`
+        .replace('__PH__', encodeURIComponent(stem + '.glb'));
+}
+
+function loadGLBAsync(url) {
+    return new Promise(function(resolve, reject) {
+        glbLoader.load(url, resolve, undefined, reject);
+    });
+}
+
+async function getGeometry(filename) {
+    if (!geoCache[filename]) {
+        var gltf = await loadGLBAsync(glbUrl(filename));
+        var geo = null;
+        gltf.scene.traverse(function(child) {
+            if (!geo && child.isMesh && child.geometry) {
+                geo = child.geometry;
+            }
+        });
+        if (!geo) throw new Error('No mesh found in GLB: ' + filename);
+        geo.computeVertexNormals();
+        geo.center();
+        geo.rotateX(-Math.PI / 2);
+        geoCache[filename] = geo;
+    }
+    return geoCache[filename].clone();
+}
+
+// ─── Dual inline 3D viewers ────────────────────────────────────────
+var queryViewer  = null;
+var resultViewer = null;
+var syncing = false;
+
+function createViewer(canvasId, boxId) {
+    var canvas = document.getElementById(canvasId);
+    var box    = document.getElementById(boxId);
+    var w = box.clientWidth, h = box.clientHeight;
+
+    var scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x1a1a2e);
+    scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+    var d1 = new THREE.DirectionalLight(0xffffff, 0.8);
+    d1.position.set(1, 1, 1); scene.add(d1);
+    var d2 = new THREE.DirectionalLight(0xffffff, 0.4);
+    d2.position.set(-1, -0.5, -1); scene.add(d2);
+
+    var camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 2000);
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: true });
+    renderer.setSize(w, h);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    var controls = new OrbitControls(camera, canvas);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.1;
+    controls.autoRotate    = false;
+
+    var viewer = {
+        scene: scene, camera: camera, renderer: renderer,
+        controls: controls, mesh: null, animId: null,
+        boxId: boxId, canvasId: canvasId
+    };
+
+    function animate() {
+        viewer.animId = requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+    }
+    animate();
+
+    return viewer;
+}
+
+function syncCamera(src, dst) {
+    if (syncing) return;
+    syncing = true;
+    dst.controls.target.copy(src.controls.target);
+    dst.camera.position.copy(src.camera.position);
+    dst.camera.quaternion.copy(src.camera.quaternion);
+    dst.controls.update();
+    syncing = false;
+}
+
+function setupSync() {
+    queryViewer.controls.addEventListener('change', function() {
+        syncCamera(queryViewer, resultViewer);
+    });
+    resultViewer.controls.addEventListener('change', function() {
+        syncCamera(resultViewer, queryViewer);
+    });
+}
+
+function handleResize() {
+    [queryViewer, resultViewer].forEach(function(v) {
+        if (!v) return;
+        var box = document.getElementById(v.boxId);
+        var w = box.clientWidth, h = box.clientHeight;
+        v.camera.aspect = w / h;
+        v.camera.updateProjectionMatrix();
+        v.renderer.setSize(w, h);
+    });
+}
+
+function clearViewer(v) {
+    if (!v || !v.mesh) return;
+    v.scene.remove(v.mesh);
+    v.mesh.geometry.dispose();
+    v.mesh.material.dispose();
+    v.mesh = null;
+}
+
+async function loadIntoViewer(v, filename, loadingId) {
+    var loadingEl = document.getElementById(loadingId);
+    if (loadingEl) loadingEl.classList.remove('hidden');
+
+    clearViewer(v);
+
+    var geo = await getGeometry(filename);
+    var mat = new THREE.MeshPhongMaterial({
+        color: 0xc8ddf0, specular: 0x444444, shininess: 60
+    });
+    var mesh = new THREE.Mesh(geo, mat);
+    v.scene.add(mesh);
+    v.mesh = mesh;
+
+    var box    = new THREE.Box3().setFromObject(mesh);
+    var center = box.getCenter(new THREE.Vector3());
+    var size   = box.getSize(new THREE.Vector3());
+    var maxDim = Math.max(size.x, size.y, size.z);
+
+    if (loadingEl) loadingEl.classList.add('hidden');
+    return { center: center, maxDim: maxDim };
+}
+
+function fitCamera(v, center, maxDim) {
+    v.camera.position.set(center.x, center.y + maxDim * 0.3, center.z + maxDim * 1.4);
+    v.controls.target.copy(center);
+    v.controls.update();
+}
+
+// ─── Init ───────────────────────────────────────────────────────────
+async function init() {
+    try {
+        var resp = await fetch('{{ url_for("validation.api_judge_state") }}?model=' + encodeURIComponent(MODEL_NAME));
+        var data = await resp.json();
+        if (data.error) { alert(data.error); return; }
+
+        rankings = data.rankings;
+        progress = data.progress || {};
+
+        // Build sorted list: worst (rank 0 = fail) → best (rank 1)
+        var testScans = data.test_scans;
+        var items = [];
+        for (var i = 0; i < testScans.length; i++) {
+            var fn = testScans[i];
+            var chosenRank = 0;
+            if (progress.top_1 && progress.top_1[fn]) {
+                chosenRank = progress.top_1[fn].chosen_rank;
+            }
+            items.push({ filename: fn, chosen_rank: chosenRank });
+        }
+
+        // Sort: rank 0 first (fail all), then 10, 9, 8, ... 1 (best)
+        // Lower chosen_rank = worse, but 0 is worst of all
+        items.sort(function(a, b) {
+            // Map: 0 → -1 (worst), otherwise negate so 10 < 9 < ... < 1
+            var va = a.chosen_rank === 0 ? -1 : -a.chosen_rank;
+            var vb = b.chosen_rank === 0 ? -1 : -b.chosen_rank;
+            // Ascending sort: most negative (worst) first
+            // rank 0 → -1 (worst)
+            // rank 10 → -10 (next worst)
+            // rank 1 → -1 ... wait, 0 and 1 would collide
+            // Better approach: explicit sort key
+            // Worst to best: 0 (fail all), 10, 9, 8, 7, 6, 5, 4, 3, 2, 1
+            var ka = a.chosen_rank === 0 ? -1 : (MAX_RESULTS + 1 - a.chosen_rank);
+            var kb = b.chosen_rank === 0 ? -1 : (MAX_RESULTS + 1 - b.chosen_rank);
+            return ka - kb;
+        });
+
+        sortedQueries = items;
+
+        document.getElementById('reviewLoading').style.display = 'none';
+        document.getElementById('reviewUI').style.display = 'block';
+
+        queryViewer  = createViewer('queryCanvas',  'queryViewerBox');
+        resultViewer = createViewer('resultCanvas', 'resultViewerBox');
+        setupSync();
+        window.addEventListener('resize', handleResize);
+
+        renderSidebar();
+        await loadQuery();
+    } catch(e) {
+        alert('Failed to load: ' + e.message);
+        console.error(e);
+    }
+}
+
+// ─── Load query ─────────────────────────────────────────────────────
+var queryLoadGen = 0;
+
+async function loadQuery() {
+    var gen = ++queryLoadGen;
+    var q = sortedQueries[currentQueryIdx];
+    var queryFile = q.filename;
+    var chosenRank = q.chosen_rank;
+    var results = rankings[queryFile];
+
+    // Header
+    document.getElementById('queryCounter').textContent =
+        'Query ' + (currentQueryIdx + 1) + ' / ' + sortedQueries.length;
+    document.getElementById('queryFileName').textContent = queryFile;
+
+    // Verdict banner
+    var bannerEl = document.getElementById('verdictBanner');
+    if (chosenRank === 0) {
+        bannerEl.className = 'verdict-banner fail-all';
+        bannerEl.innerHTML = '<i class="bi bi-x-octagon me-2"></i>FAILED ALL — No acceptable match in top 10';
+    } else {
+        bannerEl.className = 'verdict-banner pass-rank';
+        bannerEl.innerHTML = '<i class="bi bi-check-circle me-2"></i>PASSED at rank #' + chosenRank;
+    }
+
+    // Query nav
+    document.getElementById('qPrevBtn').disabled = (currentQueryIdx <= 0);
+    document.getElementById('qNextBtn').disabled = (currentQueryIdx >= sortedQueries.length - 1);
+    document.getElementById('qNavLabel').textContent = (currentQueryIdx + 1) + ' / ' + sortedQueries.length;
+
+    renderSidebar();
+
+    // Load query STL into left viewer
+    try {
+        var qFit = await loadIntoViewer(queryViewer, queryFile, 'queryLoading');
+        if (gen !== queryLoadGen) return;
+        fitCamera(queryViewer, qFit.center, qFit.maxDim);
+        syncCamera(queryViewer, resultViewer);
+    } catch(e) {
+        console.error('Failed to load query:', e);
+    }
+
+    // Load first result
+    currentResultIdx = 0;
+    await loadResult();
+
+    // Prefetch
+    for (var i = 1; i < results.length; i++) {
+        if (gen !== queryLoadGen) return;
+        var fn = results[i].filename;
+        if (!geoCache[fn]) {
+            getGeometry(fn).catch(function() {});
+        }
+    }
+}
+
+// ─── Load result ────────────────────────────────────────────────────
+async function loadResult() {
+    var q = sortedQueries[currentQueryIdx];
+    var queryFile = q.filename;
+    var chosenRank = q.chosen_rank;
+    var results = rankings[queryFile];
+    var r = results[currentResultIdx];
+    var rank = currentResultIdx + 1;
+
+    // Labels
+    document.getElementById('resultLabel').textContent = 'Result #' + rank;
+    document.getElementById('resultSim').textContent =
+        (r.similarity * 100).toFixed(1) + '% similarity';
+    document.getElementById('resultRankTag').textContent = '#' + rank;
+    document.getElementById('resultFileName').textContent = r.filename;
+    document.getElementById('resultSimSmall').textContent =
+        (r.similarity * 100).toFixed(1) + '%';
+
+    // Nav buttons
+    document.getElementById('resultPrevBtn').disabled = (currentResultIdx <= 0);
+    document.getElementById('resultNextBtn').disabled = (currentResultIdx >= MAX_RESULTS - 1);
+    document.getElementById('resultNavLabel').textContent = rank + ' / ' + MAX_RESULTS;
+
+    // Result verdict indicator
+    var indEl = document.getElementById('resultVerdictIndicator');
+    if (chosenRank === 0) {
+        indEl.className = 'result-verdict-indicator not-chosen';
+        indEl.textContent = '';
+    } else if (rank === chosenRank) {
+        indEl.className = 'result-verdict-indicator is-chosen';
+        indEl.innerHTML = '<i class="bi bi-check-circle-fill me-1"></i>Doctor chose this result as pass';
+    } else if (rank < chosenRank) {
+        indEl.className = 'result-verdict-indicator not-chosen';
+        indEl.innerHTML = '<i class="bi bi-x-circle me-1"></i>Not accepted by doctor';
+    } else {
+        indEl.className = 'result-verdict-indicator not-chosen';
+        indEl.textContent = '';
+    }
+
+    // Load result 3D
+    try {
+        await loadIntoViewer(resultViewer, r.filename, 'resultLoading');
+    } catch(e) {
+        console.error('Failed to load result:', e);
+    }
+}
+
+// ─── Navigation ─────────────────────────────────────────────────────
+function resultPrev() {
+    if (currentResultIdx <= 0) return;
+    currentResultIdx--;
+    loadResult();
+}
+
+function resultNext() {
+    if (currentResultIdx >= MAX_RESULTS - 1) return;
+    currentResultIdx++;
+    loadResult();
+}
+
+function queryPrev() {
+    if (currentQueryIdx <= 0) return;
+    currentQueryIdx--;
+    currentResultIdx = 0;
+    loadQuery();
+}
+
+function queryNext() {
+    if (currentQueryIdx >= sortedQueries.length - 1) return;
+    currentQueryIdx++;
+    currentResultIdx = 0;
+    loadQuery();
+}
+
+function jumpToQuery(idx) {
+    if (idx < 0 || idx >= sortedQueries.length || idx === currentQueryIdx) return;
+    currentQueryIdx = idx;
+    currentResultIdx = 0;
+    loadQuery();
+}
+
+// ─── Keyboard shortcuts ─────────────────────────────────────────────
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'ArrowLeft' && e.shiftKey)       { queryPrev(); e.preventDefault(); }
+    else if (e.key === 'ArrowRight' && e.shiftKey)  { queryNext(); e.preventDefault(); }
+    else if (e.key === 'ArrowLeft')                  { resultPrev(); e.preventDefault(); }
+    else if (e.key === 'ArrowRight')                 { resultNext(); e.preventDefault(); }
+});
+
+// ─── Sidebar ────────────────────────────────────────────────────────
+function renderSidebar() {
+    var container = document.getElementById('sidebarList');
+    container.innerHTML = '';
+
+    for (var i = 0; i < sortedQueries.length; i++) {
+        var q = sortedQueries[i];
+        var item = document.createElement('div');
+        item.className = 'sidebar-item' + (i === currentQueryIdx ? ' active' : '');
+
+        var rankText, rankClass, badgeClass, badgeText;
+        if (q.chosen_rank === 0) {
+            rankText = '✗';
+            rankClass = 'rank-fail';
+            badgeClass = 'fail';
+            badgeText = 'FAIL';
+        } else {
+            rankText = '#' + q.chosen_rank;
+            rankClass = 'rank-pass';
+            badgeClass = 'pass';
+            badgeText = 'PASS';
+        }
+
+        // Truncate filename for sidebar display
+        var shortName = q.filename.replace(/\.stl$/i, '');
+        if (shortName.length > 20) {
+            shortName = shortName.substring(0, 8) + '…' + shortName.substring(shortName.length - 8);
+        }
+
+        item.innerHTML =
+            '<span class="si-rank ' + rankClass + '">' + rankText + '</span>' +
+            '<span class="si-name" title="' + q.filename + '">' + shortName + '</span>' +
+            '<span class="si-badge ' + badgeClass + '">' + badgeText + '</span>';
+
+        (function(idx) {
+            item.addEventListener('click', function() { jumpToQuery(idx); });
+        })(i);
+
+        container.appendChild(item);
+    }
+}
+
+// ─── Expose ─────────────────────────────────────────────────────────
+window.resultPrev  = resultPrev;
+window.resultNext  = resultNext;
+window.queryPrev   = queryPrev;
+window.queryNext   = queryNext;
+window.jumpToQuery = jumpToQuery;
+
+// Boot
+init();
+</script>
+{% endblock %}
