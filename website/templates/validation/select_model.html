@@ -13,10 +13,12 @@
         text-align: center;
         margin-bottom: 2.5rem;
     }
+
     .page-header h2 {
         font-weight: 800;
         margin-bottom: 0.5rem;
     }
+
     .page-header p {
         color: var(--oasis-gray-500);
         font-size: 0.95rem;
@@ -40,11 +42,13 @@
         position: relative;
         overflow: hidden;
     }
+
     .model-card:hover {
         border-color: var(--oasis-green-400);
         box-shadow: 0 8px 30px rgba(34, 197, 94, 0.12);
         transform: translateY(-2px);
     }
+
     .model-card.unavailable {
         opacity: 0.55;
         pointer-events: none;
@@ -60,24 +64,34 @@
         font-size: 1.5rem;
         margin-bottom: 1rem;
     }
+
     .model-icon.dinov2 {
         background: linear-gradient(135deg, #818cf8, #6366f1);
         color: white;
     }
+
     .model-icon.simclr {
         background: linear-gradient(135deg, #34d399, #10b981);
         color: white;
     }
+
     .model-icon.mae {
         background: linear-gradient(135deg, #fb923c, #f97316);
         color: white;
     }
+
     .model-icon.dinov3 {
         background: linear-gradient(135deg, #a78bfa, #7c3aed);
         color: white;
     }
+
     .model-icon.dinov3_gallery {
         background: linear-gradient(135deg, #2dd4bf, #14b8a6);
+        color: white;
+    }
+
+    .model-icon.dinov3_concat {
+        background: linear-gradient(135deg, #fbbf24, #d97706);
         color: white;
     }
 
@@ -85,11 +99,13 @@
         font-weight: 800;
         margin-bottom: 0.25rem;
     }
+
     .model-card .model-desc {
         color: var(--oasis-gray-500);
         font-size: 0.85rem;
         margin-bottom: 1rem;
     }
+
     .model-card .model-dim {
         font-size: 0.78rem;
         color: var(--oasis-gray-500);
@@ -108,6 +124,7 @@
         padding: 0.5rem 0;
         border-top: 1px solid var(--oasis-gray-100);
     }
+
     .model-progress .prog-icon {
         color: var(--oasis-green-500);
         margin-right: 0.25rem;
@@ -119,17 +136,27 @@
         width: 100%;
         margin-bottom: 0.75rem;
     }
+
     .report-mini th {
         font-weight: 700;
         color: var(--oasis-gray-500);
         padding: 0.2rem 0.3rem;
         border-bottom: 1px solid var(--oasis-gray-200);
     }
+
     .report-mini td {
         padding: 0.2rem 0.3rem;
     }
-    .report-mini .rate-good { color: #16a34a; font-weight: 700; }
-    .report-mini .rate-bad  { color: #dc2626; font-weight: 700; }
+
+    .report-mini .rate-good {
+        color: #16a34a;
+        font-weight: 700;
+    }
+
+    .report-mini .rate-bad {
+        color: #dc2626;
+        font-weight: 700;
+    }
 
     /* Action buttons on card */
     .model-actions {
@@ -137,6 +164,7 @@
         gap: 0.5rem;
         flex-wrap: wrap;
     }
+
     .btn-start {
         background: linear-gradient(135deg, var(--oasis-green-500), var(--oasis-green-600));
         color: white;
@@ -148,11 +176,13 @@
         transition: all 0.2s;
         text-decoration: none;
     }
+
     .btn-start:hover {
         transform: translateY(-1px);
         box-shadow: 0 4px 14px rgba(34, 197, 94, 0.3);
         color: white;
     }
+
     .btn-reset {
         background: transparent;
         border: 1px solid var(--oasis-gray-300);
@@ -164,6 +194,7 @@
         cursor: pointer;
         transition: all 0.2s;
     }
+
     .btn-reset:hover {
         border-color: #ef4444;
         color: #ef4444;
@@ -187,7 +218,8 @@
             <i class="bi bi-clipboard2-pulse me-2" style="color: var(--oasis-green-500);"></i>
             Validation
         </h2>
-        <p>Choose a model to validate. Each model's progress and report are stored independently, allowing side-by-side comparison.</p>
+        <p>Choose a model to validate. Each model's progress and report are stored independently, allowing side-by-side
+            comparison.</p>
     </div>
 
     <div class="model-grid">
@@ -195,15 +227,17 @@
         <div class="model-card {{ 'unavailable' if not m.available }}">
             <div class="model-icon {{ m.name }}">
                 {% if m.name == 'dinov2' %}
-                    <i class="bi bi-eye"></i>
+                <i class="bi bi-eye"></i>
                 {% elif m.name == 'simclr' %}
-                    <i class="bi bi-box"></i>
+                <i class="bi bi-box"></i>
                 {% elif m.name == 'mae' %}
-                    <i class="bi bi-grid-3x3"></i>
+                <i class="bi bi-grid-3x3"></i>
                 {% elif m.name == 'dinov3' %}
-                    <i class="bi bi-stars"></i>
+                <i class="bi bi-stars"></i>
                 {% elif m.name == 'dinov3_gallery' %}
-                    <i class="bi bi-camera"></i>
+                <i class="bi bi-camera"></i>
+                {% elif m.name == 'dinov3_concat' %}
+                <i class="bi bi-link-45deg"></i>
                 {% endif %}
             </div>
 
@@ -212,57 +246,63 @@
             <div class="model-dim"><i class="bi bi-rulers me-1"></i>{{ m.dim }}-dim embedding</div>
 
             {% if m.available %}
-                {# Progress info #}
-                {% if m.progress_count is not none %}
-                <div class="model-progress">
-                    <i class="bi bi-check2-circle prog-icon"></i>
-                    {{ m.progress_count }} / 60 queries judged
-                </div>
-                {% endif %}
+            {# Progress info #}
+            {% if m.progress_count is not none %}
+            <div class="model-progress">
+                <i class="bi bi-check2-circle prog-icon"></i>
+                {{ m.progress_count }} / 60 queries judged
+            </div>
+            {% endif %}
 
-                {# Report mini summary #}
-                {% if m.report %}
-                <table class="report-mini">
-                    <thead>
-                        <tr><th>Round</th><th>Queries</th><th>Pass</th><th>Rate</th></tr>
-                    </thead>
-                    <tbody>
-                        {% for key, r in m.report.items()|sort %}
-                        <tr>
-                            <td><strong>{{ key }}</strong></td>
-                            <td>{{ r.total_queries }}</td>
-                            <td>{{ r.passes }}/{{ r.total_queries }}</td>
-                            <td class="{{ 'rate-good' if r.pass_rate_percent >= 50 else 'rate-bad' }}">
-                                {{ r.pass_rate_percent }}%
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-                {% endif %}
+            {# Report mini summary #}
+            {% if m.report %}
+            <table class="report-mini">
+                <thead>
+                    <tr>
+                        <th>Round</th>
+                        <th>Queries</th>
+                        <th>Pass</th>
+                        <th>Rate</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for key, r in m.report.items()|sort %}
+                    <tr>
+                        <td><strong>{{ key }}</strong></td>
+                        <td>{{ r.total_queries }}</td>
+                        <td>{{ r.passes }}/{{ r.total_queries }}</td>
+                        <td class="{{ 'rate-good' if r.pass_rate_percent >= 50 else 'rate-bad' }}">
+                            {{ r.pass_rate_percent }}%
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% endif %}
 
-                <div class="model-actions">
-                    <a class="btn-start" href="{{ url_for('validation.judge_page', model=m.name) }}">
-                        <i class="bi bi-play-fill me-1"></i>
-                        {% if m.progress_count %}Continue{% else %}Start{% endif %} Validation
-                    </a>
-                    {% if m.progress_count and m.progress_count >= 60 %}
-                    <a class="btn-reset" href="{{ url_for('validation.review_page', model=m.name) }}" style="border-color:var(--oasis-green-400); color:var(--oasis-green-600); text-decoration:none;">
-                        <i class="bi bi-search me-1"></i>Review
-                    </a>
-                    {% endif %}
-                    {% if m.progress_count %}
-                    <button class="btn-reset" onclick="resetModel('{{ m.name }}', '{{ m.label }}')">
-                        <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
-                    </button>
-                    {% endif %}
-                </div>
+            <div class="model-actions">
+                <a class="btn-start" href="{{ url_for('validation.judge_page', model=m.name) }}">
+                    <i class="bi bi-play-fill me-1"></i>
+                    {% if m.progress_count %}Continue{% else %}Start{% endif %} Validation
+                </a>
+                {% if m.progress_count and m.progress_count >= 60 %}
+                <a class="btn-reset" href="{{ url_for('validation.review_page', model=m.name) }}"
+                    style="border-color:var(--oasis-green-400); color:var(--oasis-green-600); text-decoration:none;">
+                    <i class="bi bi-search me-1"></i>Review
+                </a>
+                {% endif %}
+                {% if m.progress_count %}
+                <button class="btn-reset" onclick="resetModel('{{ m.name }}', '{{ m.label }}')">
+                    <i class="bi bi-arrow-counterclockwise me-1"></i>Reset
+                </button>
+                {% endif %}
+            </div>
             {% else %}
-                <div class="model-progress">
-                    <span class="unavailable-badge">
-                        <i class="bi bi-exclamation-triangle me-1"></i>Embeddings not available
-                    </span>
-                </div>
+            <div class="model-progress">
+                <span class="unavailable-badge">
+                    <i class="bi bi-exclamation-triangle me-1"></i>Embeddings not available
+                </span>
+            </div>
             {% endif %}
         </div>
         {% endfor %}
@@ -272,24 +312,24 @@
 
 {% block extra_js %}
 <script>
-async function resetModel(modelName, modelLabel) {
-    if (!confirm(`Reset all validation progress for ${modelLabel}? This cannot be undone.`)) return;
+    async function resetModel(modelName, modelLabel) {
+        if (!confirm(`Reset all validation progress for ${modelLabel}? This cannot be undone.`)) return;
 
-    try {
-        const resp = await fetch('{{ url_for("validation.api_reset_progress") }}', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ model: modelName })
-        });
-        const data = await resp.json();
-        if (data.ok) {
-            location.reload();
-        } else {
-            alert(data.error || 'Reset failed');
+        try {
+            const resp = await fetch('{{ url_for("validation.api_reset_progress") }}', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ model: modelName })
+            });
+            const data = await resp.json();
+            if (data.ok) {
+                location.reload();
+            } else {
+                alert(data.error || 'Reset failed');
+            }
+        } catch (e) {
+            alert('Reset failed: ' + e.message);
         }
-    } catch (e) {
-        alert('Reset failed: ' + e.message);
     }
-}
 </script>
 {% endblock %}

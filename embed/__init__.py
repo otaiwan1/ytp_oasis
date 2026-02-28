@@ -16,14 +16,14 @@ Example:
 from pathlib import Path
 import numpy as np
 
-from .models import get_model, infer_simclr, infer_mae, infer_dinov2, infer_dinov3, infer_dinov3_hybrid
+from .models import get_model, infer_simclr, infer_mae, infer_dinov2, infer_dinov3, infer_dinov3_hybrid, infer_dinov3_concat
 from .preprocessing import preprocess_simclr, preprocess_mae, preprocess_dinov2, preprocess_dinov3_gallery
 from .config import (RENDER_VIEWS_CONFIG, DINOV2_VIEWS, DINOV3_VIEWS,
                       RENDER_IMG_SIZE, RENDER_FOV_DEG)
 
 __all__ = ["embed_stl", "list_models"]
 
-_SUPPORTED_MODELS = ["simclr", "mae", "dinov2", "dinov3", "dinov3_gallery"]
+_SUPPORTED_MODELS = ["simclr", "mae", "dinov2", "dinov3", "dinov3_gallery", "dinov3_concat"]
 
 # Expected output dimensions per model
 _EMBED_DIMS = {
@@ -32,6 +32,7 @@ _EMBED_DIMS = {
     "dinov2": 1024,
     "dinov3": 1024,
     "dinov3_gallery": 2048,
+    "dinov3_concat": 10240,
 }
 
 
@@ -103,6 +104,10 @@ def embed_stl(stl_path, model="dinov2", device=None) -> dict:
     elif model_name == "dinov3_gallery":
         pil_images = preprocess_dinov3_gallery(stl_path)
         embedding = infer_dinov3_hybrid(net, pil_images, dev)
+
+    elif model_name == "dinov3_concat":
+        pil_images = preprocess_dinov3_gallery(stl_path)
+        embedding = infer_dinov3_concat(net, pil_images, dev)
 
     return {
         "embedding": embedding,

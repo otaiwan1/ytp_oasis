@@ -30,6 +30,7 @@ SUPPORTED_MODELS = {
     'mae':    {'label': 'Point-MAE', 'dim': 384,  'desc': 'Masked autoencoder (3D point cloud + normals)'},
     'dinov3': {'label': 'DINOv3',    'dim': 1024, 'desc': 'DINOv3 ViT-L/16 (multi-view, Gram Anchoring)'},
     'dinov3_gallery': {'label': 'DINOv3 Gallery', 'dim': 2048, 'desc': 'DINOv3 hybrid pooling (iTero gallery photos)'},
+    'dinov3_concat': {'label': 'DINOv3 Concat', 'dim': 10240, 'desc': 'DINOv3 hybrid concat (iTero gallery, per-view)'},
 }
 
 # ─── Paths (relative to project root) ────────────────────────────────

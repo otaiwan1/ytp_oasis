@@ -1,0 +1,6010 @@
+{
+  "top_1": {
+    "04f8f1b3-68c2-4ef3-b417-4974d87faa25_99098472.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "1bcc6714-b4c1-4962-bb0e-1571f126264e_110187496.stl",
+          "similarity": 0.969353
+        }
+      ]
+    },
+    "06f7d71e-3691-4f20-91da-fa86c56cd0d2_265171835.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "00b7b502-7949-4f18-8821-a59f368d7977_172593814.stl",
+          "similarity": 0.96959
+        }
+      ]
+    },
+    "0c596079-8260-4714-990c-9b3405b2e908_173182707.stl": {
+      "verdict": "fail",
+      "chosen_rank": 5,
+      "results": [
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.975373
+        }
+      ]
+    },
+    "0c71f971-4729-4efd-a93e-57b979a9bb1b_166424230.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "fce48be4-d2c1-4385-bd1b-6744655bfca2_174462596.stl",
+          "similarity": 0.974858
+        }
+      ]
+    },
+    "0d9e65a6-0ff9-4cf8-b78e-5ede1c490364_121858546.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "d9f5fab1-0926-4c13-9b16-65bce1b916d8_79120925.stl",
+          "similarity": 0.961425
+        }
+      ]
+    },
+    "0da6e9b6-fa01-4187-9e09-fd7161dfcc0d_252377754.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "fce48be4-d2c1-4385-bd1b-6744655bfca2_174462596.stl",
+          "similarity": 0.973985
+        }
+      ]
+    },
+    "15ba2669-99e8-4ee3-aa64-7544b8eff92a_160784333.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.974853
+        }
+      ]
+    },
+    "15deaa46-508a-4cb5-8c26-35152bdc7be7_138377650.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "760ef7cd-ea70-4e4e-bf98-a9a097456b2f_138940060.stl",
+          "similarity": 0.942377
+        }
+      ]
+    },
+    "18a03244-1847-413d-b88d-ed727652faf5_115274439.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "d71a93ad-0f2b-4dca-8133-c06a016ecd18_122117048.stl",
+          "similarity": 0.975947
+        }
+      ]
+    },
+    "1966e591-dee7-4aef-bb07-d987d674bb72_138943699.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "3dbb97a0-575f-4962-9925-9828dd8d9d66_139182012.stl",
+          "similarity": 0.945691
+        }
+      ]
+    },
+    "1a23f6e0-8ac5-4b98-9f09-906ce4352f34_75810609.stl": {
+      "verdict": "fail",
+      "chosen_rank": 3,
+      "results": [
+        {
+          "filename": "2ee9d116-5e0e-466d-87c9-ce2b16958198_95127092.stl",
+          "similarity": 0.973584
+        }
+      ]
+    },
+    "22f97d92-b578-4a29-8b56-bbd7635aab46_156195058.stl": {
+      "verdict": "fail",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.973499
+        }
+      ]
+    },
+    "35f59889-6fc3-43a6-9f8b-f8d1e2423e3f_68381658.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "6e852acc-ca98-467c-91de-72f135ed2eb0_73216985.stl",
+          "similarity": 0.965877
+        }
+      ]
+    },
+    "361af065-63ea-47b8-b613-b87d17d44a7d_87374059.stl": {
+      "verdict": "fail",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "b7277d0f-844c-426a-ba65-9612430f1f37_94049235.stl",
+          "similarity": 0.972453
+        }
+      ]
+    },
+    "3b061aae-5146-4f62-9c9d-7243b6eeb685_254482274.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "a6f632d2-6885-462c-90be-044fe5b7b935_135495113.stl",
+          "similarity": 0.968294
+        }
+      ]
+    },
+    "42fb7900-2280-4647-9db1-8234b36e5fde_226305526.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.973459
+        }
+      ]
+    },
+    "4e843234-9a38-4559-a13a-f06e07c954f2_138080209.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "35ce94e7-e07f-4700-bf0b-f4527e520caf_139186156.stl",
+          "similarity": 0.934203
+        }
+      ]
+    },
+    "50c7aab3-6af1-4031-96eb-0bc83b2eedce_69584178.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.969333
+        }
+      ]
+    },
+    "535ccff2-6c63-45e8-9448-ef36df620c2a_102740764.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "5521ab16-8c05-4573-bc5c-e77bdb0e3f62_138513351.stl",
+          "similarity": 0.975008
+        }
+      ]
+    },
+    "5c854d50-d941-48e6-9b18-dbe1e3b5cd0e_266069686.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "74c73ebb-9e66-4623-a482-8f4baeba6a88_130944418.stl",
+          "similarity": 0.975958
+        }
+      ]
+    },
+    "663de213-ccab-4147-b305-4d573b1004f6_162853608.stl": {
+      "verdict": "fail",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "ee9d5b1c-2bf2-4deb-889f-d86cbe380ce2_257773386.stl",
+          "similarity": 0.968166
+        }
+      ]
+    },
+    "66ab7524-a12f-4423-9a59-d3f46e437dd7_106905263.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "d71a93ad-0f2b-4dca-8133-c06a016ecd18_122117048.stl",
+          "similarity": 0.970096
+        }
+      ]
+    },
+    "66d9a7e8-e2b7-427e-818f-f11c03da1bf0_77865974.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "0b774684-0f9c-4ea2-9504-feebd62a3794_83616030.stl",
+          "similarity": 0.97847
+        }
+      ]
+    },
+    "686490d0-56e3-48e2-903a-2bd735d3d018_139186754.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "fc9feba8-f105-4b3a-90a1-f7ad84be123c_138946612.stl",
+          "similarity": 0.951079
+        }
+      ]
+    },
+    "708687aa-6cb7-4b23-b1c7-051119dfa97d_139181597.stl": {
+      "verdict": "fail",
+      "chosen_rank": 3,
+      "results": [
+        {
+          "filename": "d4cf3a01-51dd-4c42-8f89-12d793144a54_138945318.stl",
+          "similarity": 0.942631
+        }
+      ]
+    },
+    "7310da70-16e6-4793-a6df-62969c5c4658_240224016.stl": {
+      "verdict": "fail",
+      "chosen_rank": 4,
+      "results": [
+        {
+          "filename": "e2449df4-b826-4348-bfea-e6b34a50f088_172595772.stl",
+          "similarity": 0.96537
+        }
+      ]
+    },
+    "73c08345-7575-48f7-999f-0d1bd19bf617_164777909.stl": {
+      "verdict": "fail",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "c644b18e-f9c5-4b70-bcc5-f11444c8d96f_153315209.stl",
+          "similarity": 0.973056
+        }
+      ]
+    },
+    "7b0015ac-3336-4120-a5b7-8d7b2142e7eb_180009675.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.967606
+        }
+      ]
+    },
+    "7f2b242c-95ab-4629-a5c8-86e9b9e692d4_146183446.stl": {
+      "verdict": "fail",
+      "chosen_rank": 6,
+      "results": [
+        {
+          "filename": "273df5b8-dd5f-4523-85f2-37f4eec10ceb_180536957.stl",
+          "similarity": 0.971126
+        }
+      ]
+    },
+    "7f4b45f1-c63f-4f3f-8738-e7410e511483_121202161.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "302381e6-d363-4132-876c-98c257b8677f_73237143.stl",
+          "similarity": 0.974977
+        }
+      ]
+    },
+    "864d28f7-a7e5-473e-ad58-833671247efc_121986385.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "2de628e7-55bc-43bb-a51d-157e131397ff_120663003.stl",
+          "similarity": 0.965859
+        }
+      ]
+    },
+    "872ddb15-65a6-40da-9a3f-92b932f20e7e_156361270.stl": {
+      "verdict": "fail",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "9bb5e684-bf12-419f-bc55-f52cd0ac4bb1_137238153.stl",
+          "similarity": 0.9775
+        }
+      ]
+    },
+    "882a7e7e-9884-4c0c-96d8-3e527248a709_179529738.stl": {
+      "verdict": "fail",
+      "chosen_rank": 6,
+      "results": [
+        {
+          "filename": "0a1b9c21-ac5f-41d5-b6a2-f829b90218bd_254165971.stl",
+          "similarity": 0.976613
+        }
+      ]
+    },
+    "88c6261a-fb28-444c-9aa2-66cf2202ee3a_139186903.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.962007
+        }
+      ]
+    },
+    "89f6e5d9-4fd8-4b50-9ae0-bda4c8239bf1_104270621.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "b7277d0f-844c-426a-ba65-9612430f1f37_94049235.stl",
+          "similarity": 0.978156
+        }
+      ]
+    },
+    "8b293fd9-410f-43d3-a47e-1f4e1ef4bdbe_167875525.stl": {
+      "verdict": "fail",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "380a035a-b2e9-40c3-afc1-e2d3bb377bdb_176924593.stl",
+          "similarity": 0.978613
+        }
+      ]
+    },
+    "8d13d9d6-7c1c-491d-baa1-8166415b3218_93754058.stl": {
+      "verdict": "fail",
+      "chosen_rank": 5,
+      "results": [
+        {
+          "filename": "105d28aa-7d96-4f4b-ae38-0009881a572c_80291296.stl",
+          "similarity": 0.968842
+        }
+      ]
+    },
+    "8e8b0ae8-789d-4707-973c-b7a64643ed13_138491438.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.934479
+        }
+      ]
+    },
+    "90ed9867-247d-4e84-bd1f-96b07d243c3e_138220233.stl": {
+      "verdict": "fail",
+      "chosen_rank": 3,
+      "results": [
+        {
+          "filename": "da6c16b3-0d81-4e83-87fa-1f47163add29_138370014.stl",
+          "similarity": 0.941185
+        }
+      ]
+    },
+    "9152b443-f680-4f29-8489-7490b6806185_156196447.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "2ed544ef-c643-44e4-a24a-d43777f82423_174038941.stl",
+          "similarity": 0.959601
+        }
+      ]
+    },
+    "91af08e0-72ac-463f-be6f-8e01d41a74dd_268307206.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "b708d2dd-ff6e-4be8-9f00-c52aa48d875d_127857489.stl",
+          "similarity": 0.974902
+        }
+      ]
+    },
+    "96d6716c-fc86-462a-94c4-7f4744c6e976_138921126.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "ef4dc3db-41af-4d76-bc48-9f95cc60b2ef_138081414.stl",
+          "similarity": 0.95008
+        }
+      ]
+    },
+    "970fd290-6aaf-439f-8a18-789670d0c84d_154987223.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "aa6461bb-1114-4693-b3c4-15f0556e2311_252398582.stl",
+          "similarity": 0.976887
+        }
+      ]
+    },
+    "9dfbf4f4-0e53-4424-8216-2e24ccb726c6_137540083.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "90b116d9-e7eb-48bd-9c72-b8e79d1fda94_234586329.stl",
+          "similarity": 0.978823
+        }
+      ]
+    },
+    "a5710783-46d0-4cba-a583-58a172456b97_72034155.stl": {
+      "verdict": "fail",
+      "chosen_rank": 4,
+      "results": [
+        {
+          "filename": "612b314a-5c2c-4633-8784-c94feefef386_72032590.stl",
+          "similarity": 0.969641
+        }
+      ]
+    },
+    "ada48d47-0aa9-490a-86f5-389ebf238eff_129760319.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.975616
+        }
+      ]
+    },
+    "ae6dea56-7d27-4aa0-b08a-537109818c69_165121161.stl": {
+      "verdict": "fail",
+      "chosen_rank": 9,
+      "results": [
+        {
+          "filename": "4934b130-b0a5-4d6a-ac12-c30b20708e2b_148795582.stl",
+          "similarity": 0.973044
+        }
+      ]
+    },
+    "b57fde05-2fac-4483-85b2-8c75d353585b_235100001.stl": {
+      "verdict": "fail",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "0c0d8b92-9e79-4e89-b0e1-157a7e1a63d4_177789038.stl",
+          "similarity": 0.968081
+        }
+      ]
+    },
+    "b63f405b-9a82-4b32-908e-176e07cf54dd_131563887.stl": {
+      "verdict": "fail",
+      "chosen_rank": 7,
+      "results": [
+        {
+          "filename": "2724825d-2c65-40cb-87b0-4de8d3125415_235932467.stl",
+          "similarity": 0.970068
+        }
+      ]
+    },
+    "ba32b798-4e21-4efb-9c5f-f050b53b5f6c_126828142.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "bffb86c8-6553-425b-95f5-cde2e9f17d93_272335855.stl",
+          "similarity": 0.974689
+        }
+      ]
+    },
+    "bc52e782-3a50-4ab9-96ec-ab06360cf0df_139183123.stl": {
+      "verdict": "fail",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "ca26127b-5723-444b-86a2-8153b6349fde_138942701.stl",
+          "similarity": 0.912143
+        }
+      ]
+    },
+    "bf6c582a-97bf-4c8e-b739-d38f4ff8a587_269117142.stl": {
+      "verdict": "fail",
+      "chosen_rank": 7,
+      "results": [
+        {
+          "filename": "2e22763d-5225-4841-93d7-007c4f4d97ea_156659082.stl",
+          "similarity": 0.97555
+        }
+      ]
+    },
+    "c71553bb-d015-435d-a0e2-1b8809d95782_98633179.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "601dfb05-16e8-4c21-b050-512bc6a27fbb_116176769.stl",
+          "similarity": 0.962738
+        }
+      ]
+    },
+    "c72ce1ee-b0c0-47b4-b1c1-31d3b7db4202_224826742.stl": {
+      "verdict": "fail",
+      "chosen_rank": 8,
+      "results": [
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.967952
+        }
+      ]
+    },
+    "caedd817-a00c-482b-8a06-d26e99d34747_176804494.stl": {
+      "verdict": "fail",
+      "chosen_rank": 6,
+      "results": [
+        {
+          "filename": "601dfb05-16e8-4c21-b050-512bc6a27fbb_116176769.stl",
+          "similarity": 0.966972
+        }
+      ]
+    },
+    "cd243e1b-3c3d-47b4-9ac7-afc1fafe9514_102169805.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "59fe87a8-f73d-4bdd-9dcb-915d637c3142_133950232.stl",
+          "similarity": 0.963825
+        }
+      ]
+    },
+    "d3f8fff1-fabe-4515-8bc9-5d6c748e4704_228210355.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.976992
+        }
+      ]
+    },
+    "da7ed085-ee67-4d34-96c5-3f651dbf2952_227925412.stl": {
+      "verdict": "fail",
+      "chosen_rank": 6,
+      "results": [
+        {
+          "filename": "dbb571ed-e0cb-4837-a22e-fa206c44d561_250304067.stl",
+          "similarity": 0.97678
+        }
+      ]
+    },
+    "e07ea579-494e-4c87-a4b8-93355017acbb_151039691.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "b708d2dd-ff6e-4be8-9f00-c52aa48d875d_127857489.stl",
+          "similarity": 0.976827
+        }
+      ]
+    },
+    "f47cb25d-220b-4286-8190-1578c602c7b4_147295206.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "b0b4f0a7-2365-4135-9ba9-2d486ea5a250_164628198.stl",
+          "similarity": 0.97406
+        }
+      ]
+    }
+  },
+  "top_3": {
+    "04f8f1b3-68c2-4ef3-b417-4974d87faa25_99098472.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "1bcc6714-b4c1-4962-bb0e-1571f126264e_110187496.stl",
+          "similarity": 0.969353
+        },
+        {
+          "filename": "8d395d73-f857-4d37-ba70-87e08b454d5e_71207338.stl",
+          "similarity": 0.969153
+        },
+        {
+          "filename": "b048b9f3-bb73-40ef-a879-2323e472822b_120140876.stl",
+          "similarity": 0.968963
+        }
+      ]
+    },
+    "06f7d71e-3691-4f20-91da-fa86c56cd0d2_265171835.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "00b7b502-7949-4f18-8821-a59f368d7977_172593814.stl",
+          "similarity": 0.96959
+        },
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.968421
+        },
+        {
+          "filename": "576080fd-6013-4803-ae10-11e7580459ae_134224267.stl",
+          "similarity": 0.967884
+        }
+      ]
+    },
+    "0c596079-8260-4714-990c-9b3405b2e908_173182707.stl": {
+      "verdict": "fail",
+      "chosen_rank": 5,
+      "results": [
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.975373
+        },
+        {
+          "filename": "a9918e6d-6b84-4512-8af9-2c0202981f75_160634854.stl",
+          "similarity": 0.973888
+        },
+        {
+          "filename": "51f2425a-4437-40f1-b021-2f388e1fdf67_267934762.stl",
+          "similarity": 0.973786
+        }
+      ]
+    },
+    "0c71f971-4729-4efd-a93e-57b979a9bb1b_166424230.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "fce48be4-d2c1-4385-bd1b-6744655bfca2_174462596.stl",
+          "similarity": 0.974858
+        },
+        {
+          "filename": "00ebca40-7c9d-4479-8911-8c15e2e20f28_170640337.stl",
+          "similarity": 0.973765
+        },
+        {
+          "filename": "5b88129e-3ef6-44d3-90f6-7af198123dc4_163319490.stl",
+          "similarity": 0.973118
+        }
+      ]
+    },
+    "0d9e65a6-0ff9-4cf8-b78e-5ede1c490364_121858546.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "d9f5fab1-0926-4c13-9b16-65bce1b916d8_79120925.stl",
+          "similarity": 0.961425
+        },
+        {
+          "filename": "105d28aa-7d96-4f4b-ae38-0009881a572c_80291296.stl",
+          "similarity": 0.960306
+        },
+        {
+          "filename": "f7889cef-64b1-4d18-ac74-cc563eeae9f2_120140499.stl",
+          "similarity": 0.958574
+        }
+      ]
+    },
+    "0da6e9b6-fa01-4187-9e09-fd7161dfcc0d_252377754.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "fce48be4-d2c1-4385-bd1b-6744655bfca2_174462596.stl",
+          "similarity": 0.973985
+        },
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.973623
+        },
+        {
+          "filename": "4d4409be-2485-4613-a3b4-79142bfae5ee_154676390.stl",
+          "similarity": 0.973478
+        }
+      ]
+    },
+    "15ba2669-99e8-4ee3-aa64-7544b8eff92a_160784333.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.974853
+        },
+        {
+          "filename": "17ed82e9-c016-420c-ac83-adfec3db6e19_130836381.stl",
+          "similarity": 0.972857
+        },
+        {
+          "filename": "319343aa-247b-45fe-8f13-b3eeffd1c326_180338970.stl",
+          "similarity": 0.971987
+        }
+      ]
+    },
+    "15deaa46-508a-4cb5-8c26-35152bdc7be7_138377650.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "760ef7cd-ea70-4e4e-bf98-a9a097456b2f_138940060.stl",
+          "similarity": 0.942377
+        },
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.942176
+        },
+        {
+          "filename": "40d679f5-d3f9-421d-a361-a192dd9584c8_138940518.stl",
+          "similarity": 0.939869
+        }
+      ]
+    },
+    "18a03244-1847-413d-b88d-ed727652faf5_115274439.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "d71a93ad-0f2b-4dca-8133-c06a016ecd18_122117048.stl",
+          "similarity": 0.975947
+        },
+        {
+          "filename": "782ef0a4-e103-4f0a-9f9a-64072396c027_120524763.stl",
+          "similarity": 0.973409
+        },
+        {
+          "filename": "2ee9d116-5e0e-466d-87c9-ce2b16958198_95127092.stl",
+          "similarity": 0.972862
+        }
+      ]
+    },
+    "1966e591-dee7-4aef-bb07-d987d674bb72_138943699.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "3dbb97a0-575f-4962-9925-9828dd8d9d66_139182012.stl",
+          "similarity": 0.945691
+        },
+        {
+          "filename": "98d16923-2844-4888-97eb-e32c5bcd51b8_139182769.stl",
+          "similarity": 0.945333
+        },
+        {
+          "filename": "fc9feba8-f105-4b3a-90a1-f7ad84be123c_138946612.stl",
+          "similarity": 0.945081
+        }
+      ]
+    },
+    "1a23f6e0-8ac5-4b98-9f09-906ce4352f34_75810609.stl": {
+      "verdict": "pass",
+      "chosen_rank": 3,
+      "results": [
+        {
+          "filename": "2ee9d116-5e0e-466d-87c9-ce2b16958198_95127092.stl",
+          "similarity": 0.973584
+        },
+        {
+          "filename": "a71941d4-47c8-4e8a-9aea-de138344292c_74875008.stl",
+          "similarity": 0.97312
+        },
+        {
+          "filename": "8d395d73-f857-4d37-ba70-87e08b454d5e_71207338.stl",
+          "similarity": 0.972233
+        }
+      ]
+    },
+    "22f97d92-b578-4a29-8b56-bbd7635aab46_156195058.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.973499
+        },
+        {
+          "filename": "bc61caaa-cece-43ec-9d3a-142c56e33d41_225522086.stl",
+          "similarity": 0.972348
+        },
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.971674
+        }
+      ]
+    },
+    "35f59889-6fc3-43a6-9f8b-f8d1e2423e3f_68381658.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "6e852acc-ca98-467c-91de-72f135ed2eb0_73216985.stl",
+          "similarity": 0.965877
+        },
+        {
+          "filename": "1c8d6100-6a9a-407a-a115-6b810d32428f_93783331.stl",
+          "similarity": 0.964459
+        },
+        {
+          "filename": "0e5028dc-072d-4e34-b560-93ab5f40c0cb_78389091.stl",
+          "similarity": 0.964001
+        }
+      ]
+    },
+    "361af065-63ea-47b8-b613-b87d17d44a7d_87374059.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "b7277d0f-844c-426a-ba65-9612430f1f37_94049235.stl",
+          "similarity": 0.972453
+        },
+        {
+          "filename": "d71a93ad-0f2b-4dca-8133-c06a016ecd18_122117048.stl",
+          "similarity": 0.972043
+        },
+        {
+          "filename": "2ee9d116-5e0e-466d-87c9-ce2b16958198_95127092.stl",
+          "similarity": 0.971802
+        }
+      ]
+    },
+    "3b061aae-5146-4f62-9c9d-7243b6eeb685_254482274.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "a6f632d2-6885-462c-90be-044fe5b7b935_135495113.stl",
+          "similarity": 0.968294
+        },
+        {
+          "filename": "8b0b397e-aff3-4b82-80dc-1de73e158d7c_130434977.stl",
+          "similarity": 0.968186
+        },
+        {
+          "filename": "cb15635c-cde4-4a6f-be27-93fe95af0e60_148328071.stl",
+          "similarity": 0.967067
+        }
+      ]
+    },
+    "42fb7900-2280-4647-9db1-8234b36e5fde_226305526.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.973459
+        },
+        {
+          "filename": "3c940be4-d994-4595-9567-837092ac0b77_225516270.stl",
+          "similarity": 0.973221
+        },
+        {
+          "filename": "2e22763d-5225-4841-93d7-007c4f4d97ea_156659082.stl",
+          "similarity": 0.972971
+        }
+      ]
+    },
+    "4e843234-9a38-4559-a13a-f06e07c954f2_138080209.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "35ce94e7-e07f-4700-bf0b-f4527e520caf_139186156.stl",
+          "similarity": 0.934203
+        },
+        {
+          "filename": "ca95cfb7-39ea-4f11-8efd-862503938f0d_137954011.stl",
+          "similarity": 0.926742
+        },
+        {
+          "filename": "3c217e3e-fb90-477e-822f-847f66b9effc_139183003.stl",
+          "similarity": 0.922799
+        }
+      ]
+    },
+    "50c7aab3-6af1-4031-96eb-0bc83b2eedce_69584178.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.969333
+        },
+        {
+          "filename": "b4d3c289-9b1f-4424-8e91-2f5fe0f91749_81754975.stl",
+          "similarity": 0.968075
+        },
+        {
+          "filename": "39b76e69-132a-4a2d-bac6-0c4a9f49e316_102072509.stl",
+          "similarity": 0.96681
+        }
+      ]
+    },
+    "535ccff2-6c63-45e8-9448-ef36df620c2a_102740764.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "5521ab16-8c05-4573-bc5c-e77bdb0e3f62_138513351.stl",
+          "similarity": 0.975008
+        },
+        {
+          "filename": "406ab595-6d4c-4e06-88b6-66580d882b63_104265944.stl",
+          "similarity": 0.9743
+        },
+        {
+          "filename": "9285249c-7aff-4adf-a507-30bd9254ad08_97087833.stl",
+          "similarity": 0.974191
+        }
+      ]
+    },
+    "5c854d50-d941-48e6-9b18-dbe1e3b5cd0e_266069686.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "74c73ebb-9e66-4623-a482-8f4baeba6a88_130944418.stl",
+          "similarity": 0.975958
+        },
+        {
+          "filename": "af5f2654-b25a-4b8e-b1c5-26f1cdda392d_244660316.stl",
+          "similarity": 0.97505
+        },
+        {
+          "filename": "d8e57dd0-c8f7-4eff-af7c-56e791d464c6_133971538.stl",
+          "similarity": 0.973227
+        }
+      ]
+    },
+    "663de213-ccab-4147-b305-4d573b1004f6_162853608.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "ee9d5b1c-2bf2-4deb-889f-d86cbe380ce2_257773386.stl",
+          "similarity": 0.968166
+        },
+        {
+          "filename": "17ed82e9-c016-420c-ac83-adfec3db6e19_130836381.stl",
+          "similarity": 0.965206
+        },
+        {
+          "filename": "2216ea6c-5253-46a8-843a-203606b34cc7_225336925.stl",
+          "similarity": 0.963664
+        }
+      ]
+    },
+    "66ab7524-a12f-4423-9a59-d3f46e437dd7_106905263.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "d71a93ad-0f2b-4dca-8133-c06a016ecd18_122117048.stl",
+          "similarity": 0.970096
+        },
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.969456
+        },
+        {
+          "filename": "a9809708-e1a7-42f2-927b-c15e620e0de8_79142915.stl",
+          "similarity": 0.969449
+        }
+      ]
+    },
+    "66d9a7e8-e2b7-427e-818f-f11c03da1bf0_77865974.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "0b774684-0f9c-4ea2-9504-feebd62a3794_83616030.stl",
+          "similarity": 0.97847
+        },
+        {
+          "filename": "35a31c1f-1e18-4b9d-aa7e-eba811e2a647_101946559.stl",
+          "similarity": 0.97758
+        },
+        {
+          "filename": "b7277d0f-844c-426a-ba65-9612430f1f37_94049235.stl",
+          "similarity": 0.976594
+        }
+      ]
+    },
+    "686490d0-56e3-48e2-903a-2bd735d3d018_139186754.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "fc9feba8-f105-4b3a-90a1-f7ad84be123c_138946612.stl",
+          "similarity": 0.951079
+        },
+        {
+          "filename": "b5c23f00-bc25-4e30-a4c8-35ea588930f7_139185578.stl",
+          "similarity": 0.945184
+        },
+        {
+          "filename": "859855c2-8b9b-490c-8ca6-866ac03682e2_137953581.stl",
+          "similarity": 0.942224
+        }
+      ]
+    },
+    "708687aa-6cb7-4b23-b1c7-051119dfa97d_139181597.stl": {
+      "verdict": "pass",
+      "chosen_rank": 3,
+      "results": [
+        {
+          "filename": "d4cf3a01-51dd-4c42-8f89-12d793144a54_138945318.stl",
+          "similarity": 0.942631
+        },
+        {
+          "filename": "da6c16b3-0d81-4e83-87fa-1f47163add29_138370014.stl",
+          "similarity": 0.942081
+        },
+        {
+          "filename": "616dd674-28e4-4101-bf73-d582216ad6e2_139182539.stl",
+          "similarity": 0.941679
+        }
+      ]
+    },
+    "7310da70-16e6-4793-a6df-62969c5c4658_240224016.stl": {
+      "verdict": "fail",
+      "chosen_rank": 4,
+      "results": [
+        {
+          "filename": "e2449df4-b826-4348-bfea-e6b34a50f088_172595772.stl",
+          "similarity": 0.96537
+        },
+        {
+          "filename": "10503e60-3a26-47fd-be8f-76cd89125897_246795528.stl",
+          "similarity": 0.963766
+        },
+        {
+          "filename": "98761a17-b8ce-42a0-915d-2a6a41855f12_148107416.stl",
+          "similarity": 0.963273
+        }
+      ]
+    },
+    "73c08345-7575-48f7-999f-0d1bd19bf617_164777909.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "c644b18e-f9c5-4b70-bcc5-f11444c8d96f_153315209.stl",
+          "similarity": 0.973056
+        },
+        {
+          "filename": "00b7b502-7949-4f18-8821-a59f368d7977_172593814.stl",
+          "similarity": 0.972603
+        },
+        {
+          "filename": "6f5ea276-ce95-444f-b813-de5f90ab2ebb_257083642.stl",
+          "similarity": 0.97244
+        }
+      ]
+    },
+    "7b0015ac-3336-4120-a5b7-8d7b2142e7eb_180009675.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.967606
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.967511
+        },
+        {
+          "filename": "bff1f697-5846-4677-9fa1-fa3ca555ca2c_228308775.stl",
+          "similarity": 0.966937
+        }
+      ]
+    },
+    "7f2b242c-95ab-4629-a5c8-86e9b9e692d4_146183446.stl": {
+      "verdict": "fail",
+      "chosen_rank": 6,
+      "results": [
+        {
+          "filename": "273df5b8-dd5f-4523-85f2-37f4eec10ceb_180536957.stl",
+          "similarity": 0.971126
+        },
+        {
+          "filename": "d9d47e9b-d666-459e-8489-ad56c0b4ce7b_228309575.stl",
+          "similarity": 0.971035
+        },
+        {
+          "filename": "cc9b81ea-984d-4e62-a1d0-18e7d5d7e0b2_128299860.stl",
+          "similarity": 0.970581
+        }
+      ]
+    },
+    "7f4b45f1-c63f-4f3f-8738-e7410e511483_121202161.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "302381e6-d363-4132-876c-98c257b8677f_73237143.stl",
+          "similarity": 0.974977
+        },
+        {
+          "filename": "0b774684-0f9c-4ea2-9504-feebd62a3794_83616030.stl",
+          "similarity": 0.973629
+        },
+        {
+          "filename": "9285249c-7aff-4adf-a507-30bd9254ad08_97087833.stl",
+          "similarity": 0.973442
+        }
+      ]
+    },
+    "864d28f7-a7e5-473e-ad58-833671247efc_121986385.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "2de628e7-55bc-43bb-a51d-157e131397ff_120663003.stl",
+          "similarity": 0.965859
+        },
+        {
+          "filename": "c7bf201b-863a-4b07-aa9f-07afae37ff9f_95960016.stl",
+          "similarity": 0.961326
+        },
+        {
+          "filename": "a44a1562-e6ec-4c07-8141-3fd328d3a664_102163937.stl",
+          "similarity": 0.959138
+        }
+      ]
+    },
+    "872ddb15-65a6-40da-9a3f-92b932f20e7e_156361270.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "9bb5e684-bf12-419f-bc55-f52cd0ac4bb1_137238153.stl",
+          "similarity": 0.9775
+        },
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.977493
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.976934
+        }
+      ]
+    },
+    "882a7e7e-9884-4c0c-96d8-3e527248a709_179529738.stl": {
+      "verdict": "fail",
+      "chosen_rank": 6,
+      "results": [
+        {
+          "filename": "0a1b9c21-ac5f-41d5-b6a2-f829b90218bd_254165971.stl",
+          "similarity": 0.976613
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.976536
+        },
+        {
+          "filename": "02021fff-a88c-4aae-92e5-08a3f18701aa_133418847.stl",
+          "similarity": 0.976518
+        }
+      ]
+    },
+    "88c6261a-fb28-444c-9aa2-66cf2202ee3a_139186903.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.962007
+        },
+        {
+          "filename": "760ef7cd-ea70-4e4e-bf98-a9a097456b2f_138940060.stl",
+          "similarity": 0.949284
+        },
+        {
+          "filename": "9f1acced-797a-4a4b-b275-ef7d51dc9e8d_138920794.stl",
+          "similarity": 0.948202
+        }
+      ]
+    },
+    "89f6e5d9-4fd8-4b50-9ae0-bda4c8239bf1_104270621.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "b7277d0f-844c-426a-ba65-9612430f1f37_94049235.stl",
+          "similarity": 0.978156
+        },
+        {
+          "filename": "60e31f60-5f46-4bcc-bcee-e360a29bd7ce_91748698.stl",
+          "similarity": 0.977549
+        },
+        {
+          "filename": "35a31c1f-1e18-4b9d-aa7e-eba811e2a647_101946559.stl",
+          "similarity": 0.976373
+        }
+      ]
+    },
+    "8b293fd9-410f-43d3-a47e-1f4e1ef4bdbe_167875525.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "380a035a-b2e9-40c3-afc1-e2d3bb377bdb_176924593.stl",
+          "similarity": 0.978613
+        },
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.978478
+        },
+        {
+          "filename": "bffb86c8-6553-425b-95f5-cde2e9f17d93_272335855.stl",
+          "similarity": 0.977279
+        }
+      ]
+    },
+    "8d13d9d6-7c1c-491d-baa1-8166415b3218_93754058.stl": {
+      "verdict": "fail",
+      "chosen_rank": 5,
+      "results": [
+        {
+          "filename": "105d28aa-7d96-4f4b-ae38-0009881a572c_80291296.stl",
+          "similarity": 0.968842
+        },
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.966894
+        },
+        {
+          "filename": "d9f5fab1-0926-4c13-9b16-65bce1b916d8_79120925.stl",
+          "similarity": 0.966268
+        }
+      ]
+    },
+    "8e8b0ae8-789d-4707-973c-b7a64643ed13_138491438.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.934479
+        },
+        {
+          "filename": "ec3c14e8-6179-432c-8227-1b4f0838a371_138377404.stl",
+          "similarity": 0.934451
+        },
+        {
+          "filename": "760ef7cd-ea70-4e4e-bf98-a9a097456b2f_138940060.stl",
+          "similarity": 0.931082
+        }
+      ]
+    },
+    "90ed9867-247d-4e84-bd1f-96b07d243c3e_138220233.stl": {
+      "verdict": "pass",
+      "chosen_rank": 3,
+      "results": [
+        {
+          "filename": "da6c16b3-0d81-4e83-87fa-1f47163add29_138370014.stl",
+          "similarity": 0.941185
+        },
+        {
+          "filename": "ca95cfb7-39ea-4f11-8efd-862503938f0d_137954011.stl",
+          "similarity": 0.938259
+        },
+        {
+          "filename": "8ec1a108-9475-4613-ad27-b59586fbc858_138938596.stl",
+          "similarity": 0.937479
+        }
+      ]
+    },
+    "9152b443-f680-4f29-8489-7490b6806185_156196447.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "2ed544ef-c643-44e4-a24a-d43777f82423_174038941.stl",
+          "similarity": 0.959601
+        },
+        {
+          "filename": "ade23b8b-00c3-4ba8-b6b0-786c6a64b84d_264988802.stl",
+          "similarity": 0.958408
+        },
+        {
+          "filename": "086d26a2-a42c-4c93-bc56-61521a225a7b_229507751.stl",
+          "similarity": 0.957695
+        }
+      ]
+    },
+    "91af08e0-72ac-463f-be6f-8e01d41a74dd_268307206.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "b708d2dd-ff6e-4be8-9f00-c52aa48d875d_127857489.stl",
+          "similarity": 0.974902
+        },
+        {
+          "filename": "52de4afe-24be-4a9a-9365-101768e1c589_135386769.stl",
+          "similarity": 0.974892
+        },
+        {
+          "filename": "2f604299-24be-46bc-a417-35795f59a6d1_227619076.stl",
+          "similarity": 0.97473
+        }
+      ]
+    },
+    "96d6716c-fc86-462a-94c4-7f4744c6e976_138921126.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "ef4dc3db-41af-4d76-bc48-9f95cc60b2ef_138081414.stl",
+          "similarity": 0.95008
+        },
+        {
+          "filename": "9f1acced-797a-4a4b-b275-ef7d51dc9e8d_138920794.stl",
+          "similarity": 0.948578
+        },
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.947591
+        }
+      ]
+    },
+    "970fd290-6aaf-439f-8a18-789670d0c84d_154987223.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "aa6461bb-1114-4693-b3c4-15f0556e2311_252398582.stl",
+          "similarity": 0.976887
+        },
+        {
+          "filename": "5c8a5584-2c95-4ffe-b2f6-e652379b9c56_241834612.stl",
+          "similarity": 0.976255
+        },
+        {
+          "filename": "e6abe54b-e520-45ec-ae71-b1440ab023f8_167567185.stl",
+          "similarity": 0.976163
+        }
+      ]
+    },
+    "9dfbf4f4-0e53-4424-8216-2e24ccb726c6_137540083.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "90b116d9-e7eb-48bd-9c72-b8e79d1fda94_234586329.stl",
+          "similarity": 0.978823
+        },
+        {
+          "filename": "98761a17-b8ce-42a0-915d-2a6a41855f12_148107416.stl",
+          "similarity": 0.97597
+        },
+        {
+          "filename": "a6f632d2-6885-462c-90be-044fe5b7b935_135495113.stl",
+          "similarity": 0.975223
+        }
+      ]
+    },
+    "a5710783-46d0-4cba-a583-58a172456b97_72034155.stl": {
+      "verdict": "fail",
+      "chosen_rank": 4,
+      "results": [
+        {
+          "filename": "612b314a-5c2c-4633-8784-c94feefef386_72032590.stl",
+          "similarity": 0.969641
+        },
+        {
+          "filename": "3300e1e0-280b-4333-b215-88d63725e864_68805284.stl",
+          "similarity": 0.968863
+        },
+        {
+          "filename": "6b3c3fbd-c94a-4084-847c-530556b078e0_118603733.stl",
+          "similarity": 0.968519
+        }
+      ]
+    },
+    "ada48d47-0aa9-490a-86f5-389ebf238eff_129760319.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.975616
+        },
+        {
+          "filename": "5c8a5584-2c95-4ffe-b2f6-e652379b9c56_241834612.stl",
+          "similarity": 0.974845
+        },
+        {
+          "filename": "ae3d5240-a2ef-4d44-bf91-6c80145209e0_172148589.stl",
+          "similarity": 0.974797
+        }
+      ]
+    },
+    "ae6dea56-7d27-4aa0-b08a-537109818c69_165121161.stl": {
+      "verdict": "fail",
+      "chosen_rank": 9,
+      "results": [
+        {
+          "filename": "4934b130-b0a5-4d6a-ac12-c30b20708e2b_148795582.stl",
+          "similarity": 0.973044
+        },
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.972948
+        },
+        {
+          "filename": "65668d36-d4de-460b-91aa-8b6e649026c8_146179103.stl",
+          "similarity": 0.972754
+        }
+      ]
+    },
+    "b57fde05-2fac-4483-85b2-8c75d353585b_235100001.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "0c0d8b92-9e79-4e89-b0e1-157a7e1a63d4_177789038.stl",
+          "similarity": 0.968081
+        },
+        {
+          "filename": "5e9443cc-7e2f-48f5-836f-0ade72add685_170941511.stl",
+          "similarity": 0.966479
+        },
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.966392
+        }
+      ]
+    },
+    "b63f405b-9a82-4b32-908e-176e07cf54dd_131563887.stl": {
+      "verdict": "fail",
+      "chosen_rank": 7,
+      "results": [
+        {
+          "filename": "2724825d-2c65-40cb-87b0-4de8d3125415_235932467.stl",
+          "similarity": 0.970068
+        },
+        {
+          "filename": "2f604299-24be-46bc-a417-35795f59a6d1_227619076.stl",
+          "similarity": 0.969753
+        },
+        {
+          "filename": "6cb8e7ec-ceda-40f1-bf66-74406817d150_254146214.stl",
+          "similarity": 0.969623
+        }
+      ]
+    },
+    "ba32b798-4e21-4efb-9c5f-f050b53b5f6c_126828142.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "bffb86c8-6553-425b-95f5-cde2e9f17d93_272335855.stl",
+          "similarity": 0.974689
+        },
+        {
+          "filename": "5b88129e-3ef6-44d3-90f6-7af198123dc4_163319490.stl",
+          "similarity": 0.973756
+        },
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.973649
+        }
+      ]
+    },
+    "bc52e782-3a50-4ab9-96ec-ab06360cf0df_139183123.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "ca26127b-5723-444b-86a2-8153b6349fde_138942701.stl",
+          "similarity": 0.912143
+        },
+        {
+          "filename": "b138fcd2-790a-4648-855c-1dcf2559b198_138942173.stl",
+          "similarity": 0.90031
+        },
+        {
+          "filename": "3c217e3e-fb90-477e-822f-847f66b9effc_139183003.stl",
+          "similarity": 0.895328
+        }
+      ]
+    },
+    "bf6c582a-97bf-4c8e-b739-d38f4ff8a587_269117142.stl": {
+      "verdict": "fail",
+      "chosen_rank": 7,
+      "results": [
+        {
+          "filename": "2e22763d-5225-4841-93d7-007c4f4d97ea_156659082.stl",
+          "similarity": 0.97555
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.972035
+        },
+        {
+          "filename": "6f5ea276-ce95-444f-b813-de5f90ab2ebb_257083642.stl",
+          "similarity": 0.972016
+        }
+      ]
+    },
+    "c71553bb-d015-435d-a0e2-1b8809d95782_98633179.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "601dfb05-16e8-4c21-b050-512bc6a27fbb_116176769.stl",
+          "similarity": 0.962738
+        },
+        {
+          "filename": "2eca13e2-6807-440d-a5e3-99863229d42d_101120402.stl",
+          "similarity": 0.961627
+        },
+        {
+          "filename": "00ebca40-7c9d-4479-8911-8c15e2e20f28_170640337.stl",
+          "similarity": 0.960998
+        }
+      ]
+    },
+    "c72ce1ee-b0c0-47b4-b1c1-31d3b7db4202_224826742.stl": {
+      "verdict": "fail",
+      "chosen_rank": 8,
+      "results": [
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.967952
+        },
+        {
+          "filename": "9bb5e684-bf12-419f-bc55-f52cd0ac4bb1_137238153.stl",
+          "similarity": 0.966174
+        },
+        {
+          "filename": "37dfe2f3-8f03-4602-ba58-3f399b4ce8af_136283599.stl",
+          "similarity": 0.965889
+        }
+      ]
+    },
+    "caedd817-a00c-482b-8a06-d26e99d34747_176804494.stl": {
+      "verdict": "fail",
+      "chosen_rank": 6,
+      "results": [
+        {
+          "filename": "601dfb05-16e8-4c21-b050-512bc6a27fbb_116176769.stl",
+          "similarity": 0.966972
+        },
+        {
+          "filename": "b4d3c289-9b1f-4424-8e91-2f5fe0f91749_81754975.stl",
+          "similarity": 0.966902
+        },
+        {
+          "filename": "d9f5fab1-0926-4c13-9b16-65bce1b916d8_79120925.stl",
+          "similarity": 0.964985
+        }
+      ]
+    },
+    "cd243e1b-3c3d-47b4-9ac7-afc1fafe9514_102169805.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "59fe87a8-f73d-4bdd-9dcb-915d637c3142_133950232.stl",
+          "similarity": 0.963825
+        },
+        {
+          "filename": "f1c7e732-414b-4d3d-bd15-d72ac4b6ada2_96193727.stl",
+          "similarity": 0.962463
+        },
+        {
+          "filename": "08d46ee3-ebb0-424b-b8e4-c482f5f0ca1f_87347569.stl",
+          "similarity": 0.9605
+        }
+      ]
+    },
+    "d3f8fff1-fabe-4515-8bc9-5d6c748e4704_228210355.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.976992
+        },
+        {
+          "filename": "59452f5a-3fae-42f2-87ac-16e33eda84cc_135895630.stl",
+          "similarity": 0.975647
+        },
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.974503
+        }
+      ]
+    },
+    "da7ed085-ee67-4d34-96c5-3f651dbf2952_227925412.stl": {
+      "verdict": "fail",
+      "chosen_rank": 6,
+      "results": [
+        {
+          "filename": "dbb571ed-e0cb-4837-a22e-fa206c44d561_250304067.stl",
+          "similarity": 0.97678
+        },
+        {
+          "filename": "1782916b-faf0-4d58-9d76-838e3b5c3f2c_154830657.stl",
+          "similarity": 0.97461
+        },
+        {
+          "filename": "5c8a5584-2c95-4ffe-b2f6-e652379b9c56_241834612.stl",
+          "similarity": 0.973229
+        }
+      ]
+    },
+    "e07ea579-494e-4c87-a4b8-93355017acbb_151039691.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "b708d2dd-ff6e-4be8-9f00-c52aa48d875d_127857489.stl",
+          "similarity": 0.976827
+        },
+        {
+          "filename": "2f604299-24be-46bc-a417-35795f59a6d1_227619076.stl",
+          "similarity": 0.976609
+        },
+        {
+          "filename": "f2d96186-2c98-4cad-a6bc-a93d97e506c1_251119934.stl",
+          "similarity": 0.976062
+        }
+      ]
+    },
+    "f47cb25d-220b-4286-8190-1578c602c7b4_147295206.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "b0b4f0a7-2365-4135-9ba9-2d486ea5a250_164628198.stl",
+          "similarity": 0.97406
+        },
+        {
+          "filename": "b0508688-ce7f-4e69-b870-42fd2c6da5b4_252938545.stl",
+          "similarity": 0.974006
+        },
+        {
+          "filename": "dcd0f85f-9359-4a85-b335-efe13eeee603_245014641.stl",
+          "similarity": 0.973689
+        }
+      ]
+    }
+  },
+  "top_5": {
+    "04f8f1b3-68c2-4ef3-b417-4974d87faa25_99098472.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "1bcc6714-b4c1-4962-bb0e-1571f126264e_110187496.stl",
+          "similarity": 0.969353
+        },
+        {
+          "filename": "8d395d73-f857-4d37-ba70-87e08b454d5e_71207338.stl",
+          "similarity": 0.969153
+        },
+        {
+          "filename": "b048b9f3-bb73-40ef-a879-2323e472822b_120140876.stl",
+          "similarity": 0.968963
+        },
+        {
+          "filename": "d71a93ad-0f2b-4dca-8133-c06a016ecd18_122117048.stl",
+          "similarity": 0.968516
+        },
+        {
+          "filename": "7f270a79-1bef-4782-9a99-b245136d2ff3_90876708.stl",
+          "similarity": 0.968081
+        }
+      ]
+    },
+    "06f7d71e-3691-4f20-91da-fa86c56cd0d2_265171835.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "00b7b502-7949-4f18-8821-a59f368d7977_172593814.stl",
+          "similarity": 0.96959
+        },
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.968421
+        },
+        {
+          "filename": "576080fd-6013-4803-ae10-11e7580459ae_134224267.stl",
+          "similarity": 0.967884
+        },
+        {
+          "filename": "65668d36-d4de-460b-91aa-8b6e649026c8_146179103.stl",
+          "similarity": 0.967717
+        },
+        {
+          "filename": "6f5ea276-ce95-444f-b813-de5f90ab2ebb_257083642.stl",
+          "similarity": 0.966853
+        }
+      ]
+    },
+    "0c596079-8260-4714-990c-9b3405b2e908_173182707.stl": {
+      "verdict": "pass",
+      "chosen_rank": 5,
+      "results": [
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.975373
+        },
+        {
+          "filename": "a9918e6d-6b84-4512-8af9-2c0202981f75_160634854.stl",
+          "similarity": 0.973888
+        },
+        {
+          "filename": "51f2425a-4437-40f1-b021-2f388e1fdf67_267934762.stl",
+          "similarity": 0.973786
+        },
+        {
+          "filename": "730588c5-01b5-4c6d-8e7d-4f32d7003d18_90541983.stl",
+          "similarity": 0.973324
+        },
+        {
+          "filename": "375c625a-54af-4f29-bf85-3411492cb35f_254987164.stl",
+          "similarity": 0.972798
+        }
+      ]
+    },
+    "0c71f971-4729-4efd-a93e-57b979a9bb1b_166424230.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "fce48be4-d2c1-4385-bd1b-6744655bfca2_174462596.stl",
+          "similarity": 0.974858
+        },
+        {
+          "filename": "00ebca40-7c9d-4479-8911-8c15e2e20f28_170640337.stl",
+          "similarity": 0.973765
+        },
+        {
+          "filename": "5b88129e-3ef6-44d3-90f6-7af198123dc4_163319490.stl",
+          "similarity": 0.973118
+        },
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.97258
+        },
+        {
+          "filename": "2baf768d-d83e-436f-9db7-7ba18b5e4a68_224341174.stl",
+          "similarity": 0.972393
+        }
+      ]
+    },
+    "0d9e65a6-0ff9-4cf8-b78e-5ede1c490364_121858546.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "d9f5fab1-0926-4c13-9b16-65bce1b916d8_79120925.stl",
+          "similarity": 0.961425
+        },
+        {
+          "filename": "105d28aa-7d96-4f4b-ae38-0009881a572c_80291296.stl",
+          "similarity": 0.960306
+        },
+        {
+          "filename": "f7889cef-64b1-4d18-ac74-cc563eeae9f2_120140499.stl",
+          "similarity": 0.958574
+        },
+        {
+          "filename": "a9809708-e1a7-42f2-927b-c15e620e0de8_79142915.stl",
+          "similarity": 0.957946
+        },
+        {
+          "filename": "b1b92b99-b6e4-4d36-a0eb-4bd2c51be9a0_78385287.stl",
+          "similarity": 0.957254
+        }
+      ]
+    },
+    "0da6e9b6-fa01-4187-9e09-fd7161dfcc0d_252377754.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "fce48be4-d2c1-4385-bd1b-6744655bfca2_174462596.stl",
+          "similarity": 0.973985
+        },
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.973623
+        },
+        {
+          "filename": "4d4409be-2485-4613-a3b4-79142bfae5ee_154676390.stl",
+          "similarity": 0.973478
+        },
+        {
+          "filename": "2d4ed68e-5121-44c9-bd5f-141f7fcecf7c_227626492.stl",
+          "similarity": 0.972824
+        },
+        {
+          "filename": "17ed82e9-c016-420c-ac83-adfec3db6e19_130836381.stl",
+          "similarity": 0.971677
+        }
+      ]
+    },
+    "15ba2669-99e8-4ee3-aa64-7544b8eff92a_160784333.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.974853
+        },
+        {
+          "filename": "17ed82e9-c016-420c-ac83-adfec3db6e19_130836381.stl",
+          "similarity": 0.972857
+        },
+        {
+          "filename": "319343aa-247b-45fe-8f13-b3eeffd1c326_180338970.stl",
+          "similarity": 0.971987
+        },
+        {
+          "filename": "5b88129e-3ef6-44d3-90f6-7af198123dc4_163319490.stl",
+          "similarity": 0.971625
+        },
+        {
+          "filename": "d8e57dd0-c8f7-4eff-af7c-56e791d464c6_133971538.stl",
+          "similarity": 0.971495
+        }
+      ]
+    },
+    "15deaa46-508a-4cb5-8c26-35152bdc7be7_138377650.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "760ef7cd-ea70-4e4e-bf98-a9a097456b2f_138940060.stl",
+          "similarity": 0.942377
+        },
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.942176
+        },
+        {
+          "filename": "40d679f5-d3f9-421d-a361-a192dd9584c8_138940518.stl",
+          "similarity": 0.939869
+        },
+        {
+          "filename": "ec3c14e8-6179-432c-8227-1b4f0838a371_138377404.stl",
+          "similarity": 0.93807
+        },
+        {
+          "filename": "ca95cfb7-39ea-4f11-8efd-862503938f0d_137954011.stl",
+          "similarity": 0.936284
+        }
+      ]
+    },
+    "18a03244-1847-413d-b88d-ed727652faf5_115274439.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "d71a93ad-0f2b-4dca-8133-c06a016ecd18_122117048.stl",
+          "similarity": 0.975947
+        },
+        {
+          "filename": "782ef0a4-e103-4f0a-9f9a-64072396c027_120524763.stl",
+          "similarity": 0.973409
+        },
+        {
+          "filename": "2ee9d116-5e0e-466d-87c9-ce2b16958198_95127092.stl",
+          "similarity": 0.972862
+        },
+        {
+          "filename": "7138062b-5a12-4914-bdec-8e112fc00ec0_82096876.stl",
+          "similarity": 0.972706
+        },
+        {
+          "filename": "35a31c1f-1e18-4b9d-aa7e-eba811e2a647_101946559.stl",
+          "similarity": 0.972424
+        }
+      ]
+    },
+    "1966e591-dee7-4aef-bb07-d987d674bb72_138943699.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "3dbb97a0-575f-4962-9925-9828dd8d9d66_139182012.stl",
+          "similarity": 0.945691
+        },
+        {
+          "filename": "98d16923-2844-4888-97eb-e32c5bcd51b8_139182769.stl",
+          "similarity": 0.945333
+        },
+        {
+          "filename": "fc9feba8-f105-4b3a-90a1-f7ad84be123c_138946612.stl",
+          "similarity": 0.945081
+        },
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.944961
+        },
+        {
+          "filename": "773fb0c3-12f1-4755-938a-8a1881134c5a_139182275.stl",
+          "similarity": 0.944573
+        }
+      ]
+    },
+    "1a23f6e0-8ac5-4b98-9f09-906ce4352f34_75810609.stl": {
+      "verdict": "pass",
+      "chosen_rank": 3,
+      "results": [
+        {
+          "filename": "2ee9d116-5e0e-466d-87c9-ce2b16958198_95127092.stl",
+          "similarity": 0.973584
+        },
+        {
+          "filename": "a71941d4-47c8-4e8a-9aea-de138344292c_74875008.stl",
+          "similarity": 0.97312
+        },
+        {
+          "filename": "8d395d73-f857-4d37-ba70-87e08b454d5e_71207338.stl",
+          "similarity": 0.972233
+        },
+        {
+          "filename": "e3044904-25f7-4e4a-8490-cbb17cb25089_121068923.stl",
+          "similarity": 0.971454
+        },
+        {
+          "filename": "bea070c1-4188-42b0-ba70-3afb15517a99_77270898.stl",
+          "similarity": 0.971401
+        }
+      ]
+    },
+    "22f97d92-b578-4a29-8b56-bbd7635aab46_156195058.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.973499
+        },
+        {
+          "filename": "bc61caaa-cece-43ec-9d3a-142c56e33d41_225522086.stl",
+          "similarity": 0.972348
+        },
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.971674
+        },
+        {
+          "filename": "c644b18e-f9c5-4b70-bcc5-f11444c8d96f_153315209.stl",
+          "similarity": 0.971368
+        },
+        {
+          "filename": "6f6a0346-9c05-4309-9443-7579b25dbced_236783850.stl",
+          "similarity": 0.971336
+        }
+      ]
+    },
+    "35f59889-6fc3-43a6-9f8b-f8d1e2423e3f_68381658.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "6e852acc-ca98-467c-91de-72f135ed2eb0_73216985.stl",
+          "similarity": 0.965877
+        },
+        {
+          "filename": "1c8d6100-6a9a-407a-a115-6b810d32428f_93783331.stl",
+          "similarity": 0.964459
+        },
+        {
+          "filename": "0e5028dc-072d-4e34-b560-93ab5f40c0cb_78389091.stl",
+          "similarity": 0.964001
+        },
+        {
+          "filename": "2ee9d116-5e0e-466d-87c9-ce2b16958198_95127092.stl",
+          "similarity": 0.963764
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.962407
+        }
+      ]
+    },
+    "361af065-63ea-47b8-b613-b87d17d44a7d_87374059.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "b7277d0f-844c-426a-ba65-9612430f1f37_94049235.stl",
+          "similarity": 0.972453
+        },
+        {
+          "filename": "d71a93ad-0f2b-4dca-8133-c06a016ecd18_122117048.stl",
+          "similarity": 0.972043
+        },
+        {
+          "filename": "2ee9d116-5e0e-466d-87c9-ce2b16958198_95127092.stl",
+          "similarity": 0.971802
+        },
+        {
+          "filename": "460abe26-4b35-4a08-b549-7c4e85274913_110183287.stl",
+          "similarity": 0.971321
+        },
+        {
+          "filename": "2a77ea8f-7843-4ddc-981d-8dec8d398c4c_94045444.stl",
+          "similarity": 0.971228
+        }
+      ]
+    },
+    "3b061aae-5146-4f62-9c9d-7243b6eeb685_254482274.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "a6f632d2-6885-462c-90be-044fe5b7b935_135495113.stl",
+          "similarity": 0.968294
+        },
+        {
+          "filename": "8b0b397e-aff3-4b82-80dc-1de73e158d7c_130434977.stl",
+          "similarity": 0.968186
+        },
+        {
+          "filename": "cb15635c-cde4-4a6f-be27-93fe95af0e60_148328071.stl",
+          "similarity": 0.967067
+        },
+        {
+          "filename": "436d7907-06f8-419d-9b31-94dbca71bf3e_164295540.stl",
+          "similarity": 0.966549
+        },
+        {
+          "filename": "19b41ff6-974d-4862-a275-469c5bcf970e_155601719.stl",
+          "similarity": 0.96651
+        }
+      ]
+    },
+    "42fb7900-2280-4647-9db1-8234b36e5fde_226305526.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.973459
+        },
+        {
+          "filename": "3c940be4-d994-4595-9567-837092ac0b77_225516270.stl",
+          "similarity": 0.973221
+        },
+        {
+          "filename": "2e22763d-5225-4841-93d7-007c4f4d97ea_156659082.stl",
+          "similarity": 0.972971
+        },
+        {
+          "filename": "c2334a9b-fbcc-42f2-bd45-c792135a8076_156491707.stl",
+          "similarity": 0.972091
+        },
+        {
+          "filename": "65668d36-d4de-460b-91aa-8b6e649026c8_146179103.stl",
+          "similarity": 0.971954
+        }
+      ]
+    },
+    "4e843234-9a38-4559-a13a-f06e07c954f2_138080209.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "35ce94e7-e07f-4700-bf0b-f4527e520caf_139186156.stl",
+          "similarity": 0.934203
+        },
+        {
+          "filename": "ca95cfb7-39ea-4f11-8efd-862503938f0d_137954011.stl",
+          "similarity": 0.926742
+        },
+        {
+          "filename": "3c217e3e-fb90-477e-822f-847f66b9effc_139183003.stl",
+          "similarity": 0.922799
+        },
+        {
+          "filename": "f4f0e134-1ac6-4b22-b24e-3e84a02f1358_138373357.stl",
+          "similarity": 0.922032
+        },
+        {
+          "filename": "616dd674-28e4-4101-bf73-d582216ad6e2_139182539.stl",
+          "similarity": 0.921863
+        }
+      ]
+    },
+    "50c7aab3-6af1-4031-96eb-0bc83b2eedce_69584178.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.969333
+        },
+        {
+          "filename": "b4d3c289-9b1f-4424-8e91-2f5fe0f91749_81754975.stl",
+          "similarity": 0.968075
+        },
+        {
+          "filename": "39b76e69-132a-4a2d-bac6-0c4a9f49e316_102072509.stl",
+          "similarity": 0.96681
+        },
+        {
+          "filename": "d66a835c-10c9-4243-a895-ca7ff2ec2026_78989604.stl",
+          "similarity": 0.966683
+        },
+        {
+          "filename": "1c8d6100-6a9a-407a-a115-6b810d32428f_93783331.stl",
+          "similarity": 0.966489
+        }
+      ]
+    },
+    "535ccff2-6c63-45e8-9448-ef36df620c2a_102740764.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "5521ab16-8c05-4573-bc5c-e77bdb0e3f62_138513351.stl",
+          "similarity": 0.975008
+        },
+        {
+          "filename": "406ab595-6d4c-4e06-88b6-66580d882b63_104265944.stl",
+          "similarity": 0.9743
+        },
+        {
+          "filename": "9285249c-7aff-4adf-a507-30bd9254ad08_97087833.stl",
+          "similarity": 0.974191
+        },
+        {
+          "filename": "0936e627-c004-4243-a541-5b4aebcdc0ba_109469558.stl",
+          "similarity": 0.973929
+        },
+        {
+          "filename": "bc7a6d3a-30f5-443d-bc79-3f0e313ee75e_110981142.stl",
+          "similarity": 0.9737
+        }
+      ]
+    },
+    "5c854d50-d941-48e6-9b18-dbe1e3b5cd0e_266069686.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "74c73ebb-9e66-4623-a482-8f4baeba6a88_130944418.stl",
+          "similarity": 0.975958
+        },
+        {
+          "filename": "af5f2654-b25a-4b8e-b1c5-26f1cdda392d_244660316.stl",
+          "similarity": 0.97505
+        },
+        {
+          "filename": "d8e57dd0-c8f7-4eff-af7c-56e791d464c6_133971538.stl",
+          "similarity": 0.973227
+        },
+        {
+          "filename": "cc9b81ea-984d-4e62-a1d0-18e7d5d7e0b2_128299860.stl",
+          "similarity": 0.972488
+        },
+        {
+          "filename": "e43729c6-ee57-41cf-aa46-67c152c9118e_137538969.stl",
+          "similarity": 0.972423
+        }
+      ]
+    },
+    "663de213-ccab-4147-b305-4d573b1004f6_162853608.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "ee9d5b1c-2bf2-4deb-889f-d86cbe380ce2_257773386.stl",
+          "similarity": 0.968166
+        },
+        {
+          "filename": "17ed82e9-c016-420c-ac83-adfec3db6e19_130836381.stl",
+          "similarity": 0.965206
+        },
+        {
+          "filename": "2216ea6c-5253-46a8-843a-203606b34cc7_225336925.stl",
+          "similarity": 0.963664
+        },
+        {
+          "filename": "65668d36-d4de-460b-91aa-8b6e649026c8_146179103.stl",
+          "similarity": 0.96359
+        },
+        {
+          "filename": "2ed544ef-c643-44e4-a24a-d43777f82423_174038941.stl",
+          "similarity": 0.963535
+        }
+      ]
+    },
+    "66ab7524-a12f-4423-9a59-d3f46e437dd7_106905263.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "d71a93ad-0f2b-4dca-8133-c06a016ecd18_122117048.stl",
+          "similarity": 0.970096
+        },
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.969456
+        },
+        {
+          "filename": "a9809708-e1a7-42f2-927b-c15e620e0de8_79142915.stl",
+          "similarity": 0.969449
+        },
+        {
+          "filename": "105d28aa-7d96-4f4b-ae38-0009881a572c_80291296.stl",
+          "similarity": 0.968782
+        },
+        {
+          "filename": "b4d3c289-9b1f-4424-8e91-2f5fe0f91749_81754975.stl",
+          "similarity": 0.968568
+        }
+      ]
+    },
+    "66d9a7e8-e2b7-427e-818f-f11c03da1bf0_77865974.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "0b774684-0f9c-4ea2-9504-feebd62a3794_83616030.stl",
+          "similarity": 0.97847
+        },
+        {
+          "filename": "35a31c1f-1e18-4b9d-aa7e-eba811e2a647_101946559.stl",
+          "similarity": 0.97758
+        },
+        {
+          "filename": "b7277d0f-844c-426a-ba65-9612430f1f37_94049235.stl",
+          "similarity": 0.976594
+        },
+        {
+          "filename": "26f99bcc-966d-4df4-ba79-1421c8adb704_99456432.stl",
+          "similarity": 0.976543
+        },
+        {
+          "filename": "e7b32b15-1867-4659-a924-b5c83fd0a8f1_104040438.stl",
+          "similarity": 0.976398
+        }
+      ]
+    },
+    "686490d0-56e3-48e2-903a-2bd735d3d018_139186754.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "fc9feba8-f105-4b3a-90a1-f7ad84be123c_138946612.stl",
+          "similarity": 0.951079
+        },
+        {
+          "filename": "b5c23f00-bc25-4e30-a4c8-35ea588930f7_139185578.stl",
+          "similarity": 0.945184
+        },
+        {
+          "filename": "859855c2-8b9b-490c-8ca6-866ac03682e2_137953581.stl",
+          "similarity": 0.942224
+        },
+        {
+          "filename": "d4cf3a01-51dd-4c42-8f89-12d793144a54_138945318.stl",
+          "similarity": 0.940807
+        },
+        {
+          "filename": "760ef7cd-ea70-4e4e-bf98-a9a097456b2f_138940060.stl",
+          "similarity": 0.939065
+        }
+      ]
+    },
+    "708687aa-6cb7-4b23-b1c7-051119dfa97d_139181597.stl": {
+      "verdict": "pass",
+      "chosen_rank": 3,
+      "results": [
+        {
+          "filename": "d4cf3a01-51dd-4c42-8f89-12d793144a54_138945318.stl",
+          "similarity": 0.942631
+        },
+        {
+          "filename": "da6c16b3-0d81-4e83-87fa-1f47163add29_138370014.stl",
+          "similarity": 0.942081
+        },
+        {
+          "filename": "616dd674-28e4-4101-bf73-d582216ad6e2_139182539.stl",
+          "similarity": 0.941679
+        },
+        {
+          "filename": "f7ed0c2c-72e3-42f0-a1ec-cd53ceb3c6bd_138941482.stl",
+          "similarity": 0.940981
+        },
+        {
+          "filename": "96755635-bab7-4fd6-ab44-2c9b87ada693_138945944.stl",
+          "similarity": 0.938635
+        }
+      ]
+    },
+    "7310da70-16e6-4793-a6df-62969c5c4658_240224016.stl": {
+      "verdict": "pass",
+      "chosen_rank": 4,
+      "results": [
+        {
+          "filename": "e2449df4-b826-4348-bfea-e6b34a50f088_172595772.stl",
+          "similarity": 0.96537
+        },
+        {
+          "filename": "10503e60-3a26-47fd-be8f-76cd89125897_246795528.stl",
+          "similarity": 0.963766
+        },
+        {
+          "filename": "98761a17-b8ce-42a0-915d-2a6a41855f12_148107416.stl",
+          "similarity": 0.963273
+        },
+        {
+          "filename": "91815d08-204b-423d-9084-a093506aa129_266070981.stl",
+          "similarity": 0.962599
+        },
+        {
+          "filename": "f2d96186-2c98-4cad-a6bc-a93d97e506c1_251119934.stl",
+          "similarity": 0.962332
+        }
+      ]
+    },
+    "73c08345-7575-48f7-999f-0d1bd19bf617_164777909.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "c644b18e-f9c5-4b70-bcc5-f11444c8d96f_153315209.stl",
+          "similarity": 0.973056
+        },
+        {
+          "filename": "00b7b502-7949-4f18-8821-a59f368d7977_172593814.stl",
+          "similarity": 0.972603
+        },
+        {
+          "filename": "6f5ea276-ce95-444f-b813-de5f90ab2ebb_257083642.stl",
+          "similarity": 0.97244
+        },
+        {
+          "filename": "0a1b9c21-ac5f-41d5-b6a2-f829b90218bd_254165971.stl",
+          "similarity": 0.971353
+        },
+        {
+          "filename": "b8de8bc0-e13a-4b8c-9dca-eff3f22f6394_166411330.stl",
+          "similarity": 0.969703
+        }
+      ]
+    },
+    "7b0015ac-3336-4120-a5b7-8d7b2142e7eb_180009675.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.967606
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.967511
+        },
+        {
+          "filename": "bff1f697-5846-4677-9fa1-fa3ca555ca2c_228308775.stl",
+          "similarity": 0.966937
+        },
+        {
+          "filename": "6f5ea276-ce95-444f-b813-de5f90ab2ebb_257083642.stl",
+          "similarity": 0.966929
+        },
+        {
+          "filename": "6add3a9a-f394-41ee-aec5-ed394856cda2_180016239.stl",
+          "similarity": 0.966293
+        }
+      ]
+    },
+    "7f2b242c-95ab-4629-a5c8-86e9b9e692d4_146183446.stl": {
+      "verdict": "fail",
+      "chosen_rank": 6,
+      "results": [
+        {
+          "filename": "273df5b8-dd5f-4523-85f2-37f4eec10ceb_180536957.stl",
+          "similarity": 0.971126
+        },
+        {
+          "filename": "d9d47e9b-d666-459e-8489-ad56c0b4ce7b_228309575.stl",
+          "similarity": 0.971035
+        },
+        {
+          "filename": "cc9b81ea-984d-4e62-a1d0-18e7d5d7e0b2_128299860.stl",
+          "similarity": 0.970581
+        },
+        {
+          "filename": "ae3d5240-a2ef-4d44-bf91-6c80145209e0_172148589.stl",
+          "similarity": 0.970521
+        },
+        {
+          "filename": "f2d96186-2c98-4cad-a6bc-a93d97e506c1_251119934.stl",
+          "similarity": 0.970514
+        }
+      ]
+    },
+    "7f4b45f1-c63f-4f3f-8738-e7410e511483_121202161.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "302381e6-d363-4132-876c-98c257b8677f_73237143.stl",
+          "similarity": 0.974977
+        },
+        {
+          "filename": "0b774684-0f9c-4ea2-9504-feebd62a3794_83616030.stl",
+          "similarity": 0.973629
+        },
+        {
+          "filename": "9285249c-7aff-4adf-a507-30bd9254ad08_97087833.stl",
+          "similarity": 0.973442
+        },
+        {
+          "filename": "f326fb44-55f3-4207-a62b-01a8318789c7_117261741.stl",
+          "similarity": 0.972428
+        },
+        {
+          "filename": "990b1b82-2cee-453c-bb65-5a819b021a45_70023223.stl",
+          "similarity": 0.971862
+        }
+      ]
+    },
+    "864d28f7-a7e5-473e-ad58-833671247efc_121986385.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "2de628e7-55bc-43bb-a51d-157e131397ff_120663003.stl",
+          "similarity": 0.965859
+        },
+        {
+          "filename": "c7bf201b-863a-4b07-aa9f-07afae37ff9f_95960016.stl",
+          "similarity": 0.961326
+        },
+        {
+          "filename": "a44a1562-e6ec-4c07-8141-3fd328d3a664_102163937.stl",
+          "similarity": 0.959138
+        },
+        {
+          "filename": "e7273a84-8269-4165-964c-cab3f0d63b72_80824360.stl",
+          "similarity": 0.958725
+        },
+        {
+          "filename": "43ac7a47-c02e-489c-bee3-8fb6904b2fb9_172429967.stl",
+          "similarity": 0.958364
+        }
+      ]
+    },
+    "872ddb15-65a6-40da-9a3f-92b932f20e7e_156361270.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "9bb5e684-bf12-419f-bc55-f52cd0ac4bb1_137238153.stl",
+          "similarity": 0.9775
+        },
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.977493
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.976934
+        },
+        {
+          "filename": "b708d2dd-ff6e-4be8-9f00-c52aa48d875d_127857489.stl",
+          "similarity": 0.976604
+        },
+        {
+          "filename": "319343aa-247b-45fe-8f13-b3eeffd1c326_180338970.stl",
+          "similarity": 0.976599
+        }
+      ]
+    },
+    "882a7e7e-9884-4c0c-96d8-3e527248a709_179529738.stl": {
+      "verdict": "fail",
+      "chosen_rank": 6,
+      "results": [
+        {
+          "filename": "0a1b9c21-ac5f-41d5-b6a2-f829b90218bd_254165971.stl",
+          "similarity": 0.976613
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.976536
+        },
+        {
+          "filename": "02021fff-a88c-4aae-92e5-08a3f18701aa_133418847.stl",
+          "similarity": 0.976518
+        },
+        {
+          "filename": "3c940be4-d994-4595-9567-837092ac0b77_225516270.stl",
+          "similarity": 0.976451
+        },
+        {
+          "filename": "bffb86c8-6553-425b-95f5-cde2e9f17d93_272335855.stl",
+          "similarity": 0.976366
+        }
+      ]
+    },
+    "88c6261a-fb28-444c-9aa2-66cf2202ee3a_139186903.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.962007
+        },
+        {
+          "filename": "760ef7cd-ea70-4e4e-bf98-a9a097456b2f_138940060.stl",
+          "similarity": 0.949284
+        },
+        {
+          "filename": "9f1acced-797a-4a4b-b275-ef7d51dc9e8d_138920794.stl",
+          "similarity": 0.948202
+        },
+        {
+          "filename": "ef4dc3db-41af-4d76-bc48-9f95cc60b2ef_138081414.stl",
+          "similarity": 0.945833
+        },
+        {
+          "filename": "40d679f5-d3f9-421d-a361-a192dd9584c8_138940518.stl",
+          "similarity": 0.945436
+        }
+      ]
+    },
+    "89f6e5d9-4fd8-4b50-9ae0-bda4c8239bf1_104270621.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "b7277d0f-844c-426a-ba65-9612430f1f37_94049235.stl",
+          "similarity": 0.978156
+        },
+        {
+          "filename": "60e31f60-5f46-4bcc-bcee-e360a29bd7ce_91748698.stl",
+          "similarity": 0.977549
+        },
+        {
+          "filename": "35a31c1f-1e18-4b9d-aa7e-eba811e2a647_101946559.stl",
+          "similarity": 0.976373
+        },
+        {
+          "filename": "aec057ce-d029-418c-b26f-045de369b3b5_81737879.stl",
+          "similarity": 0.975687
+        },
+        {
+          "filename": "8537cff9-a442-442d-be83-ff329e999342_80676994.stl",
+          "similarity": 0.974545
+        }
+      ]
+    },
+    "8b293fd9-410f-43d3-a47e-1f4e1ef4bdbe_167875525.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "380a035a-b2e9-40c3-afc1-e2d3bb377bdb_176924593.stl",
+          "similarity": 0.978613
+        },
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.978478
+        },
+        {
+          "filename": "bffb86c8-6553-425b-95f5-cde2e9f17d93_272335855.stl",
+          "similarity": 0.977279
+        },
+        {
+          "filename": "fa0ef877-6f62-442e-a4e6-78a0ed915cc1_125319076.stl",
+          "similarity": 0.977098
+        },
+        {
+          "filename": "d4a90860-e663-48f5-8cb6-63896ad0b545_139604976.stl",
+          "similarity": 0.977051
+        }
+      ]
+    },
+    "8d13d9d6-7c1c-491d-baa1-8166415b3218_93754058.stl": {
+      "verdict": "pass",
+      "chosen_rank": 5,
+      "results": [
+        {
+          "filename": "105d28aa-7d96-4f4b-ae38-0009881a572c_80291296.stl",
+          "similarity": 0.968842
+        },
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.966894
+        },
+        {
+          "filename": "d9f5fab1-0926-4c13-9b16-65bce1b916d8_79120925.stl",
+          "similarity": 0.966268
+        },
+        {
+          "filename": "7138062b-5a12-4914-bdec-8e112fc00ec0_82096876.stl",
+          "similarity": 0.965854
+        },
+        {
+          "filename": "599d6bb7-d8fb-4515-8eed-c8da6a032a60_122115517.stl",
+          "similarity": 0.965833
+        }
+      ]
+    },
+    "8e8b0ae8-789d-4707-973c-b7a64643ed13_138491438.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.934479
+        },
+        {
+          "filename": "ec3c14e8-6179-432c-8227-1b4f0838a371_138377404.stl",
+          "similarity": 0.934451
+        },
+        {
+          "filename": "760ef7cd-ea70-4e4e-bf98-a9a097456b2f_138940060.stl",
+          "similarity": 0.931082
+        },
+        {
+          "filename": "ef4dc3db-41af-4d76-bc48-9f95cc60b2ef_138081414.stl",
+          "similarity": 0.93071
+        },
+        {
+          "filename": "f7ed0c2c-72e3-42f0-a1ec-cd53ceb3c6bd_138941482.stl",
+          "similarity": 0.928767
+        }
+      ]
+    },
+    "90ed9867-247d-4e84-bd1f-96b07d243c3e_138220233.stl": {
+      "verdict": "pass",
+      "chosen_rank": 3,
+      "results": [
+        {
+          "filename": "da6c16b3-0d81-4e83-87fa-1f47163add29_138370014.stl",
+          "similarity": 0.941185
+        },
+        {
+          "filename": "ca95cfb7-39ea-4f11-8efd-862503938f0d_137954011.stl",
+          "similarity": 0.938259
+        },
+        {
+          "filename": "8ec1a108-9475-4613-ad27-b59586fbc858_138938596.stl",
+          "similarity": 0.937479
+        },
+        {
+          "filename": "d4cf3a01-51dd-4c42-8f89-12d793144a54_138945318.stl",
+          "similarity": 0.937443
+        },
+        {
+          "filename": "96755635-bab7-4fd6-ab44-2c9b87ada693_138945944.stl",
+          "similarity": 0.936636
+        }
+      ]
+    },
+    "9152b443-f680-4f29-8489-7490b6806185_156196447.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "2ed544ef-c643-44e4-a24a-d43777f82423_174038941.stl",
+          "similarity": 0.959601
+        },
+        {
+          "filename": "ade23b8b-00c3-4ba8-b6b0-786c6a64b84d_264988802.stl",
+          "similarity": 0.958408
+        },
+        {
+          "filename": "086d26a2-a42c-4c93-bc56-61521a225a7b_229507751.stl",
+          "similarity": 0.957695
+        },
+        {
+          "filename": "4a763521-2037-4bca-8564-efd8287286f9_174024162.stl",
+          "similarity": 0.957363
+        },
+        {
+          "filename": "0c0d8b92-9e79-4e89-b0e1-157a7e1a63d4_177789038.stl",
+          "similarity": 0.957244
+        }
+      ]
+    },
+    "91af08e0-72ac-463f-be6f-8e01d41a74dd_268307206.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "b708d2dd-ff6e-4be8-9f00-c52aa48d875d_127857489.stl",
+          "similarity": 0.974902
+        },
+        {
+          "filename": "52de4afe-24be-4a9a-9365-101768e1c589_135386769.stl",
+          "similarity": 0.974892
+        },
+        {
+          "filename": "2f604299-24be-46bc-a417-35795f59a6d1_227619076.stl",
+          "similarity": 0.97473
+        },
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.973894
+        },
+        {
+          "filename": "0a1b9c21-ac5f-41d5-b6a2-f829b90218bd_254165971.stl",
+          "similarity": 0.9734
+        }
+      ]
+    },
+    "96d6716c-fc86-462a-94c4-7f4744c6e976_138921126.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "ef4dc3db-41af-4d76-bc48-9f95cc60b2ef_138081414.stl",
+          "similarity": 0.95008
+        },
+        {
+          "filename": "9f1acced-797a-4a4b-b275-ef7d51dc9e8d_138920794.stl",
+          "similarity": 0.948578
+        },
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.947591
+        },
+        {
+          "filename": "773fb0c3-12f1-4755-938a-8a1881134c5a_139182275.stl",
+          "similarity": 0.94438
+        },
+        {
+          "filename": "fc9feba8-f105-4b3a-90a1-f7ad84be123c_138946612.stl",
+          "similarity": 0.941207
+        }
+      ]
+    },
+    "970fd290-6aaf-439f-8a18-789670d0c84d_154987223.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "aa6461bb-1114-4693-b3c4-15f0556e2311_252398582.stl",
+          "similarity": 0.976887
+        },
+        {
+          "filename": "5c8a5584-2c95-4ffe-b2f6-e652379b9c56_241834612.stl",
+          "similarity": 0.976255
+        },
+        {
+          "filename": "e6abe54b-e520-45ec-ae71-b1440ab023f8_167567185.stl",
+          "similarity": 0.976163
+        },
+        {
+          "filename": "1782916b-faf0-4d58-9d76-838e3b5c3f2c_154830657.stl",
+          "similarity": 0.975127
+        },
+        {
+          "filename": "589cf8d1-9762-4855-918b-a0ce2593f136_168688311.stl",
+          "similarity": 0.975023
+        }
+      ]
+    },
+    "9dfbf4f4-0e53-4424-8216-2e24ccb726c6_137540083.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "90b116d9-e7eb-48bd-9c72-b8e79d1fda94_234586329.stl",
+          "similarity": 0.978823
+        },
+        {
+          "filename": "98761a17-b8ce-42a0-915d-2a6a41855f12_148107416.stl",
+          "similarity": 0.97597
+        },
+        {
+          "filename": "a6f632d2-6885-462c-90be-044fe5b7b935_135495113.stl",
+          "similarity": 0.975223
+        },
+        {
+          "filename": "cb15635c-cde4-4a6f-be27-93fe95af0e60_148328071.stl",
+          "similarity": 0.974679
+        },
+        {
+          "filename": "5c8a5584-2c95-4ffe-b2f6-e652379b9c56_241834612.stl",
+          "similarity": 0.974646
+        }
+      ]
+    },
+    "a5710783-46d0-4cba-a583-58a172456b97_72034155.stl": {
+      "verdict": "pass",
+      "chosen_rank": 4,
+      "results": [
+        {
+          "filename": "612b314a-5c2c-4633-8784-c94feefef386_72032590.stl",
+          "similarity": 0.969641
+        },
+        {
+          "filename": "3300e1e0-280b-4333-b215-88d63725e864_68805284.stl",
+          "similarity": 0.968863
+        },
+        {
+          "filename": "6b3c3fbd-c94a-4084-847c-530556b078e0_118603733.stl",
+          "similarity": 0.968519
+        },
+        {
+          "filename": "e5a73148-0a7a-41c1-b90c-940ae33cde27_69905938.stl",
+          "similarity": 0.968213
+        },
+        {
+          "filename": "70185ac7-822c-4b41-9235-99af41c1b6a3_244855917.stl",
+          "similarity": 0.967875
+        }
+      ]
+    },
+    "ada48d47-0aa9-490a-86f5-389ebf238eff_129760319.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.975616
+        },
+        {
+          "filename": "5c8a5584-2c95-4ffe-b2f6-e652379b9c56_241834612.stl",
+          "similarity": 0.974845
+        },
+        {
+          "filename": "ae3d5240-a2ef-4d44-bf91-6c80145209e0_172148589.stl",
+          "similarity": 0.974797
+        },
+        {
+          "filename": "5ed7a4ce-769e-4104-973a-3e4ff9e212f4_176806186.stl",
+          "similarity": 0.974631
+        },
+        {
+          "filename": "380a035a-b2e9-40c3-afc1-e2d3bb377bdb_176924593.stl",
+          "similarity": 0.974133
+        }
+      ]
+    },
+    "ae6dea56-7d27-4aa0-b08a-537109818c69_165121161.stl": {
+      "verdict": "fail",
+      "chosen_rank": 9,
+      "results": [
+        {
+          "filename": "4934b130-b0a5-4d6a-ac12-c30b20708e2b_148795582.stl",
+          "similarity": 0.973044
+        },
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.972948
+        },
+        {
+          "filename": "65668d36-d4de-460b-91aa-8b6e649026c8_146179103.stl",
+          "similarity": 0.972754
+        },
+        {
+          "filename": "6add3a9a-f394-41ee-aec5-ed394856cda2_180016239.stl",
+          "similarity": 0.972637
+        },
+        {
+          "filename": "fa0ef877-6f62-442e-a4e6-78a0ed915cc1_125319076.stl",
+          "similarity": 0.972455
+        }
+      ]
+    },
+    "b57fde05-2fac-4483-85b2-8c75d353585b_235100001.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "0c0d8b92-9e79-4e89-b0e1-157a7e1a63d4_177789038.stl",
+          "similarity": 0.968081
+        },
+        {
+          "filename": "5e9443cc-7e2f-48f5-836f-0ade72add685_170941511.stl",
+          "similarity": 0.966479
+        },
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.966392
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.966075
+        },
+        {
+          "filename": "17665b65-4efe-46a5-953c-ddc55d6210bc_175246165.stl",
+          "similarity": 0.965622
+        }
+      ]
+    },
+    "b63f405b-9a82-4b32-908e-176e07cf54dd_131563887.stl": {
+      "verdict": "fail",
+      "chosen_rank": 7,
+      "results": [
+        {
+          "filename": "2724825d-2c65-40cb-87b0-4de8d3125415_235932467.stl",
+          "similarity": 0.970068
+        },
+        {
+          "filename": "2f604299-24be-46bc-a417-35795f59a6d1_227619076.stl",
+          "similarity": 0.969753
+        },
+        {
+          "filename": "6cb8e7ec-ceda-40f1-bf66-74406817d150_254146214.stl",
+          "similarity": 0.969623
+        },
+        {
+          "filename": "d76da914-65aa-48fe-8994-0caa92b40566_112874289.stl",
+          "similarity": 0.969376
+        },
+        {
+          "filename": "9b75ec63-ac26-4a0b-8151-0a95be32f395_256377272.stl",
+          "similarity": 0.968848
+        }
+      ]
+    },
+    "ba32b798-4e21-4efb-9c5f-f050b53b5f6c_126828142.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "bffb86c8-6553-425b-95f5-cde2e9f17d93_272335855.stl",
+          "similarity": 0.974689
+        },
+        {
+          "filename": "5b88129e-3ef6-44d3-90f6-7af198123dc4_163319490.stl",
+          "similarity": 0.973756
+        },
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.973649
+        },
+        {
+          "filename": "dbb571ed-e0cb-4837-a22e-fa206c44d561_250304067.stl",
+          "similarity": 0.973388
+        },
+        {
+          "filename": "4934b130-b0a5-4d6a-ac12-c30b20708e2b_148795582.stl",
+          "similarity": 0.9733
+        }
+      ]
+    },
+    "bc52e782-3a50-4ab9-96ec-ab06360cf0df_139183123.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "ca26127b-5723-444b-86a2-8153b6349fde_138942701.stl",
+          "similarity": 0.912143
+        },
+        {
+          "filename": "b138fcd2-790a-4648-855c-1dcf2559b198_138942173.stl",
+          "similarity": 0.90031
+        },
+        {
+          "filename": "3c217e3e-fb90-477e-822f-847f66b9effc_139183003.stl",
+          "similarity": 0.895328
+        },
+        {
+          "filename": "14abce5e-71dd-433b-b7cf-ec457d2df668_138941008.stl",
+          "similarity": 0.888329
+        },
+        {
+          "filename": "110844df-0ee6-4222-8c79-3ff2faea262b_139185275.stl",
+          "similarity": 0.887999
+        }
+      ]
+    },
+    "bf6c582a-97bf-4c8e-b739-d38f4ff8a587_269117142.stl": {
+      "verdict": "fail",
+      "chosen_rank": 7,
+      "results": [
+        {
+          "filename": "2e22763d-5225-4841-93d7-007c4f4d97ea_156659082.stl",
+          "similarity": 0.97555
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.972035
+        },
+        {
+          "filename": "6f5ea276-ce95-444f-b813-de5f90ab2ebb_257083642.stl",
+          "similarity": 0.972016
+        },
+        {
+          "filename": "3c940be4-d994-4595-9567-837092ac0b77_225516270.stl",
+          "similarity": 0.97168
+        },
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.971297
+        }
+      ]
+    },
+    "c71553bb-d015-435d-a0e2-1b8809d95782_98633179.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "601dfb05-16e8-4c21-b050-512bc6a27fbb_116176769.stl",
+          "similarity": 0.962738
+        },
+        {
+          "filename": "2eca13e2-6807-440d-a5e3-99863229d42d_101120402.stl",
+          "similarity": 0.961627
+        },
+        {
+          "filename": "00ebca40-7c9d-4479-8911-8c15e2e20f28_170640337.stl",
+          "similarity": 0.960998
+        },
+        {
+          "filename": "e0e5dbc6-bbb9-4744-b67e-d7f50fd675b4_144048738.stl",
+          "similarity": 0.960818
+        },
+        {
+          "filename": "b8de8bc0-e13a-4b8c-9dca-eff3f22f6394_166411330.stl",
+          "similarity": 0.960047
+        }
+      ]
+    },
+    "c72ce1ee-b0c0-47b4-b1c1-31d3b7db4202_224826742.stl": {
+      "verdict": "fail",
+      "chosen_rank": 8,
+      "results": [
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.967952
+        },
+        {
+          "filename": "9bb5e684-bf12-419f-bc55-f52cd0ac4bb1_137238153.stl",
+          "similarity": 0.966174
+        },
+        {
+          "filename": "37dfe2f3-8f03-4602-ba58-3f399b4ce8af_136283599.stl",
+          "similarity": 0.965889
+        },
+        {
+          "filename": "149c03d3-eb17-458c-a9a3-494fcb15728a_252573857.stl",
+          "similarity": 0.965799
+        },
+        {
+          "filename": "87c45f54-3293-4cac-bb0e-c851d5302c6f_135245914.stl",
+          "similarity": 0.965647
+        }
+      ]
+    },
+    "caedd817-a00c-482b-8a06-d26e99d34747_176804494.stl": {
+      "verdict": "fail",
+      "chosen_rank": 6,
+      "results": [
+        {
+          "filename": "601dfb05-16e8-4c21-b050-512bc6a27fbb_116176769.stl",
+          "similarity": 0.966972
+        },
+        {
+          "filename": "b4d3c289-9b1f-4424-8e91-2f5fe0f91749_81754975.stl",
+          "similarity": 0.966902
+        },
+        {
+          "filename": "d9f5fab1-0926-4c13-9b16-65bce1b916d8_79120925.stl",
+          "similarity": 0.964985
+        },
+        {
+          "filename": "5a629a33-d06e-4993-b954-78588883e4ba_84729564.stl",
+          "similarity": 0.964788
+        },
+        {
+          "filename": "105d28aa-7d96-4f4b-ae38-0009881a572c_80291296.stl",
+          "similarity": 0.964328
+        }
+      ]
+    },
+    "cd243e1b-3c3d-47b4-9ac7-afc1fafe9514_102169805.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "59fe87a8-f73d-4bdd-9dcb-915d637c3142_133950232.stl",
+          "similarity": 0.963825
+        },
+        {
+          "filename": "f1c7e732-414b-4d3d-bd15-d72ac4b6ada2_96193727.stl",
+          "similarity": 0.962463
+        },
+        {
+          "filename": "08d46ee3-ebb0-424b-b8e4-c482f5f0ca1f_87347569.stl",
+          "similarity": 0.9605
+        },
+        {
+          "filename": "5521ab16-8c05-4573-bc5c-e77bdb0e3f62_138513351.stl",
+          "similarity": 0.960259
+        },
+        {
+          "filename": "09b2d640-5b06-479b-a5f7-6291c6a77eda_105438206.stl",
+          "similarity": 0.95962
+        }
+      ]
+    },
+    "d3f8fff1-fabe-4515-8bc9-5d6c748e4704_228210355.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.976992
+        },
+        {
+          "filename": "59452f5a-3fae-42f2-87ac-16e33eda84cc_135895630.stl",
+          "similarity": 0.975647
+        },
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.974503
+        },
+        {
+          "filename": "fa0ef877-6f62-442e-a4e6-78a0ed915cc1_125319076.stl",
+          "similarity": 0.97441
+        },
+        {
+          "filename": "5dfdccfb-0a16-4b2e-acc4-db29b305032c_226651945.stl",
+          "similarity": 0.974391
+        }
+      ]
+    },
+    "da7ed085-ee67-4d34-96c5-3f651dbf2952_227925412.stl": {
+      "verdict": "fail",
+      "chosen_rank": 6,
+      "results": [
+        {
+          "filename": "dbb571ed-e0cb-4837-a22e-fa206c44d561_250304067.stl",
+          "similarity": 0.97678
+        },
+        {
+          "filename": "1782916b-faf0-4d58-9d76-838e3b5c3f2c_154830657.stl",
+          "similarity": 0.97461
+        },
+        {
+          "filename": "5c8a5584-2c95-4ffe-b2f6-e652379b9c56_241834612.stl",
+          "similarity": 0.973229
+        },
+        {
+          "filename": "d71542bb-20d3-4137-9cae-6ef31220f6aa_170161741.stl",
+          "similarity": 0.973054
+        },
+        {
+          "filename": "aa6461bb-1114-4693-b3c4-15f0556e2311_252398582.stl",
+          "similarity": 0.973044
+        }
+      ]
+    },
+    "e07ea579-494e-4c87-a4b8-93355017acbb_151039691.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "b708d2dd-ff6e-4be8-9f00-c52aa48d875d_127857489.stl",
+          "similarity": 0.976827
+        },
+        {
+          "filename": "2f604299-24be-46bc-a417-35795f59a6d1_227619076.stl",
+          "similarity": 0.976609
+        },
+        {
+          "filename": "f2d96186-2c98-4cad-a6bc-a93d97e506c1_251119934.stl",
+          "similarity": 0.976062
+        },
+        {
+          "filename": "0c8fb84b-e513-450e-8f73-0f0070e20d61_151491830.stl",
+          "similarity": 0.975773
+        },
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.975009
+        }
+      ]
+    },
+    "f47cb25d-220b-4286-8190-1578c602c7b4_147295206.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "b0b4f0a7-2365-4135-9ba9-2d486ea5a250_164628198.stl",
+          "similarity": 0.97406
+        },
+        {
+          "filename": "b0508688-ce7f-4e69-b870-42fd2c6da5b4_252938545.stl",
+          "similarity": 0.974006
+        },
+        {
+          "filename": "dcd0f85f-9359-4a85-b335-efe13eeee603_245014641.stl",
+          "similarity": 0.973689
+        },
+        {
+          "filename": "e43729c6-ee57-41cf-aa46-67c152c9118e_137538969.stl",
+          "similarity": 0.973626
+        },
+        {
+          "filename": "5c8a5584-2c95-4ffe-b2f6-e652379b9c56_241834612.stl",
+          "similarity": 0.973334
+        }
+      ]
+    }
+  },
+  "top_10": {
+    "04f8f1b3-68c2-4ef3-b417-4974d87faa25_99098472.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "1bcc6714-b4c1-4962-bb0e-1571f126264e_110187496.stl",
+          "similarity": 0.969353
+        },
+        {
+          "filename": "8d395d73-f857-4d37-ba70-87e08b454d5e_71207338.stl",
+          "similarity": 0.969153
+        },
+        {
+          "filename": "b048b9f3-bb73-40ef-a879-2323e472822b_120140876.stl",
+          "similarity": 0.968963
+        },
+        {
+          "filename": "d71a93ad-0f2b-4dca-8133-c06a016ecd18_122117048.stl",
+          "similarity": 0.968516
+        },
+        {
+          "filename": "7f270a79-1bef-4782-9a99-b245136d2ff3_90876708.stl",
+          "similarity": 0.968081
+        },
+        {
+          "filename": "e7b32b15-1867-4659-a924-b5c83fd0a8f1_104040438.stl",
+          "similarity": 0.968079
+        },
+        {
+          "filename": "58b770df-83b1-4458-906e-2ebee018c432_73230403.stl",
+          "similarity": 0.96804
+        },
+        {
+          "filename": "4cc7446e-e87e-46b8-bdf8-885ab5a7f32b_109844149.stl",
+          "similarity": 0.967779
+        },
+        {
+          "filename": "35a31c1f-1e18-4b9d-aa7e-eba811e2a647_101946559.stl",
+          "similarity": 0.967486
+        },
+        {
+          "filename": "5882c789-c16b-4b3c-aabf-eaee8606983c_87382879.stl",
+          "similarity": 0.967478
+        }
+      ]
+    },
+    "06f7d71e-3691-4f20-91da-fa86c56cd0d2_265171835.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "00b7b502-7949-4f18-8821-a59f368d7977_172593814.stl",
+          "similarity": 0.96959
+        },
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.968421
+        },
+        {
+          "filename": "576080fd-6013-4803-ae10-11e7580459ae_134224267.stl",
+          "similarity": 0.967884
+        },
+        {
+          "filename": "65668d36-d4de-460b-91aa-8b6e649026c8_146179103.stl",
+          "similarity": 0.967717
+        },
+        {
+          "filename": "6f5ea276-ce95-444f-b813-de5f90ab2ebb_257083642.stl",
+          "similarity": 0.966853
+        },
+        {
+          "filename": "2216ea6c-5253-46a8-843a-203606b34cc7_225336925.stl",
+          "similarity": 0.966317
+        },
+        {
+          "filename": "b74811ff-67f5-40d2-9914-a4d728c4edb7_248368612.stl",
+          "similarity": 0.966213
+        },
+        {
+          "filename": "0a1b9c21-ac5f-41d5-b6a2-f829b90218bd_254165971.stl",
+          "similarity": 0.965973
+        },
+        {
+          "filename": "43ac7a47-c02e-489c-bee3-8fb6904b2fb9_172429967.stl",
+          "similarity": 0.965891
+        },
+        {
+          "filename": "105d28aa-7d96-4f4b-ae38-0009881a572c_80291296.stl",
+          "similarity": 0.96573
+        }
+      ]
+    },
+    "0c596079-8260-4714-990c-9b3405b2e908_173182707.stl": {
+      "verdict": "pass",
+      "chosen_rank": 5,
+      "results": [
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.975373
+        },
+        {
+          "filename": "a9918e6d-6b84-4512-8af9-2c0202981f75_160634854.stl",
+          "similarity": 0.973888
+        },
+        {
+          "filename": "51f2425a-4437-40f1-b021-2f388e1fdf67_267934762.stl",
+          "similarity": 0.973786
+        },
+        {
+          "filename": "730588c5-01b5-4c6d-8e7d-4f32d7003d18_90541983.stl",
+          "similarity": 0.973324
+        },
+        {
+          "filename": "375c625a-54af-4f29-bf85-3411492cb35f_254987164.stl",
+          "similarity": 0.972798
+        },
+        {
+          "filename": "149c03d3-eb17-458c-a9a3-494fcb15728a_252573857.stl",
+          "similarity": 0.972471
+        },
+        {
+          "filename": "c2334a9b-fbcc-42f2-bd45-c792135a8076_156491707.stl",
+          "similarity": 0.972273
+        },
+        {
+          "filename": "d71a93ad-0f2b-4dca-8133-c06a016ecd18_122117048.stl",
+          "similarity": 0.971803
+        },
+        {
+          "filename": "ae3d5240-a2ef-4d44-bf91-6c80145209e0_172148589.stl",
+          "similarity": 0.971623
+        },
+        {
+          "filename": "2bf03b8a-4527-43bc-9bee-8fa9ecde5441_253638436.stl",
+          "similarity": 0.971565
+        }
+      ]
+    },
+    "0c71f971-4729-4efd-a93e-57b979a9bb1b_166424230.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "fce48be4-d2c1-4385-bd1b-6744655bfca2_174462596.stl",
+          "similarity": 0.974858
+        },
+        {
+          "filename": "00ebca40-7c9d-4479-8911-8c15e2e20f28_170640337.stl",
+          "similarity": 0.973765
+        },
+        {
+          "filename": "5b88129e-3ef6-44d3-90f6-7af198123dc4_163319490.stl",
+          "similarity": 0.973118
+        },
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.97258
+        },
+        {
+          "filename": "2baf768d-d83e-436f-9db7-7ba18b5e4a68_224341174.stl",
+          "similarity": 0.972393
+        },
+        {
+          "filename": "236ff37c-85a3-406a-b91c-f99b7d463adf_173903032.stl",
+          "similarity": 0.972354
+        },
+        {
+          "filename": "2d4ed68e-5121-44c9-bd5f-141f7fcecf7c_227626492.stl",
+          "similarity": 0.971992
+        },
+        {
+          "filename": "b0b4f0a7-2365-4135-9ba9-2d486ea5a250_164628198.stl",
+          "similarity": 0.97163
+        },
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.970943
+        },
+        {
+          "filename": "bc61caaa-cece-43ec-9d3a-142c56e33d41_225522086.stl",
+          "similarity": 0.970905
+        }
+      ]
+    },
+    "0d9e65a6-0ff9-4cf8-b78e-5ede1c490364_121858546.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "d9f5fab1-0926-4c13-9b16-65bce1b916d8_79120925.stl",
+          "similarity": 0.961425
+        },
+        {
+          "filename": "105d28aa-7d96-4f4b-ae38-0009881a572c_80291296.stl",
+          "similarity": 0.960306
+        },
+        {
+          "filename": "f7889cef-64b1-4d18-ac74-cc563eeae9f2_120140499.stl",
+          "similarity": 0.958574
+        },
+        {
+          "filename": "a9809708-e1a7-42f2-927b-c15e620e0de8_79142915.stl",
+          "similarity": 0.957946
+        },
+        {
+          "filename": "b1b92b99-b6e4-4d36-a0eb-4bd2c51be9a0_78385287.stl",
+          "similarity": 0.957254
+        },
+        {
+          "filename": "fd60211e-63dc-480a-b828-3e8f61e6ba0a_96859081.stl",
+          "similarity": 0.957204
+        },
+        {
+          "filename": "0e5028dc-072d-4e34-b560-93ab5f40c0cb_78389091.stl",
+          "similarity": 0.957142
+        },
+        {
+          "filename": "c7a2a64a-2dec-4d90-8fd4-f3910a050bf5_74254920.stl",
+          "similarity": 0.956991
+        },
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.956581
+        },
+        {
+          "filename": "599d6bb7-d8fb-4515-8eed-c8da6a032a60_122115517.stl",
+          "similarity": 0.956444
+        }
+      ]
+    },
+    "0da6e9b6-fa01-4187-9e09-fd7161dfcc0d_252377754.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "fce48be4-d2c1-4385-bd1b-6744655bfca2_174462596.stl",
+          "similarity": 0.973985
+        },
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.973623
+        },
+        {
+          "filename": "4d4409be-2485-4613-a3b4-79142bfae5ee_154676390.stl",
+          "similarity": 0.973478
+        },
+        {
+          "filename": "2d4ed68e-5121-44c9-bd5f-141f7fcecf7c_227626492.stl",
+          "similarity": 0.972824
+        },
+        {
+          "filename": "17ed82e9-c016-420c-ac83-adfec3db6e19_130836381.stl",
+          "similarity": 0.971677
+        },
+        {
+          "filename": "5be75df9-2104-49e5-9613-e4bbdb94902d_254336200.stl",
+          "similarity": 0.971653
+        },
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.971569
+        },
+        {
+          "filename": "c644b18e-f9c5-4b70-bcc5-f11444c8d96f_153315209.stl",
+          "similarity": 0.970808
+        },
+        {
+          "filename": "b0b4f0a7-2365-4135-9ba9-2d486ea5a250_164628198.stl",
+          "similarity": 0.9707
+        },
+        {
+          "filename": "26797da9-59b1-4f08-8ba5-f2f426669be6_126563256.stl",
+          "similarity": 0.970645
+        }
+      ]
+    },
+    "15ba2669-99e8-4ee3-aa64-7544b8eff92a_160784333.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.974853
+        },
+        {
+          "filename": "17ed82e9-c016-420c-ac83-adfec3db6e19_130836381.stl",
+          "similarity": 0.972857
+        },
+        {
+          "filename": "319343aa-247b-45fe-8f13-b3eeffd1c326_180338970.stl",
+          "similarity": 0.971987
+        },
+        {
+          "filename": "5b88129e-3ef6-44d3-90f6-7af198123dc4_163319490.stl",
+          "similarity": 0.971625
+        },
+        {
+          "filename": "d8e57dd0-c8f7-4eff-af7c-56e791d464c6_133971538.stl",
+          "similarity": 0.971495
+        },
+        {
+          "filename": "dbb571ed-e0cb-4837-a22e-fa206c44d561_250304067.stl",
+          "similarity": 0.971149
+        },
+        {
+          "filename": "b8de8bc0-e13a-4b8c-9dca-eff3f22f6394_166411330.stl",
+          "similarity": 0.970213
+        },
+        {
+          "filename": "3c940be4-d994-4595-9567-837092ac0b77_225516270.stl",
+          "similarity": 0.970164
+        },
+        {
+          "filename": "0a1b9c21-ac5f-41d5-b6a2-f829b90218bd_254165971.stl",
+          "similarity": 0.969994
+        },
+        {
+          "filename": "f80ec6bb-eef5-453a-87f9-e4b595d4036f_137365313.stl",
+          "similarity": 0.969975
+        }
+      ]
+    },
+    "15deaa46-508a-4cb5-8c26-35152bdc7be7_138377650.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "760ef7cd-ea70-4e4e-bf98-a9a097456b2f_138940060.stl",
+          "similarity": 0.942377
+        },
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.942176
+        },
+        {
+          "filename": "40d679f5-d3f9-421d-a361-a192dd9584c8_138940518.stl",
+          "similarity": 0.939869
+        },
+        {
+          "filename": "ec3c14e8-6179-432c-8227-1b4f0838a371_138377404.stl",
+          "similarity": 0.93807
+        },
+        {
+          "filename": "ca95cfb7-39ea-4f11-8efd-862503938f0d_137954011.stl",
+          "similarity": 0.936284
+        },
+        {
+          "filename": "ef4dc3db-41af-4d76-bc48-9f95cc60b2ef_138081414.stl",
+          "similarity": 0.935334
+        },
+        {
+          "filename": "f0500d51-34d9-4728-9069-6b4655ed3a50_138370984.stl",
+          "similarity": 0.935219
+        },
+        {
+          "filename": "4b1c1301-73bb-47ce-bc61-42ee933367ce_138920365.stl",
+          "similarity": 0.934371
+        },
+        {
+          "filename": "fc9feba8-f105-4b3a-90a1-f7ad84be123c_138946612.stl",
+          "similarity": 0.934359
+        },
+        {
+          "filename": "c973e75e-82fd-485c-a4f6-df5f392c1be7_139185423.stl",
+          "similarity": 0.934092
+        }
+      ]
+    },
+    "18a03244-1847-413d-b88d-ed727652faf5_115274439.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "d71a93ad-0f2b-4dca-8133-c06a016ecd18_122117048.stl",
+          "similarity": 0.975947
+        },
+        {
+          "filename": "782ef0a4-e103-4f0a-9f9a-64072396c027_120524763.stl",
+          "similarity": 0.973409
+        },
+        {
+          "filename": "2ee9d116-5e0e-466d-87c9-ce2b16958198_95127092.stl",
+          "similarity": 0.972862
+        },
+        {
+          "filename": "7138062b-5a12-4914-bdec-8e112fc00ec0_82096876.stl",
+          "similarity": 0.972706
+        },
+        {
+          "filename": "35a31c1f-1e18-4b9d-aa7e-eba811e2a647_101946559.stl",
+          "similarity": 0.972424
+        },
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.971885
+        },
+        {
+          "filename": "ffc10ee6-23b8-4b2d-aeba-379f1846878c_90532493.stl",
+          "similarity": 0.971816
+        },
+        {
+          "filename": "0936e627-c004-4243-a541-5b4aebcdc0ba_109469558.stl",
+          "similarity": 0.971567
+        },
+        {
+          "filename": "a71941d4-47c8-4e8a-9aea-de138344292c_74875008.stl",
+          "similarity": 0.97133
+        },
+        {
+          "filename": "2a77ea8f-7843-4ddc-981d-8dec8d398c4c_94045444.stl",
+          "similarity": 0.971024
+        }
+      ]
+    },
+    "1966e591-dee7-4aef-bb07-d987d674bb72_138943699.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "3dbb97a0-575f-4962-9925-9828dd8d9d66_139182012.stl",
+          "similarity": 0.945691
+        },
+        {
+          "filename": "98d16923-2844-4888-97eb-e32c5bcd51b8_139182769.stl",
+          "similarity": 0.945333
+        },
+        {
+          "filename": "fc9feba8-f105-4b3a-90a1-f7ad84be123c_138946612.stl",
+          "similarity": 0.945081
+        },
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.944961
+        },
+        {
+          "filename": "773fb0c3-12f1-4755-938a-8a1881134c5a_139182275.stl",
+          "similarity": 0.944573
+        },
+        {
+          "filename": "4b1c1301-73bb-47ce-bc61-42ee933367ce_138920365.stl",
+          "similarity": 0.94415
+        },
+        {
+          "filename": "859855c2-8b9b-490c-8ca6-866ac03682e2_137953581.stl",
+          "similarity": 0.942863
+        },
+        {
+          "filename": "800ae4db-15fa-47b7-847f-7a2c6e5e1656_138375465.stl",
+          "similarity": 0.941704
+        },
+        {
+          "filename": "50924d4a-ff44-4122-94f2-6cde42779fe3_138220388.stl",
+          "similarity": 0.939204
+        },
+        {
+          "filename": "760ef7cd-ea70-4e4e-bf98-a9a097456b2f_138940060.stl",
+          "similarity": 0.938285
+        }
+      ]
+    },
+    "1a23f6e0-8ac5-4b98-9f09-906ce4352f34_75810609.stl": {
+      "verdict": "pass",
+      "chosen_rank": 3,
+      "results": [
+        {
+          "filename": "2ee9d116-5e0e-466d-87c9-ce2b16958198_95127092.stl",
+          "similarity": 0.973584
+        },
+        {
+          "filename": "a71941d4-47c8-4e8a-9aea-de138344292c_74875008.stl",
+          "similarity": 0.97312
+        },
+        {
+          "filename": "8d395d73-f857-4d37-ba70-87e08b454d5e_71207338.stl",
+          "similarity": 0.972233
+        },
+        {
+          "filename": "e3044904-25f7-4e4a-8490-cbb17cb25089_121068923.stl",
+          "similarity": 0.971454
+        },
+        {
+          "filename": "bea070c1-4188-42b0-ba70-3afb15517a99_77270898.stl",
+          "similarity": 0.971401
+        },
+        {
+          "filename": "d71a93ad-0f2b-4dca-8133-c06a016ecd18_122117048.stl",
+          "similarity": 0.971017
+        },
+        {
+          "filename": "1bcc6714-b4c1-4962-bb0e-1571f126264e_110187496.stl",
+          "similarity": 0.970769
+        },
+        {
+          "filename": "28c38542-ca78-478c-9497-8ee83300cf7d_89948324.stl",
+          "similarity": 0.970738
+        },
+        {
+          "filename": "2f604299-24be-46bc-a417-35795f59a6d1_227619076.stl",
+          "similarity": 0.970243
+        },
+        {
+          "filename": "5a629a33-d06e-4993-b954-78588883e4ba_84729564.stl",
+          "similarity": 0.969751
+        }
+      ]
+    },
+    "22f97d92-b578-4a29-8b56-bbd7635aab46_156195058.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.973499
+        },
+        {
+          "filename": "bc61caaa-cece-43ec-9d3a-142c56e33d41_225522086.stl",
+          "similarity": 0.972348
+        },
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.971674
+        },
+        {
+          "filename": "c644b18e-f9c5-4b70-bcc5-f11444c8d96f_153315209.stl",
+          "similarity": 0.971368
+        },
+        {
+          "filename": "6f6a0346-9c05-4309-9443-7579b25dbced_236783850.stl",
+          "similarity": 0.971336
+        },
+        {
+          "filename": "0a1b9c21-ac5f-41d5-b6a2-f829b90218bd_254165971.stl",
+          "similarity": 0.970735
+        },
+        {
+          "filename": "1cc5650a-f6c2-4560-9cff-8566d3921de2_164779577.stl",
+          "similarity": 0.970591
+        },
+        {
+          "filename": "bffb86c8-6553-425b-95f5-cde2e9f17d93_272335855.stl",
+          "similarity": 0.96992
+        },
+        {
+          "filename": "0b774684-0f9c-4ea2-9504-feebd62a3794_83616030.stl",
+          "similarity": 0.96981
+        },
+        {
+          "filename": "26797da9-59b1-4f08-8ba5-f2f426669be6_126563256.stl",
+          "similarity": 0.969653
+        }
+      ]
+    },
+    "35f59889-6fc3-43a6-9f8b-f8d1e2423e3f_68381658.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "6e852acc-ca98-467c-91de-72f135ed2eb0_73216985.stl",
+          "similarity": 0.965877
+        },
+        {
+          "filename": "1c8d6100-6a9a-407a-a115-6b810d32428f_93783331.stl",
+          "similarity": 0.964459
+        },
+        {
+          "filename": "0e5028dc-072d-4e34-b560-93ab5f40c0cb_78389091.stl",
+          "similarity": 0.964001
+        },
+        {
+          "filename": "2ee9d116-5e0e-466d-87c9-ce2b16958198_95127092.stl",
+          "similarity": 0.963764
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.962407
+        },
+        {
+          "filename": "7138062b-5a12-4914-bdec-8e112fc00ec0_82096876.stl",
+          "similarity": 0.960077
+        },
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.95965
+        },
+        {
+          "filename": "02d03af8-ed2c-41a8-aa7b-d47da89a21bb_69251729.stl",
+          "similarity": 0.959565
+        },
+        {
+          "filename": "f80ec6bb-eef5-453a-87f9-e4b595d4036f_137365313.stl",
+          "similarity": 0.959517
+        },
+        {
+          "filename": "601dfb05-16e8-4c21-b050-512bc6a27fbb_116176769.stl",
+          "similarity": 0.958843
+        }
+      ]
+    },
+    "361af065-63ea-47b8-b613-b87d17d44a7d_87374059.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "b7277d0f-844c-426a-ba65-9612430f1f37_94049235.stl",
+          "similarity": 0.972453
+        },
+        {
+          "filename": "d71a93ad-0f2b-4dca-8133-c06a016ecd18_122117048.stl",
+          "similarity": 0.972043
+        },
+        {
+          "filename": "2ee9d116-5e0e-466d-87c9-ce2b16958198_95127092.stl",
+          "similarity": 0.971802
+        },
+        {
+          "filename": "460abe26-4b35-4a08-b549-7c4e85274913_110183287.stl",
+          "similarity": 0.971321
+        },
+        {
+          "filename": "2a77ea8f-7843-4ddc-981d-8dec8d398c4c_94045444.stl",
+          "similarity": 0.971228
+        },
+        {
+          "filename": "60e31f60-5f46-4bcc-bcee-e360a29bd7ce_91748698.stl",
+          "similarity": 0.971192
+        },
+        {
+          "filename": "a44a1562-e6ec-4c07-8141-3fd328d3a664_102163937.stl",
+          "similarity": 0.971182
+        },
+        {
+          "filename": "bea070c1-4188-42b0-ba70-3afb15517a99_77270898.stl",
+          "similarity": 0.970537
+        },
+        {
+          "filename": "aec057ce-d029-418c-b26f-045de369b3b5_81737879.stl",
+          "similarity": 0.970187
+        },
+        {
+          "filename": "7138062b-5a12-4914-bdec-8e112fc00ec0_82096876.stl",
+          "similarity": 0.969744
+        }
+      ]
+    },
+    "3b061aae-5146-4f62-9c9d-7243b6eeb685_254482274.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "a6f632d2-6885-462c-90be-044fe5b7b935_135495113.stl",
+          "similarity": 0.968294
+        },
+        {
+          "filename": "8b0b397e-aff3-4b82-80dc-1de73e158d7c_130434977.stl",
+          "similarity": 0.968186
+        },
+        {
+          "filename": "cb15635c-cde4-4a6f-be27-93fe95af0e60_148328071.stl",
+          "similarity": 0.967067
+        },
+        {
+          "filename": "436d7907-06f8-419d-9b31-94dbca71bf3e_164295540.stl",
+          "similarity": 0.966549
+        },
+        {
+          "filename": "19b41ff6-974d-4862-a275-469c5bcf970e_155601719.stl",
+          "similarity": 0.96651
+        },
+        {
+          "filename": "0ca89810-7df0-4e75-91c6-1b7cd4fe6d7b_109607406.stl",
+          "similarity": 0.966309
+        },
+        {
+          "filename": "82581966-1d4d-4e18-b812-a02818ba7ac8_117533790.stl",
+          "similarity": 0.965743
+        },
+        {
+          "filename": "e6abe54b-e520-45ec-ae71-b1440ab023f8_167567185.stl",
+          "similarity": 0.965623
+        },
+        {
+          "filename": "8a07dda0-4750-47e8-8ef2-144dc7eeb675_166744071.stl",
+          "similarity": 0.965489
+        },
+        {
+          "filename": "90c8554f-9fdc-4ecf-82af-9372e60a8783_266621045.stl",
+          "similarity": 0.965413
+        }
+      ]
+    },
+    "42fb7900-2280-4647-9db1-8234b36e5fde_226305526.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.973459
+        },
+        {
+          "filename": "3c940be4-d994-4595-9567-837092ac0b77_225516270.stl",
+          "similarity": 0.973221
+        },
+        {
+          "filename": "2e22763d-5225-4841-93d7-007c4f4d97ea_156659082.stl",
+          "similarity": 0.972971
+        },
+        {
+          "filename": "c2334a9b-fbcc-42f2-bd45-c792135a8076_156491707.stl",
+          "similarity": 0.972091
+        },
+        {
+          "filename": "65668d36-d4de-460b-91aa-8b6e649026c8_146179103.stl",
+          "similarity": 0.971954
+        },
+        {
+          "filename": "375c625a-54af-4f29-bf85-3411492cb35f_254987164.stl",
+          "similarity": 0.97173
+        },
+        {
+          "filename": "17ed82e9-c016-420c-ac83-adfec3db6e19_130836381.stl",
+          "similarity": 0.971525
+        },
+        {
+          "filename": "b708d2dd-ff6e-4be8-9f00-c52aa48d875d_127857489.stl",
+          "similarity": 0.971473
+        },
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.971206
+        },
+        {
+          "filename": "6f5ea276-ce95-444f-b813-de5f90ab2ebb_257083642.stl",
+          "similarity": 0.970452
+        }
+      ]
+    },
+    "4e843234-9a38-4559-a13a-f06e07c954f2_138080209.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "35ce94e7-e07f-4700-bf0b-f4527e520caf_139186156.stl",
+          "similarity": 0.934203
+        },
+        {
+          "filename": "ca95cfb7-39ea-4f11-8efd-862503938f0d_137954011.stl",
+          "similarity": 0.926742
+        },
+        {
+          "filename": "3c217e3e-fb90-477e-822f-847f66b9effc_139183003.stl",
+          "similarity": 0.922799
+        },
+        {
+          "filename": "f4f0e134-1ac6-4b22-b24e-3e84a02f1358_138373357.stl",
+          "similarity": 0.922032
+        },
+        {
+          "filename": "616dd674-28e4-4101-bf73-d582216ad6e2_139182539.stl",
+          "similarity": 0.921863
+        },
+        {
+          "filename": "3dbb97a0-575f-4962-9925-9828dd8d9d66_139182012.stl",
+          "similarity": 0.920141
+        },
+        {
+          "filename": "8cf4d70b-1d17-4895-8646-ddc614c39e0a_139186524.stl",
+          "similarity": 0.920018
+        },
+        {
+          "filename": "4b1c1301-73bb-47ce-bc61-42ee933367ce_138920365.stl",
+          "similarity": 0.919863
+        },
+        {
+          "filename": "8ec1a108-9475-4613-ad27-b59586fbc858_138938596.stl",
+          "similarity": 0.919689
+        },
+        {
+          "filename": "b5c23f00-bc25-4e30-a4c8-35ea588930f7_139185578.stl",
+          "similarity": 0.919577
+        }
+      ]
+    },
+    "50c7aab3-6af1-4031-96eb-0bc83b2eedce_69584178.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.969333
+        },
+        {
+          "filename": "b4d3c289-9b1f-4424-8e91-2f5fe0f91749_81754975.stl",
+          "similarity": 0.968075
+        },
+        {
+          "filename": "39b76e69-132a-4a2d-bac6-0c4a9f49e316_102072509.stl",
+          "similarity": 0.96681
+        },
+        {
+          "filename": "d66a835c-10c9-4243-a895-ca7ff2ec2026_78989604.stl",
+          "similarity": 0.966683
+        },
+        {
+          "filename": "1c8d6100-6a9a-407a-a115-6b810d32428f_93783331.stl",
+          "similarity": 0.966489
+        },
+        {
+          "filename": "f7889cef-64b1-4d18-ac74-cc563eeae9f2_120140499.stl",
+          "similarity": 0.965795
+        },
+        {
+          "filename": "bec75ae3-8c37-4583-887d-e45ab6a9a477_69998796.stl",
+          "similarity": 0.965718
+        },
+        {
+          "filename": "990b1b82-2cee-453c-bb65-5a819b021a45_70023223.stl",
+          "similarity": 0.965606
+        },
+        {
+          "filename": "02d03af8-ed2c-41a8-aa7b-d47da89a21bb_69251729.stl",
+          "similarity": 0.965505
+        },
+        {
+          "filename": "cfc499f7-97e0-47af-982e-cdd8de40f8b9_78388549.stl",
+          "similarity": 0.965491
+        }
+      ]
+    },
+    "535ccff2-6c63-45e8-9448-ef36df620c2a_102740764.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "5521ab16-8c05-4573-bc5c-e77bdb0e3f62_138513351.stl",
+          "similarity": 0.975008
+        },
+        {
+          "filename": "406ab595-6d4c-4e06-88b6-66580d882b63_104265944.stl",
+          "similarity": 0.9743
+        },
+        {
+          "filename": "9285249c-7aff-4adf-a507-30bd9254ad08_97087833.stl",
+          "similarity": 0.974191
+        },
+        {
+          "filename": "0936e627-c004-4243-a541-5b4aebcdc0ba_109469558.stl",
+          "similarity": 0.973929
+        },
+        {
+          "filename": "bc7a6d3a-30f5-443d-bc79-3f0e313ee75e_110981142.stl",
+          "similarity": 0.9737
+        },
+        {
+          "filename": "29463fff-3c51-4fdb-8b5d-56a2e9e6c406_88414846.stl",
+          "similarity": 0.973688
+        },
+        {
+          "filename": "6b3c3fbd-c94a-4084-847c-530556b078e0_118603733.stl",
+          "similarity": 0.973495
+        },
+        {
+          "filename": "59c6f27a-9a31-4c55-b61b-fd3f638ac730_103674354.stl",
+          "similarity": 0.973492
+        },
+        {
+          "filename": "98d267cb-d10e-497f-b0b5-1cf348d68cc1_250767809.stl",
+          "similarity": 0.973443
+        },
+        {
+          "filename": "612b314a-5c2c-4633-8784-c94feefef386_72032590.stl",
+          "similarity": 0.973202
+        }
+      ]
+    },
+    "5c854d50-d941-48e6-9b18-dbe1e3b5cd0e_266069686.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "74c73ebb-9e66-4623-a482-8f4baeba6a88_130944418.stl",
+          "similarity": 0.975958
+        },
+        {
+          "filename": "af5f2654-b25a-4b8e-b1c5-26f1cdda392d_244660316.stl",
+          "similarity": 0.97505
+        },
+        {
+          "filename": "d8e57dd0-c8f7-4eff-af7c-56e791d464c6_133971538.stl",
+          "similarity": 0.973227
+        },
+        {
+          "filename": "cc9b81ea-984d-4e62-a1d0-18e7d5d7e0b2_128299860.stl",
+          "similarity": 0.972488
+        },
+        {
+          "filename": "e43729c6-ee57-41cf-aa46-67c152c9118e_137538969.stl",
+          "similarity": 0.972423
+        },
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.972413
+        },
+        {
+          "filename": "61a646a2-be8a-40cb-932e-c134df9bf91e_228837912.stl",
+          "similarity": 0.972229
+        },
+        {
+          "filename": "748fcb76-5694-41ec-803f-655f1e1fbe30_263207166.stl",
+          "similarity": 0.972171
+        },
+        {
+          "filename": "b8de8bc0-e13a-4b8c-9dca-eff3f22f6394_166411330.stl",
+          "similarity": 0.971634
+        },
+        {
+          "filename": "2bf03b8a-4527-43bc-9bee-8fa9ecde5441_253638436.stl",
+          "similarity": 0.97161
+        }
+      ]
+    },
+    "663de213-ccab-4147-b305-4d573b1004f6_162853608.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "ee9d5b1c-2bf2-4deb-889f-d86cbe380ce2_257773386.stl",
+          "similarity": 0.968166
+        },
+        {
+          "filename": "17ed82e9-c016-420c-ac83-adfec3db6e19_130836381.stl",
+          "similarity": 0.965206
+        },
+        {
+          "filename": "2216ea6c-5253-46a8-843a-203606b34cc7_225336925.stl",
+          "similarity": 0.963664
+        },
+        {
+          "filename": "65668d36-d4de-460b-91aa-8b6e649026c8_146179103.stl",
+          "similarity": 0.96359
+        },
+        {
+          "filename": "2ed544ef-c643-44e4-a24a-d43777f82423_174038941.stl",
+          "similarity": 0.963535
+        },
+        {
+          "filename": "c2334a9b-fbcc-42f2-bd45-c792135a8076_156491707.stl",
+          "similarity": 0.96344
+        },
+        {
+          "filename": "00b7b502-7949-4f18-8821-a59f368d7977_172593814.stl",
+          "similarity": 0.962891
+        },
+        {
+          "filename": "65c83eed-f129-48a3-815b-30986e155ecc_243770836.stl",
+          "similarity": 0.962781
+        },
+        {
+          "filename": "cc9b81ea-984d-4e62-a1d0-18e7d5d7e0b2_128299860.stl",
+          "similarity": 0.962667
+        },
+        {
+          "filename": "4a763521-2037-4bca-8564-efd8287286f9_174024162.stl",
+          "similarity": 0.962497
+        }
+      ]
+    },
+    "66ab7524-a12f-4423-9a59-d3f46e437dd7_106905263.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "d71a93ad-0f2b-4dca-8133-c06a016ecd18_122117048.stl",
+          "similarity": 0.970096
+        },
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.969456
+        },
+        {
+          "filename": "a9809708-e1a7-42f2-927b-c15e620e0de8_79142915.stl",
+          "similarity": 0.969449
+        },
+        {
+          "filename": "105d28aa-7d96-4f4b-ae38-0009881a572c_80291296.stl",
+          "similarity": 0.968782
+        },
+        {
+          "filename": "b4d3c289-9b1f-4424-8e91-2f5fe0f91749_81754975.stl",
+          "similarity": 0.968568
+        },
+        {
+          "filename": "8d395d73-f857-4d37-ba70-87e08b454d5e_71207338.stl",
+          "similarity": 0.968487
+        },
+        {
+          "filename": "a71941d4-47c8-4e8a-9aea-de138344292c_74875008.stl",
+          "similarity": 0.968184
+        },
+        {
+          "filename": "601dfb05-16e8-4c21-b050-512bc6a27fbb_116176769.stl",
+          "similarity": 0.967905
+        },
+        {
+          "filename": "1c8d6100-6a9a-407a-a115-6b810d32428f_93783331.stl",
+          "similarity": 0.967876
+        },
+        {
+          "filename": "1bcc6714-b4c1-4962-bb0e-1571f126264e_110187496.stl",
+          "similarity": 0.967858
+        }
+      ]
+    },
+    "66d9a7e8-e2b7-427e-818f-f11c03da1bf0_77865974.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "0b774684-0f9c-4ea2-9504-feebd62a3794_83616030.stl",
+          "similarity": 0.97847
+        },
+        {
+          "filename": "35a31c1f-1e18-4b9d-aa7e-eba811e2a647_101946559.stl",
+          "similarity": 0.97758
+        },
+        {
+          "filename": "b7277d0f-844c-426a-ba65-9612430f1f37_94049235.stl",
+          "similarity": 0.976594
+        },
+        {
+          "filename": "26f99bcc-966d-4df4-ba79-1421c8adb704_99456432.stl",
+          "similarity": 0.976543
+        },
+        {
+          "filename": "e7b32b15-1867-4659-a924-b5c83fd0a8f1_104040438.stl",
+          "similarity": 0.976398
+        },
+        {
+          "filename": "29463fff-3c51-4fdb-8b5d-56a2e9e6c406_88414846.stl",
+          "similarity": 0.976291
+        },
+        {
+          "filename": "302381e6-d363-4132-876c-98c257b8677f_73237143.stl",
+          "similarity": 0.976104
+        },
+        {
+          "filename": "9285249c-7aff-4adf-a507-30bd9254ad08_97087833.stl",
+          "similarity": 0.976015
+        },
+        {
+          "filename": "60e31f60-5f46-4bcc-bcee-e360a29bd7ce_91748698.stl",
+          "similarity": 0.975957
+        },
+        {
+          "filename": "0936e627-c004-4243-a541-5b4aebcdc0ba_109469558.stl",
+          "similarity": 0.975881
+        }
+      ]
+    },
+    "686490d0-56e3-48e2-903a-2bd735d3d018_139186754.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "fc9feba8-f105-4b3a-90a1-f7ad84be123c_138946612.stl",
+          "similarity": 0.951079
+        },
+        {
+          "filename": "b5c23f00-bc25-4e30-a4c8-35ea588930f7_139185578.stl",
+          "similarity": 0.945184
+        },
+        {
+          "filename": "859855c2-8b9b-490c-8ca6-866ac03682e2_137953581.stl",
+          "similarity": 0.942224
+        },
+        {
+          "filename": "d4cf3a01-51dd-4c42-8f89-12d793144a54_138945318.stl",
+          "similarity": 0.940807
+        },
+        {
+          "filename": "760ef7cd-ea70-4e4e-bf98-a9a097456b2f_138940060.stl",
+          "similarity": 0.939065
+        },
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.934629
+        },
+        {
+          "filename": "773fb0c3-12f1-4755-938a-8a1881134c5a_139182275.stl",
+          "similarity": 0.934381
+        },
+        {
+          "filename": "3dbb97a0-575f-4962-9925-9828dd8d9d66_139182012.stl",
+          "similarity": 0.93391
+        },
+        {
+          "filename": "f7ed0c2c-72e3-42f0-a1ec-cd53ceb3c6bd_138941482.stl",
+          "similarity": 0.932714
+        },
+        {
+          "filename": "110844df-0ee6-4222-8c79-3ff2faea262b_139185275.stl",
+          "similarity": 0.932049
+        }
+      ]
+    },
+    "708687aa-6cb7-4b23-b1c7-051119dfa97d_139181597.stl": {
+      "verdict": "pass",
+      "chosen_rank": 3,
+      "results": [
+        {
+          "filename": "d4cf3a01-51dd-4c42-8f89-12d793144a54_138945318.stl",
+          "similarity": 0.942631
+        },
+        {
+          "filename": "da6c16b3-0d81-4e83-87fa-1f47163add29_138370014.stl",
+          "similarity": 0.942081
+        },
+        {
+          "filename": "616dd674-28e4-4101-bf73-d582216ad6e2_139182539.stl",
+          "similarity": 0.941679
+        },
+        {
+          "filename": "f7ed0c2c-72e3-42f0-a1ec-cd53ceb3c6bd_138941482.stl",
+          "similarity": 0.940981
+        },
+        {
+          "filename": "96755635-bab7-4fd6-ab44-2c9b87ada693_138945944.stl",
+          "similarity": 0.938635
+        },
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.938226
+        },
+        {
+          "filename": "773fb0c3-12f1-4755-938a-8a1881134c5a_139182275.stl",
+          "similarity": 0.937927
+        },
+        {
+          "filename": "8ec1a108-9475-4613-ad27-b59586fbc858_138938596.stl",
+          "similarity": 0.937727
+        },
+        {
+          "filename": "760ef7cd-ea70-4e4e-bf98-a9a097456b2f_138940060.stl",
+          "similarity": 0.936928
+        },
+        {
+          "filename": "3c217e3e-fb90-477e-822f-847f66b9effc_139183003.stl",
+          "similarity": 0.936401
+        }
+      ]
+    },
+    "7310da70-16e6-4793-a6df-62969c5c4658_240224016.stl": {
+      "verdict": "pass",
+      "chosen_rank": 4,
+      "results": [
+        {
+          "filename": "e2449df4-b826-4348-bfea-e6b34a50f088_172595772.stl",
+          "similarity": 0.96537
+        },
+        {
+          "filename": "10503e60-3a26-47fd-be8f-76cd89125897_246795528.stl",
+          "similarity": 0.963766
+        },
+        {
+          "filename": "98761a17-b8ce-42a0-915d-2a6a41855f12_148107416.stl",
+          "similarity": 0.963273
+        },
+        {
+          "filename": "91815d08-204b-423d-9084-a093506aa129_266070981.stl",
+          "similarity": 0.962599
+        },
+        {
+          "filename": "f2d96186-2c98-4cad-a6bc-a93d97e506c1_251119934.stl",
+          "similarity": 0.962332
+        },
+        {
+          "filename": "454c73d3-aa01-4c32-be17-c650bbf697ae_149988442.stl",
+          "similarity": 0.962269
+        },
+        {
+          "filename": "e43729c6-ee57-41cf-aa46-67c152c9118e_137538969.stl",
+          "similarity": 0.962233
+        },
+        {
+          "filename": "cd3f8520-c018-44de-84f9-f76b5550ba65_174840868.stl",
+          "similarity": 0.961807
+        },
+        {
+          "filename": "589cf8d1-9762-4855-918b-a0ce2593f136_168688311.stl",
+          "similarity": 0.961709
+        },
+        {
+          "filename": "d4af5bc0-e1cc-4653-ae63-919a93ac08bc_100416234.stl",
+          "similarity": 0.961563
+        }
+      ]
+    },
+    "73c08345-7575-48f7-999f-0d1bd19bf617_164777909.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "c644b18e-f9c5-4b70-bcc5-f11444c8d96f_153315209.stl",
+          "similarity": 0.973056
+        },
+        {
+          "filename": "00b7b502-7949-4f18-8821-a59f368d7977_172593814.stl",
+          "similarity": 0.972603
+        },
+        {
+          "filename": "6f5ea276-ce95-444f-b813-de5f90ab2ebb_257083642.stl",
+          "similarity": 0.97244
+        },
+        {
+          "filename": "0a1b9c21-ac5f-41d5-b6a2-f829b90218bd_254165971.stl",
+          "similarity": 0.971353
+        },
+        {
+          "filename": "b8de8bc0-e13a-4b8c-9dca-eff3f22f6394_166411330.stl",
+          "similarity": 0.969703
+        },
+        {
+          "filename": "65668d36-d4de-460b-91aa-8b6e649026c8_146179103.stl",
+          "similarity": 0.969614
+        },
+        {
+          "filename": "0c854b82-b4a0-4f3f-b1d6-5a170ac38ba6_161778902.stl",
+          "similarity": 0.969436
+        },
+        {
+          "filename": "fa0ef877-6f62-442e-a4e6-78a0ed915cc1_125319076.stl",
+          "similarity": 0.968767
+        },
+        {
+          "filename": "b74811ff-67f5-40d2-9914-a4d728c4edb7_248368612.stl",
+          "similarity": 0.968718
+        },
+        {
+          "filename": "2f604299-24be-46bc-a417-35795f59a6d1_227619076.stl",
+          "similarity": 0.968396
+        }
+      ]
+    },
+    "7b0015ac-3336-4120-a5b7-8d7b2142e7eb_180009675.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.967606
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.967511
+        },
+        {
+          "filename": "bff1f697-5846-4677-9fa1-fa3ca555ca2c_228308775.stl",
+          "similarity": 0.966937
+        },
+        {
+          "filename": "6f5ea276-ce95-444f-b813-de5f90ab2ebb_257083642.stl",
+          "similarity": 0.966929
+        },
+        {
+          "filename": "6add3a9a-f394-41ee-aec5-ed394856cda2_180016239.stl",
+          "similarity": 0.966293
+        },
+        {
+          "filename": "cc9b81ea-984d-4e62-a1d0-18e7d5d7e0b2_128299860.stl",
+          "similarity": 0.9662
+        },
+        {
+          "filename": "f80ec6bb-eef5-453a-87f9-e4b595d4036f_137365313.stl",
+          "similarity": 0.965192
+        },
+        {
+          "filename": "2216ea6c-5253-46a8-843a-203606b34cc7_225336925.stl",
+          "similarity": 0.964996
+        },
+        {
+          "filename": "00b7b502-7949-4f18-8821-a59f368d7977_172593814.stl",
+          "similarity": 0.964878
+        },
+        {
+          "filename": "9bb5e684-bf12-419f-bc55-f52cd0ac4bb1_137238153.stl",
+          "similarity": 0.964382
+        }
+      ]
+    },
+    "7f2b242c-95ab-4629-a5c8-86e9b9e692d4_146183446.stl": {
+      "verdict": "pass",
+      "chosen_rank": 6,
+      "results": [
+        {
+          "filename": "273df5b8-dd5f-4523-85f2-37f4eec10ceb_180536957.stl",
+          "similarity": 0.971126
+        },
+        {
+          "filename": "d9d47e9b-d666-459e-8489-ad56c0b4ce7b_228309575.stl",
+          "similarity": 0.971035
+        },
+        {
+          "filename": "cc9b81ea-984d-4e62-a1d0-18e7d5d7e0b2_128299860.stl",
+          "similarity": 0.970581
+        },
+        {
+          "filename": "ae3d5240-a2ef-4d44-bf91-6c80145209e0_172148589.stl",
+          "similarity": 0.970521
+        },
+        {
+          "filename": "f2d96186-2c98-4cad-a6bc-a93d97e506c1_251119934.stl",
+          "similarity": 0.970514
+        },
+        {
+          "filename": "61bb6191-3e1e-4fc0-ba9e-603227aac6ae_250294486.stl",
+          "similarity": 0.970377
+        },
+        {
+          "filename": "af5f2654-b25a-4b8e-b1c5-26f1cdda392d_244660316.stl",
+          "similarity": 0.970016
+        },
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.969827
+        },
+        {
+          "filename": "c2334a9b-fbcc-42f2-bd45-c792135a8076_156491707.stl",
+          "similarity": 0.96976
+        },
+        {
+          "filename": "98761a17-b8ce-42a0-915d-2a6a41855f12_148107416.stl",
+          "similarity": 0.969577
+        }
+      ]
+    },
+    "7f4b45f1-c63f-4f3f-8738-e7410e511483_121202161.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "302381e6-d363-4132-876c-98c257b8677f_73237143.stl",
+          "similarity": 0.974977
+        },
+        {
+          "filename": "0b774684-0f9c-4ea2-9504-feebd62a3794_83616030.stl",
+          "similarity": 0.973629
+        },
+        {
+          "filename": "9285249c-7aff-4adf-a507-30bd9254ad08_97087833.stl",
+          "similarity": 0.973442
+        },
+        {
+          "filename": "f326fb44-55f3-4207-a62b-01a8318789c7_117261741.stl",
+          "similarity": 0.972428
+        },
+        {
+          "filename": "990b1b82-2cee-453c-bb65-5a819b021a45_70023223.stl",
+          "similarity": 0.971862
+        },
+        {
+          "filename": "55e87ea3-5325-4f15-b395-8518aabb3b89_114149499.stl",
+          "similarity": 0.971857
+        },
+        {
+          "filename": "5f0160b1-4378-4926-b3c8-b8328dd65889_112510479.stl",
+          "similarity": 0.971533
+        },
+        {
+          "filename": "8b0b397e-aff3-4b82-80dc-1de73e158d7c_130434977.stl",
+          "similarity": 0.971452
+        },
+        {
+          "filename": "368a8770-cbaf-4243-94f5-c878b3784e41_112990152.stl",
+          "similarity": 0.971384
+        },
+        {
+          "filename": "406ab595-6d4c-4e06-88b6-66580d882b63_104265944.stl",
+          "similarity": 0.971304
+        }
+      ]
+    },
+    "864d28f7-a7e5-473e-ad58-833671247efc_121986385.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "2de628e7-55bc-43bb-a51d-157e131397ff_120663003.stl",
+          "similarity": 0.965859
+        },
+        {
+          "filename": "c7bf201b-863a-4b07-aa9f-07afae37ff9f_95960016.stl",
+          "similarity": 0.961326
+        },
+        {
+          "filename": "a44a1562-e6ec-4c07-8141-3fd328d3a664_102163937.stl",
+          "similarity": 0.959138
+        },
+        {
+          "filename": "e7273a84-8269-4165-964c-cab3f0d63b72_80824360.stl",
+          "similarity": 0.958725
+        },
+        {
+          "filename": "43ac7a47-c02e-489c-bee3-8fb6904b2fb9_172429967.stl",
+          "similarity": 0.958364
+        },
+        {
+          "filename": "aa4b5f45-89a3-40cc-9b7e-acceb022b684_99684317.stl",
+          "similarity": 0.958292
+        },
+        {
+          "filename": "35a31c1f-1e18-4b9d-aa7e-eba811e2a647_101946559.stl",
+          "similarity": 0.958158
+        },
+        {
+          "filename": "c42c973e-4153-43c3-b802-a2a05a315389_251852784.stl",
+          "similarity": 0.958101
+        },
+        {
+          "filename": "840c110b-5e6f-466c-8354-0250a7c157ba_180535974.stl",
+          "similarity": 0.957814
+        },
+        {
+          "filename": "d4a90860-e663-48f5-8cb6-63896ad0b545_139604976.stl",
+          "similarity": 0.957698
+        }
+      ]
+    },
+    "872ddb15-65a6-40da-9a3f-92b932f20e7e_156361270.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "9bb5e684-bf12-419f-bc55-f52cd0ac4bb1_137238153.stl",
+          "similarity": 0.9775
+        },
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.977493
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.976934
+        },
+        {
+          "filename": "b708d2dd-ff6e-4be8-9f00-c52aa48d875d_127857489.stl",
+          "similarity": 0.976604
+        },
+        {
+          "filename": "319343aa-247b-45fe-8f13-b3eeffd1c326_180338970.stl",
+          "similarity": 0.976599
+        },
+        {
+          "filename": "2f604299-24be-46bc-a417-35795f59a6d1_227619076.stl",
+          "similarity": 0.976025
+        },
+        {
+          "filename": "0a1b9c21-ac5f-41d5-b6a2-f829b90218bd_254165971.stl",
+          "similarity": 0.975891
+        },
+        {
+          "filename": "8cddf2b4-5814-486e-bf12-850e61e783e1_146881599.stl",
+          "similarity": 0.975637
+        },
+        {
+          "filename": "37dfe2f3-8f03-4602-ba58-3f399b4ce8af_136283599.stl",
+          "similarity": 0.975172
+        },
+        {
+          "filename": "3c940be4-d994-4595-9567-837092ac0b77_225516270.stl",
+          "similarity": 0.974678
+        }
+      ]
+    },
+    "882a7e7e-9884-4c0c-96d8-3e527248a709_179529738.stl": {
+      "verdict": "pass",
+      "chosen_rank": 6,
+      "results": [
+        {
+          "filename": "0a1b9c21-ac5f-41d5-b6a2-f829b90218bd_254165971.stl",
+          "similarity": 0.976613
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.976536
+        },
+        {
+          "filename": "02021fff-a88c-4aae-92e5-08a3f18701aa_133418847.stl",
+          "similarity": 0.976518
+        },
+        {
+          "filename": "3c940be4-d994-4595-9567-837092ac0b77_225516270.stl",
+          "similarity": 0.976451
+        },
+        {
+          "filename": "bffb86c8-6553-425b-95f5-cde2e9f17d93_272335855.stl",
+          "similarity": 0.976366
+        },
+        {
+          "filename": "319343aa-247b-45fe-8f13-b3eeffd1c326_180338970.stl",
+          "similarity": 0.976176
+        },
+        {
+          "filename": "6cb8e7ec-ceda-40f1-bf66-74406817d150_254146214.stl",
+          "similarity": 0.97563
+        },
+        {
+          "filename": "fa0ef877-6f62-442e-a4e6-78a0ed915cc1_125319076.stl",
+          "similarity": 0.975572
+        },
+        {
+          "filename": "0c854b82-b4a0-4f3f-b1d6-5a170ac38ba6_161778902.stl",
+          "similarity": 0.975113
+        },
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.974944
+        }
+      ]
+    },
+    "88c6261a-fb28-444c-9aa2-66cf2202ee3a_139186903.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.962007
+        },
+        {
+          "filename": "760ef7cd-ea70-4e4e-bf98-a9a097456b2f_138940060.stl",
+          "similarity": 0.949284
+        },
+        {
+          "filename": "9f1acced-797a-4a4b-b275-ef7d51dc9e8d_138920794.stl",
+          "similarity": 0.948202
+        },
+        {
+          "filename": "ef4dc3db-41af-4d76-bc48-9f95cc60b2ef_138081414.stl",
+          "similarity": 0.945833
+        },
+        {
+          "filename": "40d679f5-d3f9-421d-a361-a192dd9584c8_138940518.stl",
+          "similarity": 0.945436
+        },
+        {
+          "filename": "d4cf3a01-51dd-4c42-8f89-12d793144a54_138945318.stl",
+          "similarity": 0.944375
+        },
+        {
+          "filename": "fc9feba8-f105-4b3a-90a1-f7ad84be123c_138946612.stl",
+          "similarity": 0.942984
+        },
+        {
+          "filename": "c973e75e-82fd-485c-a4f6-df5f392c1be7_139185423.stl",
+          "similarity": 0.942822
+        },
+        {
+          "filename": "f7ed0c2c-72e3-42f0-a1ec-cd53ceb3c6bd_138941482.stl",
+          "similarity": 0.942551
+        },
+        {
+          "filename": "ca95cfb7-39ea-4f11-8efd-862503938f0d_137954011.stl",
+          "similarity": 0.941389
+        }
+      ]
+    },
+    "89f6e5d9-4fd8-4b50-9ae0-bda4c8239bf1_104270621.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "b7277d0f-844c-426a-ba65-9612430f1f37_94049235.stl",
+          "similarity": 0.978156
+        },
+        {
+          "filename": "60e31f60-5f46-4bcc-bcee-e360a29bd7ce_91748698.stl",
+          "similarity": 0.977549
+        },
+        {
+          "filename": "35a31c1f-1e18-4b9d-aa7e-eba811e2a647_101946559.stl",
+          "similarity": 0.976373
+        },
+        {
+          "filename": "aec057ce-d029-418c-b26f-045de369b3b5_81737879.stl",
+          "similarity": 0.975687
+        },
+        {
+          "filename": "8537cff9-a442-442d-be83-ff329e999342_80676994.stl",
+          "similarity": 0.974545
+        },
+        {
+          "filename": "fbdd0f4e-cfb4-44e3-8692-ae7796548698_98851949.stl",
+          "similarity": 0.974438
+        },
+        {
+          "filename": "601dfb05-16e8-4c21-b050-512bc6a27fbb_116176769.stl",
+          "similarity": 0.974115
+        },
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.974045
+        },
+        {
+          "filename": "8ad75017-f3f8-44ea-bc28-8cc3d91c6aa3_117518146.stl",
+          "similarity": 0.973896
+        },
+        {
+          "filename": "d71a93ad-0f2b-4dca-8133-c06a016ecd18_122117048.stl",
+          "similarity": 0.973566
+        }
+      ]
+    },
+    "8b293fd9-410f-43d3-a47e-1f4e1ef4bdbe_167875525.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "380a035a-b2e9-40c3-afc1-e2d3bb377bdb_176924593.stl",
+          "similarity": 0.978613
+        },
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.978478
+        },
+        {
+          "filename": "bffb86c8-6553-425b-95f5-cde2e9f17d93_272335855.stl",
+          "similarity": 0.977279
+        },
+        {
+          "filename": "fa0ef877-6f62-442e-a4e6-78a0ed915cc1_125319076.stl",
+          "similarity": 0.977098
+        },
+        {
+          "filename": "d4a90860-e663-48f5-8cb6-63896ad0b545_139604976.stl",
+          "similarity": 0.977051
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.976622
+        },
+        {
+          "filename": "1782916b-faf0-4d58-9d76-838e3b5c3f2c_154830657.stl",
+          "similarity": 0.976085
+        },
+        {
+          "filename": "d71542bb-20d3-4137-9cae-6ef31220f6aa_170161741.stl",
+          "similarity": 0.975951
+        },
+        {
+          "filename": "e7b32b15-1867-4659-a924-b5c83fd0a8f1_104040438.stl",
+          "similarity": 0.975889
+        },
+        {
+          "filename": "d76da914-65aa-48fe-8994-0caa92b40566_112874289.stl",
+          "similarity": 0.97561
+        }
+      ]
+    },
+    "8d13d9d6-7c1c-491d-baa1-8166415b3218_93754058.stl": {
+      "verdict": "pass",
+      "chosen_rank": 5,
+      "results": [
+        {
+          "filename": "105d28aa-7d96-4f4b-ae38-0009881a572c_80291296.stl",
+          "similarity": 0.968842
+        },
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.966894
+        },
+        {
+          "filename": "d9f5fab1-0926-4c13-9b16-65bce1b916d8_79120925.stl",
+          "similarity": 0.966268
+        },
+        {
+          "filename": "7138062b-5a12-4914-bdec-8e112fc00ec0_82096876.stl",
+          "similarity": 0.965854
+        },
+        {
+          "filename": "599d6bb7-d8fb-4515-8eed-c8da6a032a60_122115517.stl",
+          "similarity": 0.965833
+        },
+        {
+          "filename": "f7889cef-64b1-4d18-ac74-cc563eeae9f2_120140499.stl",
+          "similarity": 0.965618
+        },
+        {
+          "filename": "8d395d73-f857-4d37-ba70-87e08b454d5e_71207338.stl",
+          "similarity": 0.964622
+        },
+        {
+          "filename": "1bcc6714-b4c1-4962-bb0e-1571f126264e_110187496.stl",
+          "similarity": 0.964588
+        },
+        {
+          "filename": "086d26a2-a42c-4c93-bc56-61521a225a7b_229507751.stl",
+          "similarity": 0.963185
+        },
+        {
+          "filename": "2ee9d116-5e0e-466d-87c9-ce2b16958198_95127092.stl",
+          "similarity": 0.96296
+        }
+      ]
+    },
+    "8e8b0ae8-789d-4707-973c-b7a64643ed13_138491438.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.934479
+        },
+        {
+          "filename": "ec3c14e8-6179-432c-8227-1b4f0838a371_138377404.stl",
+          "similarity": 0.934451
+        },
+        {
+          "filename": "760ef7cd-ea70-4e4e-bf98-a9a097456b2f_138940060.stl",
+          "similarity": 0.931082
+        },
+        {
+          "filename": "ef4dc3db-41af-4d76-bc48-9f95cc60b2ef_138081414.stl",
+          "similarity": 0.93071
+        },
+        {
+          "filename": "f7ed0c2c-72e3-42f0-a1ec-cd53ceb3c6bd_138941482.stl",
+          "similarity": 0.928767
+        },
+        {
+          "filename": "96755635-bab7-4fd6-ab44-2c9b87ada693_138945944.stl",
+          "similarity": 0.928422
+        },
+        {
+          "filename": "c973e75e-82fd-485c-a4f6-df5f392c1be7_139185423.stl",
+          "similarity": 0.92836
+        },
+        {
+          "filename": "f0500d51-34d9-4728-9069-6b4655ed3a50_138370984.stl",
+          "similarity": 0.927261
+        },
+        {
+          "filename": "9f1acced-797a-4a4b-b275-ef7d51dc9e8d_138920794.stl",
+          "similarity": 0.926702
+        },
+        {
+          "filename": "8ec1a108-9475-4613-ad27-b59586fbc858_138938596.stl",
+          "similarity": 0.925571
+        }
+      ]
+    },
+    "90ed9867-247d-4e84-bd1f-96b07d243c3e_138220233.stl": {
+      "verdict": "pass",
+      "chosen_rank": 3,
+      "results": [
+        {
+          "filename": "da6c16b3-0d81-4e83-87fa-1f47163add29_138370014.stl",
+          "similarity": 0.941185
+        },
+        {
+          "filename": "ca95cfb7-39ea-4f11-8efd-862503938f0d_137954011.stl",
+          "similarity": 0.938259
+        },
+        {
+          "filename": "8ec1a108-9475-4613-ad27-b59586fbc858_138938596.stl",
+          "similarity": 0.937479
+        },
+        {
+          "filename": "d4cf3a01-51dd-4c42-8f89-12d793144a54_138945318.stl",
+          "similarity": 0.937443
+        },
+        {
+          "filename": "96755635-bab7-4fd6-ab44-2c9b87ada693_138945944.stl",
+          "similarity": 0.936636
+        },
+        {
+          "filename": "4b1c1301-73bb-47ce-bc61-42ee933367ce_138920365.stl",
+          "similarity": 0.935456
+        },
+        {
+          "filename": "3c217e3e-fb90-477e-822f-847f66b9effc_139183003.stl",
+          "similarity": 0.935338
+        },
+        {
+          "filename": "b12881ab-5f64-4bdc-910a-b0dc44200907_138081076.stl",
+          "similarity": 0.93492
+        },
+        {
+          "filename": "35ce94e7-e07f-4700-bf0b-f4527e520caf_139186156.stl",
+          "similarity": 0.934851
+        },
+        {
+          "filename": "40d679f5-d3f9-421d-a361-a192dd9584c8_138940518.stl",
+          "similarity": 0.934462
+        }
+      ]
+    },
+    "9152b443-f680-4f29-8489-7490b6806185_156196447.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "2ed544ef-c643-44e4-a24a-d43777f82423_174038941.stl",
+          "similarity": 0.959601
+        },
+        {
+          "filename": "ade23b8b-00c3-4ba8-b6b0-786c6a64b84d_264988802.stl",
+          "similarity": 0.958408
+        },
+        {
+          "filename": "086d26a2-a42c-4c93-bc56-61521a225a7b_229507751.stl",
+          "similarity": 0.957695
+        },
+        {
+          "filename": "4a763521-2037-4bca-8564-efd8287286f9_174024162.stl",
+          "similarity": 0.957363
+        },
+        {
+          "filename": "0c0d8b92-9e79-4e89-b0e1-157a7e1a63d4_177789038.stl",
+          "similarity": 0.957244
+        },
+        {
+          "filename": "87c45f54-3293-4cac-bb0e-c851d5302c6f_135245914.stl",
+          "similarity": 0.957178
+        },
+        {
+          "filename": "5e9443cc-7e2f-48f5-836f-0ade72add685_170941511.stl",
+          "similarity": 0.956011
+        },
+        {
+          "filename": "0dd2a727-8c37-44a3-9714-2c14b6c5e5bd_164633494.stl",
+          "similarity": 0.95586
+        },
+        {
+          "filename": "576080fd-6013-4803-ae10-11e7580459ae_134224267.stl",
+          "similarity": 0.955157
+        },
+        {
+          "filename": "2216ea6c-5253-46a8-843a-203606b34cc7_225336925.stl",
+          "similarity": 0.954783
+        }
+      ]
+    },
+    "91af08e0-72ac-463f-be6f-8e01d41a74dd_268307206.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "b708d2dd-ff6e-4be8-9f00-c52aa48d875d_127857489.stl",
+          "similarity": 0.974902
+        },
+        {
+          "filename": "52de4afe-24be-4a9a-9365-101768e1c589_135386769.stl",
+          "similarity": 0.974892
+        },
+        {
+          "filename": "2f604299-24be-46bc-a417-35795f59a6d1_227619076.stl",
+          "similarity": 0.97473
+        },
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.973894
+        },
+        {
+          "filename": "0a1b9c21-ac5f-41d5-b6a2-f829b90218bd_254165971.stl",
+          "similarity": 0.9734
+        },
+        {
+          "filename": "3b0f1c27-0c64-4166-ae0e-38989e55cf04_245958789.stl",
+          "similarity": 0.971738
+        },
+        {
+          "filename": "f67865f6-0c89-4a44-b049-66a72147c5ca_254983431.stl",
+          "similarity": 0.97172
+        },
+        {
+          "filename": "2bf03b8a-4527-43bc-9bee-8fa9ecde5441_253638436.stl",
+          "similarity": 0.971221
+        },
+        {
+          "filename": "59452f5a-3fae-42f2-87ac-16e33eda84cc_135895630.stl",
+          "similarity": 0.971034
+        },
+        {
+          "filename": "319343aa-247b-45fe-8f13-b3eeffd1c326_180338970.stl",
+          "similarity": 0.970956
+        }
+      ]
+    },
+    "96d6716c-fc86-462a-94c4-7f4744c6e976_138921126.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "ef4dc3db-41af-4d76-bc48-9f95cc60b2ef_138081414.stl",
+          "similarity": 0.95008
+        },
+        {
+          "filename": "9f1acced-797a-4a4b-b275-ef7d51dc9e8d_138920794.stl",
+          "similarity": 0.948578
+        },
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.947591
+        },
+        {
+          "filename": "773fb0c3-12f1-4755-938a-8a1881134c5a_139182275.stl",
+          "similarity": 0.94438
+        },
+        {
+          "filename": "fc9feba8-f105-4b3a-90a1-f7ad84be123c_138946612.stl",
+          "similarity": 0.941207
+        },
+        {
+          "filename": "40d679f5-d3f9-421d-a361-a192dd9584c8_138940518.stl",
+          "similarity": 0.94097
+        },
+        {
+          "filename": "c973e75e-82fd-485c-a4f6-df5f392c1be7_139185423.stl",
+          "similarity": 0.938424
+        },
+        {
+          "filename": "8ec1a108-9475-4613-ad27-b59586fbc858_138938596.stl",
+          "similarity": 0.93792
+        },
+        {
+          "filename": "98d16923-2844-4888-97eb-e32c5bcd51b8_139182769.stl",
+          "similarity": 0.936372
+        },
+        {
+          "filename": "4b1c1301-73bb-47ce-bc61-42ee933367ce_138920365.stl",
+          "similarity": 0.936084
+        }
+      ]
+    },
+    "970fd290-6aaf-439f-8a18-789670d0c84d_154987223.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "aa6461bb-1114-4693-b3c4-15f0556e2311_252398582.stl",
+          "similarity": 0.976887
+        },
+        {
+          "filename": "5c8a5584-2c95-4ffe-b2f6-e652379b9c56_241834612.stl",
+          "similarity": 0.976255
+        },
+        {
+          "filename": "e6abe54b-e520-45ec-ae71-b1440ab023f8_167567185.stl",
+          "similarity": 0.976163
+        },
+        {
+          "filename": "1782916b-faf0-4d58-9d76-838e3b5c3f2c_154830657.stl",
+          "similarity": 0.975127
+        },
+        {
+          "filename": "589cf8d1-9762-4855-918b-a0ce2593f136_168688311.stl",
+          "similarity": 0.975023
+        },
+        {
+          "filename": "380a035a-b2e9-40c3-afc1-e2d3bb377bdb_176924593.stl",
+          "similarity": 0.974989
+        },
+        {
+          "filename": "9285249c-7aff-4adf-a507-30bd9254ad08_97087833.stl",
+          "similarity": 0.974921
+        },
+        {
+          "filename": "6cb8e7ec-ceda-40f1-bf66-74406817d150_254146214.stl",
+          "similarity": 0.97483
+        },
+        {
+          "filename": "b708d2dd-ff6e-4be8-9f00-c52aa48d875d_127857489.stl",
+          "similarity": 0.974393
+        },
+        {
+          "filename": "d498799a-ec9d-47a1-909a-dbf0c9b0aeaa_130968670.stl",
+          "similarity": 0.974251
+        }
+      ]
+    },
+    "9dfbf4f4-0e53-4424-8216-2e24ccb726c6_137540083.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "90b116d9-e7eb-48bd-9c72-b8e79d1fda94_234586329.stl",
+          "similarity": 0.978823
+        },
+        {
+          "filename": "98761a17-b8ce-42a0-915d-2a6a41855f12_148107416.stl",
+          "similarity": 0.97597
+        },
+        {
+          "filename": "a6f632d2-6885-462c-90be-044fe5b7b935_135495113.stl",
+          "similarity": 0.975223
+        },
+        {
+          "filename": "cb15635c-cde4-4a6f-be27-93fe95af0e60_148328071.stl",
+          "similarity": 0.974679
+        },
+        {
+          "filename": "5c8a5584-2c95-4ffe-b2f6-e652379b9c56_241834612.stl",
+          "similarity": 0.974646
+        },
+        {
+          "filename": "58253ad1-42ab-44b5-843d-a8a0a16aa307_153321413.stl",
+          "similarity": 0.974124
+        },
+        {
+          "filename": "9b122c79-7688-48f2-a6c2-f302b952fc33_225332945.stl",
+          "similarity": 0.973628
+        },
+        {
+          "filename": "10503e60-3a26-47fd-be8f-76cd89125897_246795528.stl",
+          "similarity": 0.97359
+        },
+        {
+          "filename": "a5a66d75-2599-4b54-b740-39ba339accb0_176280906.stl",
+          "similarity": 0.973423
+        },
+        {
+          "filename": "76baa5c2-ef83-4edf-bdab-3edad70aab8f_104385826.stl",
+          "similarity": 0.973312
+        }
+      ]
+    },
+    "a5710783-46d0-4cba-a583-58a172456b97_72034155.stl": {
+      "verdict": "pass",
+      "chosen_rank": 4,
+      "results": [
+        {
+          "filename": "612b314a-5c2c-4633-8784-c94feefef386_72032590.stl",
+          "similarity": 0.969641
+        },
+        {
+          "filename": "3300e1e0-280b-4333-b215-88d63725e864_68805284.stl",
+          "similarity": 0.968863
+        },
+        {
+          "filename": "6b3c3fbd-c94a-4084-847c-530556b078e0_118603733.stl",
+          "similarity": 0.968519
+        },
+        {
+          "filename": "e5a73148-0a7a-41c1-b90c-940ae33cde27_69905938.stl",
+          "similarity": 0.968213
+        },
+        {
+          "filename": "70185ac7-822c-4b41-9235-99af41c1b6a3_244855917.stl",
+          "similarity": 0.967875
+        },
+        {
+          "filename": "dcd0f85f-9359-4a85-b335-efe13eeee603_245014641.stl",
+          "similarity": 0.967799
+        },
+        {
+          "filename": "b3d0478b-1b9a-41a2-a659-23c4c386d327_112169566.stl",
+          "similarity": 0.967651
+        },
+        {
+          "filename": "9285249c-7aff-4adf-a507-30bd9254ad08_97087833.stl",
+          "similarity": 0.967442
+        },
+        {
+          "filename": "207206ea-4554-4723-8a40-7ed20fff9eed_72056559.stl",
+          "similarity": 0.967433
+        },
+        {
+          "filename": "d4af5bc0-e1cc-4653-ae63-919a93ac08bc_100416234.stl",
+          "similarity": 0.967187
+        }
+      ]
+    },
+    "ada48d47-0aa9-490a-86f5-389ebf238eff_129760319.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.975616
+        },
+        {
+          "filename": "5c8a5584-2c95-4ffe-b2f6-e652379b9c56_241834612.stl",
+          "similarity": 0.974845
+        },
+        {
+          "filename": "ae3d5240-a2ef-4d44-bf91-6c80145209e0_172148589.stl",
+          "similarity": 0.974797
+        },
+        {
+          "filename": "5ed7a4ce-769e-4104-973a-3e4ff9e212f4_176806186.stl",
+          "similarity": 0.974631
+        },
+        {
+          "filename": "380a035a-b2e9-40c3-afc1-e2d3bb377bdb_176924593.stl",
+          "similarity": 0.974133
+        },
+        {
+          "filename": "61a646a2-be8a-40cb-932e-c134df9bf91e_228837912.stl",
+          "similarity": 0.974132
+        },
+        {
+          "filename": "59452f5a-3fae-42f2-87ac-16e33eda84cc_135895630.stl",
+          "similarity": 0.973817
+        },
+        {
+          "filename": "224a0f4c-7910-4734-8129-c853e28af286_250766424.stl",
+          "similarity": 0.973807
+        },
+        {
+          "filename": "f67865f6-0c89-4a44-b049-66a72147c5ca_254983431.stl",
+          "similarity": 0.973799
+        },
+        {
+          "filename": "79d26c7a-672e-4fb1-bccd-42a56439b7da_125062376.stl",
+          "similarity": 0.973498
+        }
+      ]
+    },
+    "ae6dea56-7d27-4aa0-b08a-537109818c69_165121161.stl": {
+      "verdict": "pass",
+      "chosen_rank": 9,
+      "results": [
+        {
+          "filename": "4934b130-b0a5-4d6a-ac12-c30b20708e2b_148795582.stl",
+          "similarity": 0.973044
+        },
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.972948
+        },
+        {
+          "filename": "65668d36-d4de-460b-91aa-8b6e649026c8_146179103.stl",
+          "similarity": 0.972754
+        },
+        {
+          "filename": "6add3a9a-f394-41ee-aec5-ed394856cda2_180016239.stl",
+          "similarity": 0.972637
+        },
+        {
+          "filename": "fa0ef877-6f62-442e-a4e6-78a0ed915cc1_125319076.stl",
+          "similarity": 0.972455
+        },
+        {
+          "filename": "f2d96186-2c98-4cad-a6bc-a93d97e506c1_251119934.stl",
+          "similarity": 0.972412
+        },
+        {
+          "filename": "6f5ea276-ce95-444f-b813-de5f90ab2ebb_257083642.stl",
+          "similarity": 0.972167
+        },
+        {
+          "filename": "2d4ed68e-5121-44c9-bd5f-141f7fcecf7c_227626492.stl",
+          "similarity": 0.972074
+        },
+        {
+          "filename": "375c625a-54af-4f29-bf85-3411492cb35f_254987164.stl",
+          "similarity": 0.971882
+        },
+        {
+          "filename": "3c940be4-d994-4595-9567-837092ac0b77_225516270.stl",
+          "similarity": 0.971868
+        }
+      ]
+    },
+    "b57fde05-2fac-4483-85b2-8c75d353585b_235100001.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "0c0d8b92-9e79-4e89-b0e1-157a7e1a63d4_177789038.stl",
+          "similarity": 0.968081
+        },
+        {
+          "filename": "5e9443cc-7e2f-48f5-836f-0ade72add685_170941511.stl",
+          "similarity": 0.966479
+        },
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.966392
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.966075
+        },
+        {
+          "filename": "17665b65-4efe-46a5-953c-ddc55d6210bc_175246165.stl",
+          "similarity": 0.965622
+        },
+        {
+          "filename": "49a426ae-c0d9-4d87-8478-991c0bd24c0f_135639257.stl",
+          "similarity": 0.965459
+        },
+        {
+          "filename": "fafc3722-6e1e-440d-b0a9-7a748c249cc8_114048177.stl",
+          "similarity": 0.965431
+        },
+        {
+          "filename": "37dfe2f3-8f03-4602-ba58-3f399b4ce8af_136283599.stl",
+          "similarity": 0.96512
+        },
+        {
+          "filename": "0a1b9c21-ac5f-41d5-b6a2-f829b90218bd_254165971.stl",
+          "similarity": 0.96492
+        },
+        {
+          "filename": "4a763521-2037-4bca-8564-efd8287286f9_174024162.stl",
+          "similarity": 0.964387
+        }
+      ]
+    },
+    "b63f405b-9a82-4b32-908e-176e07cf54dd_131563887.stl": {
+      "verdict": "pass",
+      "chosen_rank": 7,
+      "results": [
+        {
+          "filename": "2724825d-2c65-40cb-87b0-4de8d3125415_235932467.stl",
+          "similarity": 0.970068
+        },
+        {
+          "filename": "2f604299-24be-46bc-a417-35795f59a6d1_227619076.stl",
+          "similarity": 0.969753
+        },
+        {
+          "filename": "6cb8e7ec-ceda-40f1-bf66-74406817d150_254146214.stl",
+          "similarity": 0.969623
+        },
+        {
+          "filename": "d76da914-65aa-48fe-8994-0caa92b40566_112874289.stl",
+          "similarity": 0.969376
+        },
+        {
+          "filename": "9b75ec63-ac26-4a0b-8151-0a95be32f395_256377272.stl",
+          "similarity": 0.968848
+        },
+        {
+          "filename": "f2d96186-2c98-4cad-a6bc-a93d97e506c1_251119934.stl",
+          "similarity": 0.968499
+        },
+        {
+          "filename": "3fdb05af-ae51-440b-b037-a4a43a719650_135383039.stl",
+          "similarity": 0.968319
+        },
+        {
+          "filename": "d498799a-ec9d-47a1-909a-dbf0c9b0aeaa_130968670.stl",
+          "similarity": 0.968012
+        },
+        {
+          "filename": "fbc2c8c0-d77d-4c95-8bdc-98ea786dd056_124944370.stl",
+          "similarity": 0.967896
+        },
+        {
+          "filename": "0ca89810-7df0-4e75-91c6-1b7cd4fe6d7b_109607406.stl",
+          "similarity": 0.967674
+        }
+      ]
+    },
+    "ba32b798-4e21-4efb-9c5f-f050b53b5f6c_126828142.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "bffb86c8-6553-425b-95f5-cde2e9f17d93_272335855.stl",
+          "similarity": 0.974689
+        },
+        {
+          "filename": "5b88129e-3ef6-44d3-90f6-7af198123dc4_163319490.stl",
+          "similarity": 0.973756
+        },
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.973649
+        },
+        {
+          "filename": "dbb571ed-e0cb-4837-a22e-fa206c44d561_250304067.stl",
+          "similarity": 0.973388
+        },
+        {
+          "filename": "4934b130-b0a5-4d6a-ac12-c30b20708e2b_148795582.stl",
+          "similarity": 0.9733
+        },
+        {
+          "filename": "ae47b833-89a6-4eb1-81c3-35274fece424_255336448.stl",
+          "similarity": 0.972998
+        },
+        {
+          "filename": "0c854b82-b4a0-4f3f-b1d6-5a170ac38ba6_161778902.stl",
+          "similarity": 0.972974
+        },
+        {
+          "filename": "59452f5a-3fae-42f2-87ac-16e33eda84cc_135895630.stl",
+          "similarity": 0.97286
+        },
+        {
+          "filename": "98761a17-b8ce-42a0-915d-2a6a41855f12_148107416.stl",
+          "similarity": 0.97274
+        },
+        {
+          "filename": "aa6461bb-1114-4693-b3c4-15f0556e2311_252398582.stl",
+          "similarity": 0.972564
+        }
+      ]
+    },
+    "bc52e782-3a50-4ab9-96ec-ab06360cf0df_139183123.stl": {
+      "verdict": "pass",
+      "chosen_rank": 2,
+      "results": [
+        {
+          "filename": "ca26127b-5723-444b-86a2-8153b6349fde_138942701.stl",
+          "similarity": 0.912143
+        },
+        {
+          "filename": "b138fcd2-790a-4648-855c-1dcf2559b198_138942173.stl",
+          "similarity": 0.90031
+        },
+        {
+          "filename": "3c217e3e-fb90-477e-822f-847f66b9effc_139183003.stl",
+          "similarity": 0.895328
+        },
+        {
+          "filename": "14abce5e-71dd-433b-b7cf-ec457d2df668_138941008.stl",
+          "similarity": 0.888329
+        },
+        {
+          "filename": "110844df-0ee6-4222-8c79-3ff2faea262b_139185275.stl",
+          "similarity": 0.887999
+        },
+        {
+          "filename": "760ef7cd-ea70-4e4e-bf98-a9a097456b2f_138940060.stl",
+          "similarity": 0.887984
+        },
+        {
+          "filename": "c8f8d1f6-513f-48ee-ac6b-e4a475017889_138220792.stl",
+          "similarity": 0.887307
+        },
+        {
+          "filename": "f0500d51-34d9-4728-9069-6b4655ed3a50_138370984.stl",
+          "similarity": 0.883714
+        },
+        {
+          "filename": "ec3c14e8-6179-432c-8227-1b4f0838a371_138377404.stl",
+          "similarity": 0.883292
+        },
+        {
+          "filename": "4b1c1301-73bb-47ce-bc61-42ee933367ce_138920365.stl",
+          "similarity": 0.881905
+        }
+      ]
+    },
+    "bf6c582a-97bf-4c8e-b739-d38f4ff8a587_269117142.stl": {
+      "verdict": "pass",
+      "chosen_rank": 7,
+      "results": [
+        {
+          "filename": "2e22763d-5225-4841-93d7-007c4f4d97ea_156659082.stl",
+          "similarity": 0.97555
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.972035
+        },
+        {
+          "filename": "6f5ea276-ce95-444f-b813-de5f90ab2ebb_257083642.stl",
+          "similarity": 0.972016
+        },
+        {
+          "filename": "3c940be4-d994-4595-9567-837092ac0b77_225516270.stl",
+          "similarity": 0.97168
+        },
+        {
+          "filename": "a92474a6-9207-4b94-9ea5-db52373f88ee_113228818.stl",
+          "similarity": 0.971297
+        },
+        {
+          "filename": "086d26a2-a42c-4c93-bc56-61521a225a7b_229507751.stl",
+          "similarity": 0.970802
+        },
+        {
+          "filename": "375c625a-54af-4f29-bf85-3411492cb35f_254987164.stl",
+          "similarity": 0.970323
+        },
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.970041
+        },
+        {
+          "filename": "3c9e8e8e-6e93-4838-9338-92c735eb80a2_124936766.stl",
+          "similarity": 0.969919
+        },
+        {
+          "filename": "87c45f54-3293-4cac-bb0e-c851d5302c6f_135245914.stl",
+          "similarity": 0.969627
+        }
+      ]
+    },
+    "c71553bb-d015-435d-a0e2-1b8809d95782_98633179.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "601dfb05-16e8-4c21-b050-512bc6a27fbb_116176769.stl",
+          "similarity": 0.962738
+        },
+        {
+          "filename": "2eca13e2-6807-440d-a5e3-99863229d42d_101120402.stl",
+          "similarity": 0.961627
+        },
+        {
+          "filename": "00ebca40-7c9d-4479-8911-8c15e2e20f28_170640337.stl",
+          "similarity": 0.960998
+        },
+        {
+          "filename": "e0e5dbc6-bbb9-4744-b67e-d7f50fd675b4_144048738.stl",
+          "similarity": 0.960818
+        },
+        {
+          "filename": "b8de8bc0-e13a-4b8c-9dca-eff3f22f6394_166411330.stl",
+          "similarity": 0.960047
+        },
+        {
+          "filename": "5a7e861f-5d57-4423-943b-776bd3cbb9c9_101699053.stl",
+          "similarity": 0.960004
+        },
+        {
+          "filename": "d4af5bc0-e1cc-4653-ae63-919a93ac08bc_100416234.stl",
+          "similarity": 0.959938
+        },
+        {
+          "filename": "0c8fb84b-e513-450e-8f73-0f0070e20d61_151491830.stl",
+          "similarity": 0.959798
+        },
+        {
+          "filename": "fa0ef877-6f62-442e-a4e6-78a0ed915cc1_125319076.stl",
+          "similarity": 0.959505
+        },
+        {
+          "filename": "7eac969f-6f92-4a24-88a4-e6ccabe133c6_101945335.stl",
+          "similarity": 0.959451
+        }
+      ]
+    },
+    "c72ce1ee-b0c0-47b4-b1c1-31d3b7db4202_224826742.stl": {
+      "verdict": "pass",
+      "chosen_rank": 8,
+      "results": [
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.967952
+        },
+        {
+          "filename": "9bb5e684-bf12-419f-bc55-f52cd0ac4bb1_137238153.stl",
+          "similarity": 0.966174
+        },
+        {
+          "filename": "37dfe2f3-8f03-4602-ba58-3f399b4ce8af_136283599.stl",
+          "similarity": 0.965889
+        },
+        {
+          "filename": "149c03d3-eb17-458c-a9a3-494fcb15728a_252573857.stl",
+          "similarity": 0.965799
+        },
+        {
+          "filename": "87c45f54-3293-4cac-bb0e-c851d5302c6f_135245914.stl",
+          "similarity": 0.965647
+        },
+        {
+          "filename": "c2334a9b-fbcc-42f2-bd45-c792135a8076_156491707.stl",
+          "similarity": 0.965629
+        },
+        {
+          "filename": "d9d47e9b-d666-459e-8489-ad56c0b4ce7b_228309575.stl",
+          "similarity": 0.964975
+        },
+        {
+          "filename": "375c625a-54af-4f29-bf85-3411492cb35f_254987164.stl",
+          "similarity": 0.964595
+        },
+        {
+          "filename": "3b0f1c27-0c64-4166-ae0e-38989e55cf04_245958789.stl",
+          "similarity": 0.96422
+        },
+        {
+          "filename": "2f604299-24be-46bc-a417-35795f59a6d1_227619076.stl",
+          "similarity": 0.964127
+        }
+      ]
+    },
+    "caedd817-a00c-482b-8a06-d26e99d34747_176804494.stl": {
+      "verdict": "pass",
+      "chosen_rank": 6,
+      "results": [
+        {
+          "filename": "601dfb05-16e8-4c21-b050-512bc6a27fbb_116176769.stl",
+          "similarity": 0.966972
+        },
+        {
+          "filename": "b4d3c289-9b1f-4424-8e91-2f5fe0f91749_81754975.stl",
+          "similarity": 0.966902
+        },
+        {
+          "filename": "d9f5fab1-0926-4c13-9b16-65bce1b916d8_79120925.stl",
+          "similarity": 0.964985
+        },
+        {
+          "filename": "5a629a33-d06e-4993-b954-78588883e4ba_84729564.stl",
+          "similarity": 0.964788
+        },
+        {
+          "filename": "105d28aa-7d96-4f4b-ae38-0009881a572c_80291296.stl",
+          "similarity": 0.964328
+        },
+        {
+          "filename": "9cc0654e-340b-45b1-94f1-cc38ecae1aaa_121065694.stl",
+          "similarity": 0.96405
+        },
+        {
+          "filename": "8cddf2b4-5814-486e-bf12-850e61e783e1_146881599.stl",
+          "similarity": 0.962666
+        },
+        {
+          "filename": "d66a835c-10c9-4243-a895-ca7ff2ec2026_78989604.stl",
+          "similarity": 0.962651
+        },
+        {
+          "filename": "3da81aac-385c-418d-8db5-b5b63529b952_159266122.stl",
+          "similarity": 0.962243
+        },
+        {
+          "filename": "bec75ae3-8c37-4583-887d-e45ab6a9a477_69998796.stl",
+          "similarity": 0.96217
+        }
+      ]
+    },
+    "cd243e1b-3c3d-47b4-9ac7-afc1fafe9514_102169805.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "59fe87a8-f73d-4bdd-9dcb-915d637c3142_133950232.stl",
+          "similarity": 0.963825
+        },
+        {
+          "filename": "f1c7e732-414b-4d3d-bd15-d72ac4b6ada2_96193727.stl",
+          "similarity": 0.962463
+        },
+        {
+          "filename": "08d46ee3-ebb0-424b-b8e4-c482f5f0ca1f_87347569.stl",
+          "similarity": 0.9605
+        },
+        {
+          "filename": "5521ab16-8c05-4573-bc5c-e77bdb0e3f62_138513351.stl",
+          "similarity": 0.960259
+        },
+        {
+          "filename": "09b2d640-5b06-479b-a5f7-6291c6a77eda_105438206.stl",
+          "similarity": 0.95962
+        },
+        {
+          "filename": "b33e80cd-03d9-4e12-bc4e-68344b025ac7_78391153.stl",
+          "similarity": 0.959185
+        },
+        {
+          "filename": "bc7a6d3a-30f5-443d-bc79-3f0e313ee75e_110981142.stl",
+          "similarity": 0.958244
+        },
+        {
+          "filename": "e0cd42c5-e533-4969-b0cc-5f40f82da7f4_87565917.stl",
+          "similarity": 0.957783
+        },
+        {
+          "filename": "6b3c3fbd-c94a-4084-847c-530556b078e0_118603733.stl",
+          "similarity": 0.956993
+        },
+        {
+          "filename": "9ba218ce-7bd6-4e27-9737-a7d49c6154ee_87538412.stl",
+          "similarity": 0.956758
+        }
+      ]
+    },
+    "d3f8fff1-fabe-4515-8bc9-5d6c748e4704_228210355.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.976992
+        },
+        {
+          "filename": "59452f5a-3fae-42f2-87ac-16e33eda84cc_135895630.stl",
+          "similarity": 0.975647
+        },
+        {
+          "filename": "0aa78e53-7a79-4ce1-a632-750cad726055_133705464.stl",
+          "similarity": 0.974503
+        },
+        {
+          "filename": "fa0ef877-6f62-442e-a4e6-78a0ed915cc1_125319076.stl",
+          "similarity": 0.97441
+        },
+        {
+          "filename": "5dfdccfb-0a16-4b2e-acc4-db29b305032c_226651945.stl",
+          "similarity": 0.974391
+        },
+        {
+          "filename": "0c8fb84b-e513-450e-8f73-0f0070e20d61_151491830.stl",
+          "similarity": 0.974246
+        },
+        {
+          "filename": "6f6a0346-9c05-4309-9443-7579b25dbced_236783850.stl",
+          "similarity": 0.974233
+        },
+        {
+          "filename": "bffb86c8-6553-425b-95f5-cde2e9f17d93_272335855.stl",
+          "similarity": 0.974193
+        },
+        {
+          "filename": "2724825d-2c65-40cb-87b0-4de8d3125415_235932467.stl",
+          "similarity": 0.973793
+        },
+        {
+          "filename": "ae3d5240-a2ef-4d44-bf91-6c80145209e0_172148589.stl",
+          "similarity": 0.973507
+        }
+      ]
+    },
+    "da7ed085-ee67-4d34-96c5-3f651dbf2952_227925412.stl": {
+      "verdict": "pass",
+      "chosen_rank": 6,
+      "results": [
+        {
+          "filename": "dbb571ed-e0cb-4837-a22e-fa206c44d561_250304067.stl",
+          "similarity": 0.97678
+        },
+        {
+          "filename": "1782916b-faf0-4d58-9d76-838e3b5c3f2c_154830657.stl",
+          "similarity": 0.97461
+        },
+        {
+          "filename": "5c8a5584-2c95-4ffe-b2f6-e652379b9c56_241834612.stl",
+          "similarity": 0.973229
+        },
+        {
+          "filename": "d71542bb-20d3-4137-9cae-6ef31220f6aa_170161741.stl",
+          "similarity": 0.973054
+        },
+        {
+          "filename": "aa6461bb-1114-4693-b3c4-15f0556e2311_252398582.stl",
+          "similarity": 0.973044
+        },
+        {
+          "filename": "fbc2c8c0-d77d-4c95-8bdc-98ea786dd056_124944370.stl",
+          "similarity": 0.97269
+        },
+        {
+          "filename": "4e50d749-5768-4126-a60c-3870953cddb0_174283905.stl",
+          "similarity": 0.97258
+        },
+        {
+          "filename": "411e8b4a-86a1-4ade-8efe-755e7c2c0d1c_155438390.stl",
+          "similarity": 0.972474
+        },
+        {
+          "filename": "56c8745c-05dc-4815-b4e7-d7890172aa6a_140269771.stl",
+          "similarity": 0.972266
+        },
+        {
+          "filename": "a7bba01d-5cd8-4d7e-9397-d99b55955511_227462741.stl",
+          "similarity": 0.972073
+        }
+      ]
+    },
+    "e07ea579-494e-4c87-a4b8-93355017acbb_151039691.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "b708d2dd-ff6e-4be8-9f00-c52aa48d875d_127857489.stl",
+          "similarity": 0.976827
+        },
+        {
+          "filename": "2f604299-24be-46bc-a417-35795f59a6d1_227619076.stl",
+          "similarity": 0.976609
+        },
+        {
+          "filename": "f2d96186-2c98-4cad-a6bc-a93d97e506c1_251119934.stl",
+          "similarity": 0.976062
+        },
+        {
+          "filename": "0c8fb84b-e513-450e-8f73-0f0070e20d61_151491830.stl",
+          "similarity": 0.975773
+        },
+        {
+          "filename": "fb1d49c3-fcf6-46e1-82f1-f7a6d5b8f37e_237654382.stl",
+          "similarity": 0.975009
+        },
+        {
+          "filename": "cc9b81ea-984d-4e62-a1d0-18e7d5d7e0b2_128299860.stl",
+          "similarity": 0.974778
+        },
+        {
+          "filename": "954f4b2a-a52b-4fca-8478-c84f7605a749_225515191.stl",
+          "similarity": 0.974582
+        },
+        {
+          "filename": "ae3d5240-a2ef-4d44-bf91-6c80145209e0_172148589.stl",
+          "similarity": 0.974557
+        },
+        {
+          "filename": "af5f2654-b25a-4b8e-b1c5-26f1cdda392d_244660316.stl",
+          "similarity": 0.974492
+        },
+        {
+          "filename": "fa0ef877-6f62-442e-a4e6-78a0ed915cc1_125319076.stl",
+          "similarity": 0.974296
+        }
+      ]
+    },
+    "f47cb25d-220b-4286-8190-1578c602c7b4_147295206.stl": {
+      "verdict": "pass",
+      "chosen_rank": 1,
+      "results": [
+        {
+          "filename": "b0b4f0a7-2365-4135-9ba9-2d486ea5a250_164628198.stl",
+          "similarity": 0.97406
+        },
+        {
+          "filename": "b0508688-ce7f-4e69-b870-42fd2c6da5b4_252938545.stl",
+          "similarity": 0.974006
+        },
+        {
+          "filename": "dcd0f85f-9359-4a85-b335-efe13eeee603_245014641.stl",
+          "similarity": 0.973689
+        },
+        {
+          "filename": "e43729c6-ee57-41cf-aa46-67c152c9118e_137538969.stl",
+          "similarity": 0.973626
+        },
+        {
+          "filename": "5c8a5584-2c95-4ffe-b2f6-e652379b9c56_241834612.stl",
+          "similarity": 0.973334
+        },
+        {
+          "filename": "cb15635c-cde4-4a6f-be27-93fe95af0e60_148328071.stl",
+          "similarity": 0.972242
+        },
+        {
+          "filename": "2d4ed68e-5121-44c9-bd5f-141f7fcecf7c_227626492.stl",
+          "similarity": 0.972058
+        },
+        {
+          "filename": "98761a17-b8ce-42a0-915d-2a6a41855f12_148107416.stl",
+          "similarity": 0.971943
+        },
+        {
+          "filename": "879ae163-0897-47b3-b153-b47346307997_143630366.stl",
+          "similarity": 0.971603
+        },
+        {
+          "filename": "d71542bb-20d3-4137-9cae-6ef31220f6aa_170161741.stl",
+          "similarity": 0.971232
+        }
+      ]
+    }
+  }
+}

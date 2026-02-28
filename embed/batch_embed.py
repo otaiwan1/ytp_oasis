@@ -7,7 +7,7 @@ Usage:
     python -m embed.batch_embed --model dinov3
 
     # Specify GPU + parallel workers (recommended)
-    python -m embed.batch_embed --model dinov3 --gpu 1 --workers 4
+    python -m embed.batch_embed --model dinov3 --gpu 1 --workers 12
 
 Outputs:
     {output_dir}/{model}_embeddings.npy   — (N, D) float32 array
@@ -63,7 +63,7 @@ def main():
     parser = argparse.ArgumentParser(description="Batch embed STL files.")
     parser.add_argument(
         "--model", type=str, required=True,
-        choices=["simclr", "mae", "dinov2", "dinov3", "dinov3_gallery"],
+        choices=["simclr", "mae", "dinov2", "dinov3", "dinov3_gallery", "dinov3_concat"],
         help="Embedding model to use.",
     )
     parser.add_argument(

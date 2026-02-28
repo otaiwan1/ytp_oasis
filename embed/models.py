@@ -242,6 +242,38 @@ def infer_dinov3_hybrid(model, pil_images, device):
     return embedding.cpu().numpy()
 
 
+def infer_dinov3_concat(model, pil_images, device):
+    """
+    Compute a DINOv3 embedding by concatenating all views' hybrid features.
+
+    Each view produces CLS + mean(patch) = 2048-dim.
+    5 views concatenated → 10240-dim total.
+    Preserves per-view information without averaging.
+
+    Args:
+        model: DINOv3 nn.Module (loaded via torch.hub).
+        pil_images: list[PIL.Image] (RGB, must be exactly 5).
+        device: torch.device.
+    Returns:
+        np.ndarray of shape (10240,), L2-normalized.
+    """
+    transform = _get_dinov3_transform()
+    tensors = [transform(img) for img in pil_images]
+    batch = torch.stack(tensors).to(device)
+
+    with torch.no_grad():
+        out = model.forward_features(batch)
+        cls = out["x_norm_clstoken"]              # (5, 1024)
+        patches = out["x_norm_patchtokens"]       # (5, n_patches, 1024)
+        patch_mean = patches.mean(dim=1)          # (5, 1024)
+
+        combined = torch.cat([cls, patch_mean], dim=-1)  # (5, 2048)
+        embedding = combined.flatten()            # (10240,)
+        embedding = F.normalize(embedding, p=2, dim=0)
+
+    return embedding.cpu().numpy()
+
+
 # ─── Cached loader ───────────────────────────────────────────────────
 
 def get_model(model_name: str, device=None):
@@ -265,6 +297,7 @@ def get_model(model_name: str, device=None):
             "dinov2": _load_dinov2,
             "dinov3": _load_dinov3,
             "dinov3_gallery": _load_dinov3,
+            "dinov3_concat": _load_dinov3,
         }
         if model_name not in loaders:
             raise ValueError(f"Unknown model: {model_name}. Choose from {list(loaders)}")
