@@ -36,9 +36,9 @@ def browse():
 @collection_bp.route('/patient/<patient_uid>')
 @login_required
 def patient_detail(patient_uid):
-    """Show all scans for a specific patient."""
+    """Show all scans for a specific patient with 3D GLB preview."""
     stl_dir = Path(current_app.config['STL_DATA_DIR'])
-    rendered_dir = Path(current_app.config['RENDERED_IMAGES_DIR'])
+    glb_dir = Path(current_app.config['GLB_DATA_DIR'])
 
     scans = []
     if stl_dir.exists():
@@ -47,19 +47,15 @@ def patient_detail(patient_uid):
             parts = fname.replace('.stl', '').split('_', 1)
             serial = parts[1] if len(parts) > 1 else ''
 
-            # Check for rendered views
-            views = []
-            patient_render_dir = rendered_dir / patient_uid
-            if patient_render_dir.exists():
-                for view in ['front', 'back', 'top', 'bottom', 'left', 'right']:
-                    img_path = patient_render_dir / f'{view}.png'
-                    if img_path.exists():
-                        views.append(view)
+            # Check if GLB exists
+            glb_name = fname.replace('.stl', '.glb')
+            has_glb = (glb_dir / glb_name).exists()
 
             scans.append({
                 'filename': fname,
                 'serial_number': serial,
-                'views': views
+                'has_glb': has_glb,
+                'glb_filename': fname,  # STL filename, used by JS to build GLB URL
             })
 
     if not scans:

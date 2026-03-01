@@ -304,3 +304,11 @@ def get_model(model_name: str, device=None):
         _model_cache[cache_key] = loaders[model_name](device)
 
     return _model_cache[cache_key], device
+
+
+def release_models():
+    """Release all cached models and free GPU memory."""
+    global _model_cache
+    _model_cache.clear()
+    if torch.cuda.is_available():
+        torch.cuda.empty_cache()

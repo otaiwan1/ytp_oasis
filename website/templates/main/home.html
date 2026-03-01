@@ -228,9 +228,9 @@
                     <span class="highlight">S</span>EARCH
                 </h1>
                 <p class="hero-subtitle mb-4">
-                    OASIS leverages deep learning with SimCLR contrastive learning and EdgeConv graph neural networks 
-                    to find similar orthodontic cases from 3D dental scans, empowering dentists 
-                    with AI-driven treatment insights.
+                    OASIS leverages a multi-model deep learning pipeline — including SimCLR, Point-MAE, DINOv2, 
+                    and DINOv3 — to find similar orthodontic cases from 3D dental scans and real intraoral photos, 
+                    empowering dentists with AI-driven treatment insights.
                 </p>
                 <div class="d-flex gap-3 flex-wrap">
                     {% if current_user.is_authenticated %}
@@ -253,8 +253,8 @@
             <div class="col-lg-5 d-none d-lg-block text-center hero-content">
                 <div style="background: linear-gradient(135deg, var(--oasis-green-50), var(--oasis-green-100)); border-radius: 24px; padding: 3rem; border: 1px solid var(--oasis-green-200);">
                     <i class="bi bi-gpu-card" style="font-size: 6rem; color: var(--oasis-green-400);"></i>
-                    <p class="mt-3 mb-0" style="color: var(--oasis-green-700); font-weight: 600;">3D Deep Learning Engine</p>
-                    <p style="color: var(--oasis-gray-500); font-size: 0.85rem;">SimCLR + EdgeConv Architecture</p>
+                    <p class="mt-3 mb-0" style="color: var(--oasis-green-700); font-weight: 600;">Multi-Model AI Engine</p>
+                    <p style="color: var(--oasis-gray-500); font-size: 0.85rem;">SimCLR · Point-MAE · DINOv2 · DINOv3</p>
                 </div>
             </div>
         </div>
@@ -275,34 +275,34 @@
                         <i class="bi bi-search-heart"></i>
                     </div>
                     <h5>Similarity Search</h5>
-                    <p>Upload a dental scan and instantly find the top-5 most similar cases from the database using AI embeddings.</p>
+                    <p>Upload a dental scan and instantly find the most similar cases from 642 patients using cosine similarity on AI embeddings.</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="feature-card">
                     <div class="feature-icon blue">
-                        <i class="bi bi-box"></i>
+                        <i class="bi bi-diagram-3"></i>
                     </div>
-                    <h5>3D Scan Support</h5>
-                    <p>Native support for STL 3D dental scan files with automatic point cloud extraction and normalization.</p>
+                    <h5>6 AI Models</h5>
+                    <p>Compare results across SimCLR, Point-MAE, DINOv2, DINOv3, DINOv3 Gallery, and DINOv3 Concat — from 3D point clouds to real photos.</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="feature-card">
                     <div class="feature-icon purple">
-                        <i class="bi bi-collection"></i>
+                        <i class="bi bi-clipboard-check"></i>
                     </div>
-                    <h5>Patient Collection</h5>
-                    <p>Browse all patient scans organized by patient ID, with multi-view rendered images for each scan.</p>
+                    <h5>Model Validation</h5>
+                    <p>Built-in validation system to evaluate each model's retrieval accuracy with top-K pass/fail reports.</p>
                 </div>
             </div>
             <div class="col-md-6 col-lg-3">
                 <div class="feature-card">
                     <div class="feature-icon amber">
-                        <i class="bi bi-cloud-arrow-up"></i>
+                        <i class="bi bi-camera"></i>
                     </div>
-                    <h5>Easy Upload</h5>
-                    <p>Upload new patient scans with drag-and-drop support. Data is automatically indexed for future searches.</p>
+                    <h5>Gallery Photos</h5>
+                    <p>DINOv3 Gallery uses real iTero intraoral photos for richer embeddings with color, texture, and natural lighting.</p>
                 </div>
             </div>
         </div>
@@ -327,15 +327,15 @@
             <div class="col-md-4">
                 <div class="workflow-step">
                     <div class="workflow-number">2</div>
-                    <h6>AI Analysis</h6>
-                    <p>Our SimCLR model encodes the 3D geometry into a 512-dimensional embedding vector using EdgeConv layers.</p>
+                    <h6>AI Embedding</h6>
+                    <p>Choose a model — the system encodes the scan into a high-dimensional embedding vector (384 to 10,240 dimensions).</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="workflow-step">
                     <div class="workflow-number">3</div>
                     <h6>View Results</h6>
-                    <p>Explore the top-5 most similar patient cases with scan images and similarity scores.</p>
+                    <p>Explore the most similar patient cases ranked by cosine similarity, with 3D viewers and multi-view images.</p>
                 </div>
             </div>
         </div>
@@ -348,26 +348,26 @@
         <div class="row">
             <div class="col-md-3">
                 <div class="stat-item">
-                    <div class="stat-number">512</div>
-                    <div class="stat-label">Embedding Dimensions</div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-item">
-                    <div class="stat-number">4096</div>
-                    <div class="stat-label">Points per Cloud</div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-item">
-                    <div class="stat-number">4</div>
-                    <div class="stat-label">EdgeConv Layers</div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="stat-item">
                     <div class="stat-number">6</div>
-                    <div class="stat-label">Rendered Views</div>
+                    <div class="stat-label">AI Models</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">642</div>
+                    <div class="stat-label">Patient Cases</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">View Angles</div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-item">
+                    <div class="stat-number">10240</div>
+                    <div class="stat-label">Max Embedding Dim</div>
                 </div>
             </div>
         </div>

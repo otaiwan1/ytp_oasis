@@ -16,12 +16,12 @@ Example:
 from pathlib import Path
 import numpy as np
 
-from .models import get_model, infer_simclr, infer_mae, infer_dinov2, infer_dinov3, infer_dinov3_hybrid, infer_dinov3_concat
+from .models import get_model, infer_simclr, infer_mae, infer_dinov2, infer_dinov3, infer_dinov3_hybrid, infer_dinov3_concat, release_models
 from .preprocessing import preprocess_simclr, preprocess_mae, preprocess_dinov2, preprocess_dinov3_gallery
 from .config import (RENDER_VIEWS_CONFIG, DINOV2_VIEWS, DINOV3_VIEWS,
                       RENDER_IMG_SIZE, RENDER_FOV_DEG)
 
-__all__ = ["embed_stl", "list_models"]
+__all__ = ["embed_stl", "list_models", "release_models"]
 
 _SUPPORTED_MODELS = ["simclr", "mae", "dinov2", "dinov3", "dinov3_gallery", "dinov3_concat"]
 

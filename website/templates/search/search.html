@@ -17,28 +17,34 @@
         border-color: var(--oasis-green-300);
     }
 
-    .result-preview {
-        width: 200px;
-        height: 200px;
-        border-radius: 12px;
-        object-fit: cover;
-        border: 1px solid var(--oasis-gray-200);
-        background: #000;
-        flex-shrink: 0;
+    .query-card {
+        background: white;
+        border: 2px solid #fbbf24;
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
     }
 
-    .result-preview-placeholder {
+    .result-preview-3d {
         width: 200px;
         height: 200px;
         border-radius: 12px;
-        border: 1px dashed var(--oasis-gray-300);
-        background: var(--oasis-gray-100);
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: #1a1a2e;
         flex-shrink: 0;
-        color: var(--oasis-gray-400);
-        font-size: 2.5rem;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .query-preview-3d {
+        width: 280px;
+        height: 280px;
+        border-radius: 12px;
+        border: 2px solid #fbbf24;
+        background: #1a1a2e;
+        flex-shrink: 0;
+        overflow: hidden;
+        position: relative;
     }
 
     .btn-itero {
@@ -63,14 +69,6 @@
         box-shadow: 0 2px 8px rgba(0, 102, 204, 0.3);
     }
 
-    .result-actions {
-        display: flex;
-        flex-direction: column;
-        gap: 0.5rem;
-        align-items: flex-end;
-        flex-shrink: 0;
-    }
-
     .rank-badge {
         width: 40px;
         height: 40px;
@@ -82,10 +80,31 @@
         font-size: 1.1rem;
     }
 
-    .rank-1 { background: linear-gradient(135deg, #ffd700, #ffb800); color: white; }
-    .rank-2 { background: linear-gradient(135deg, #c0c0c0, #a0a0a0); color: white; }
-    .rank-3 { background: linear-gradient(135deg, #cd7f32, #b06b2a); color: white; }
-    .rank-4, .rank-5 { background: var(--oasis-gray-200); color: var(--oasis-gray-700); }
+    .rank-1 {
+        background: linear-gradient(135deg, #ffd700, #ffb800);
+        color: white;
+    }
+
+    .rank-2 {
+        background: linear-gradient(135deg, #c0c0c0, #a0a0a0);
+        color: white;
+    }
+
+    .rank-3 {
+        background: linear-gradient(135deg, #cd7f32, #b06b2a);
+        color: white;
+    }
+
+    .rank-4,
+    .rank-5,
+    .rank-6,
+    .rank-7,
+    .rank-8,
+    .rank-9,
+    .rank-10 {
+        background: var(--oasis-gray-200);
+        color: var(--oasis-gray-700);
+    }
 
     .selected-file-info {
         background: var(--oasis-green-50);
@@ -122,6 +141,35 @@
     #no-results.active {
         display: block;
     }
+
+    .btn-load-more {
+        background: white;
+        border: 2px solid var(--oasis-green-300);
+        border-radius: 12px;
+        padding: 0.75rem 2rem;
+        font-weight: 700;
+        font-size: 0.95rem;
+        color: var(--oasis-green-700);
+        cursor: pointer;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .btn-load-more:hover {
+        background: var(--oasis-green-50);
+        border-color: var(--oasis-green-500);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 8px rgba(34, 197, 94, 0.15);
+    }
+
+    .btn-load-more:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
 </style>
 {% endblock %}
 
@@ -129,25 +177,28 @@
 <div class="container">
     <div class="page-header">
         <h1><i class="bi bi-search me-2" style="color: var(--oasis-green-500);"></i>Similarity Search</h1>
-        <p>Upload a dental scan (STL file) to find the top-5 most similar cases in the database.</p>
+        <p>Upload an iTero scan export (.zip) to find similar cases. Patient ID is auto-detected from the report.</p>
     </div>
 
     <!-- Upload Section -->
     <div class="card-oasis p-4 mb-4">
         <form id="searchForm" enctype="multipart/form-data">
-            <div class="upload-zone" id="dropZone" onclick="document.getElementById('stlInput').click();">
+            <div class="upload-zone" id="dropZone" onclick="document.getElementById('zipInput').click();">
                 <i class="bi bi-cloud-arrow-up upload-icon"></i>
-                <h5 style="font-weight: 700; color: var(--oasis-gray-700);">Drop your STL file here</h5>
-                <p style="color: var(--oasis-gray-500); font-size: 0.9rem; margin-bottom: 1rem;">or click to browse from your computer</p>
-                <span class="badge-oasis">.stl files only</span>
-                <input type="file" id="stlInput" name="stl_file" accept=".stl" hidden>
+                <h5 style="font-weight: 700; color: var(--oasis-gray-700);">Drop your iTero export here</h5>
+                <p style="color: var(--oasis-gray-500); font-size: 0.9rem; margin-bottom: 1rem;">
+                    OrthoCAD_Export_xxxxxx.zip — or click to browse</p>
+                <span class="badge-oasis">.zip files only</span>
+                <input type="file" id="zipInput" name="zip_file" accept=".zip" hidden>
             </div>
 
             <!-- Selected File Info -->
             <div class="selected-file-info mt-3 align-items-center" id="fileInfo">
-                <i class="bi bi-file-earmark-check" style="font-size: 1.5rem; color: var(--oasis-green-600); margin-right: 0.75rem;"></i>
+                <i class="bi bi-file-earmark-zip"
+                    style="font-size: 1.5rem; color: var(--oasis-green-600); margin-right: 0.75rem;"></i>
                 <div class="flex-grow-1">
-                    <div style="font-weight: 600; color: var(--oasis-gray-900); font-size: 0.95rem;" id="selectedFileName">—</div>
+                    <div style="font-weight: 600; color: var(--oasis-gray-900); font-size: 0.95rem;"
+                        id="selectedFileName">—</div>
                     <div style="font-size: 0.8rem; color: var(--oasis-gray-500);" id="selectedFileSize">—</div>
                 </div>
                 <button type="button" class="btn btn-sm" style="color: var(--oasis-gray-500);" onclick="clearFile()">
@@ -157,7 +208,7 @@
 
             <div class="mt-3 text-end">
                 <button type="submit" class="btn btn-oasis px-4" id="searchBtn" disabled>
-                    <i class="bi bi-search me-2"></i>Search Similar Scans
+                    <i class="bi bi-search me-2"></i>Upload & Search
                 </button>
             </div>
         </form>
@@ -167,8 +218,9 @@
     <div id="loading-container" class="justify-content-center align-items-center py-5">
         <div class="text-center">
             <div class="spinner-oasis mx-auto mb-3"></div>
-            <h5 style="font-weight: 700; color: var(--oasis-gray-700);">Analyzing scan...</h5>
-            <p style="color: var(--oasis-gray-500); font-size: 0.9rem;">Rendering multi-view images and computing DINOv2 embedding...</p>
+            <h5 style="font-weight: 700; color: var(--oasis-gray-700);">Processing scan...</h5>
+            <p style="color: var(--oasis-gray-500); font-size: 0.9rem;">Extracting files, computing DINOv3 Gallery
+                embedding, and searching...</p>
         </div>
     </div>
 
@@ -176,7 +228,8 @@
     <div id="no-results" class="text-center py-5">
         <i class="bi bi-inbox" style="font-size: 3rem; color: var(--oasis-gray-300);"></i>
         <h5 class="mt-3" style="font-weight: 700; color: var(--oasis-gray-700);">No data available</h5>
-        <p style="color: var(--oasis-gray-500); font-size: 0.9rem;" id="no-results-msg">Please add STL files to the data directory first.</p>
+        <p style="color: var(--oasis-gray-500); font-size: 0.9rem;" id="no-results-msg">Please upload an iTero export to
+            get started.</p>
     </div>
 
     <!-- Results Section -->
@@ -188,134 +241,342 @@
             <span class="badge-oasis" id="queryLabel">—</span>
         </div>
 
+        <!-- Query preview card -->
+        <div id="query-preview-card"></div>
+
         <div id="results-list">
-            <!-- Results will be injected here by JS -->
+            <!-- Results injected by JS -->
+        </div>
+
+        <!-- Load More Button -->
+        <div class="text-center mt-3 mb-4" id="loadMoreContainer" style="display:none;">
+            <button class="btn-load-more" id="loadMoreBtn">
+                <i class="bi bi-plus-circle"></i> Load 5 More Results
+            </button>
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
-<script>
-const dropZone = document.getElementById('dropZone');
-const stlInput = document.getElementById('stlInput');
-const fileInfo = document.getElementById('fileInfo');
-const searchBtn = document.getElementById('searchBtn');
-const searchForm = document.getElementById('searchForm');
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
 
-// Drag and drop
-['dragenter', 'dragover'].forEach(ev => {
-    dropZone.addEventListener(ev, (e) => {
-        e.preventDefault();
-        dropZone.classList.add('dragover');
-    });
-});
+<script type="module">
+    import * as THREE from 'three';
+    import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
-['dragleave', 'drop'].forEach(ev => {
-    dropZone.addEventListener(ev, (e) => {
-        e.preventDefault();
-        dropZone.classList.remove('dragover');
-    });
-});
+    // ─── State ──────────────────────────────────────────────────────────
+    const glbLoader = new GLTFLoader();
+    const geoCache = {};
+    let allViewers = [];
+    let syncing = false;
+    let lastSearchData = null;
+    let displayedCount = 0;
 
-dropZone.addEventListener('drop', (e) => {
-    const files = e.dataTransfer.files;
-    if (files.length > 0 && files[0].name.toLowerCase().endsWith('.stl')) {
-        stlInput.files = files;
-        showFileInfo(files[0]);
+    // ─── GLB loading (same as validation) ───────────────────────────────
+    function glbUrl(stlFilename) {
+        const stem = stlFilename.replace(/\.stl$/i, '');
+        return `{{ url_for("validation.serve_glb", filename="__PH__") }}`.replace('__PH__', encodeURIComponent(stem + '.glb'));
     }
-});
 
-stlInput.addEventListener('change', () => {
-    if (stlInput.files.length > 0) {
-        showFileInfo(stlInput.files[0]);
+    function loadGLBAsync(url) {
+        return new Promise((resolve, reject) => {
+            glbLoader.load(url, resolve, undefined, reject);
+        });
     }
-});
 
-function showFileInfo(file) {
-    document.getElementById('selectedFileName').textContent = file.name;
-    document.getElementById('selectedFileSize').textContent = formatSize(file.size);
-    fileInfo.classList.add('active');
-    searchBtn.disabled = false;
-}
+    async function getGeometry(filename) {
+        if (!geoCache[filename]) {
+            const gltf = await loadGLBAsync(glbUrl(filename));
+            let geo = null;
+            gltf.scene.traverse(child => {
+                if (!geo && child.isMesh && child.geometry) geo = child.geometry;
+            });
+            if (!geo) throw new Error('No mesh in GLB: ' + filename);
+            geo.computeVertexNormals();
+            geo.center();
+            geo.rotateX(-Math.PI / 2);
+            geoCache[filename] = geo;
+        }
+        return geoCache[filename].clone();
+    }
 
-function clearFile() {
-    stlInput.value = '';
-    fileInfo.classList.remove('active');
-    searchBtn.disabled = true;
-}
+    // ─── Create Three.js viewer ─────────────────────────────────────────
+    function createViewer(container, width, height) {
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x1a1a2e);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+        const d1 = new THREE.DirectionalLight(0xffffff, 0.8);
+        d1.position.set(1, 1, 1); scene.add(d1);
+        const d2 = new THREE.DirectionalLight(0xffffff, 0.4);
+        d2.position.set(-1, -0.5, -1); scene.add(d2);
 
-function formatSize(bytes) {
-    if (bytes < 1024) return bytes + ' B';
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
-    return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
-}
+        const camera = new THREE.PerspectiveCamera(50, width / height, 0.1, 2000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(width, height);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        container.appendChild(renderer.domElement);
 
-// Form submission
-searchForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    
-    if (!stlInput.files.length) return;
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.1;
+        controls.autoRotate = false;
 
-    const formData = new FormData();
-    formData.append('stl_file', stlInput.files[0]);
+        const viewer = { scene, camera, renderer, controls, mesh: null, animId: null };
 
-    // Show loading
-    document.getElementById('loading-container').classList.add('active');
-    document.getElementById('results-container').classList.remove('active');
-    document.getElementById('no-results').classList.remove('active');
-    searchBtn.disabled = true;
+        function animate() {
+            viewer.animId = requestAnimationFrame(animate);
+            controls.update();
+            renderer.render(scene, camera);
+        }
+        animate();
 
-    try {
-        const response = await fetch('{{ url_for("search.query") }}', {
-            method: 'POST',
-            body: formData
+        // Sync cameras across all viewers
+        controls.addEventListener('change', () => {
+            if (syncing) return;
+            syncing = true;
+            allViewers.forEach(other => {
+                if (other === viewer) return;
+                other.controls.target.copy(controls.target);
+                other.camera.position.copy(camera.position);
+                other.camera.quaternion.copy(camera.quaternion);
+                other.controls.autoRotate = controls.autoRotate;
+                other.controls.update();
+            });
+            syncing = false;
         });
 
-        const data = await response.json();
-        document.getElementById('loading-container').classList.remove('active');
+        return viewer;
+    }
 
-        if (!response.ok) {
-            if (response.status === 404) {
-                document.getElementById('no-results-msg').textContent = data.error || 'No scan data available.';
-                document.getElementById('no-results').classList.add('active');
-            } else {
-                alert(data.error || 'Search failed. Please try again.');
-            }
-            searchBtn.disabled = false;
-            return;
+    async function loadIntoViewer(viewer, filename) {
+        if (viewer.mesh) {
+            viewer.scene.remove(viewer.mesh);
+            viewer.mesh.geometry.dispose();
+            viewer.mesh.material.dispose();
+            viewer.mesh = null;
         }
 
-        // Show results
-        displayResults(data);
-        searchBtn.disabled = false;
+        const geo = await getGeometry(filename);
+        const mat = new THREE.MeshPhongMaterial({
+            color: 0xc8ddf0, specular: 0x444444, shininess: 60
+        });
+        const mesh = new THREE.Mesh(geo, mat);
+        viewer.scene.add(mesh);
+        viewer.mesh = mesh;
 
-    } catch (err) {
-        document.getElementById('loading-container').classList.remove('active');
-        alert('Network error. Please check your connection and try again.');
-        searchBtn.disabled = false;
+        const box = new THREE.Box3().setFromObject(mesh);
+        const center = box.getCenter(new THREE.Vector3());
+        const size = box.getSize(new THREE.Vector3());
+        const maxDim = Math.max(size.x, size.y, size.z);
+
+        viewer.camera.position.set(center.x, center.y + maxDim * 0.3, center.z + maxDim * 1.4);
+        viewer.controls.target.copy(center);
+        viewer.controls.update();
     }
-});
 
-function displayResults(data) {
-    const container = document.getElementById('results-list');
-    container.innerHTML = '';
+    function destroyAllViewers() {
+        allViewers.forEach(v => {
+            if (v.animId) cancelAnimationFrame(v.animId);
+            if (v.mesh) {
+                v.scene.remove(v.mesh);
+                v.mesh.geometry.dispose();
+                v.mesh.material.dispose();
+            }
+            v.renderer.dispose();
+        });
+        allViewers = [];
+    }
 
-    document.getElementById('queryLabel').textContent = 'Query: ' + data.query_file;
+    // ─── Upload form logic ──────────────────────────────────────────────
+    const dropZone = document.getElementById('dropZone');
+    const zipInput = document.getElementById('zipInput');
+    const fileInfo = document.getElementById('fileInfo');
+    const searchBtn = document.getElementById('searchBtn');
+    const searchForm = document.getElementById('searchForm');
 
-    data.results.forEach(r => {
-        const simPercent = (r.similarity * 100).toFixed(1);
-        const rankClass = 'rank-' + r.rank;
-        const frontImgUrl = `/collection/render/${r.patient_uid}/front`;
-        const iteroUrl = `https://bff.cloud.myitero.com/doctors/patients/${r.patient_uid}`;
+    function checkReady() {
+        searchBtn.disabled = !(zipInput.files.length > 0);
+    }
+
+    ['dragenter', 'dragover'].forEach(ev => {
+        dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+    });
+    ['dragleave', 'drop'].forEach(ev => {
+        dropZone.addEventListener(ev, e => { e.preventDefault(); dropZone.classList.remove('dragover'); });
+    });
+
+    dropZone.addEventListener('drop', e => {
+        const files = e.dataTransfer.files;
+        if (files.length > 0 && files[0].name.toLowerCase().endsWith('.zip')) {
+            zipInput.files = files;
+            showFileInfo(files[0]);
+        }
+    });
+
+    zipInput.addEventListener('change', () => {
+        if (zipInput.files.length > 0) showFileInfo(zipInput.files[0]);
+    });
+
+    function showFileInfo(file) {
+        document.getElementById('selectedFileName').textContent = file.name;
+        document.getElementById('selectedFileSize').textContent = formatSize(file.size);
+        fileInfo.classList.add('active');
+        checkReady();
+    }
+
+    function clearFile() {
+        zipInput.value = '';
+        fileInfo.classList.remove('active');
+        searchBtn.disabled = true;
+    }
+
+    function formatSize(bytes) {
+        if (bytes < 1024) return bytes + ' B';
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+        return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+    }
+
+    // ─── Form submission ────────────────────────────────────────────────
+    searchForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        if (!zipInput.files.length) return;
+
+        const formData = new FormData();
+        formData.append('zip_file', zipInput.files[0]);
+
+        document.getElementById('loading-container').classList.add('active');
+        document.getElementById('results-container').classList.remove('active');
+        document.getElementById('no-results').classList.remove('active');
+        searchBtn.disabled = true;
+
+        // Auto-scroll to loading spinner
+        setTimeout(() => {
+            document.getElementById('loading-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }, 100);
+
+        try {
+            const response = await fetch('{{ url_for("search.query") }}', {
+                method: 'POST',
+                body: formData
+            });
+
+            const data = await response.json();
+            document.getElementById('loading-container').classList.remove('active');
+
+            if (!response.ok) {
+                if (response.status === 404) {
+                    document.getElementById('no-results-msg').textContent = data.error || 'No data available.';
+                    document.getElementById('no-results').classList.add('active');
+                } else {
+                    alert(data.error || 'Search failed.');
+                }
+                searchBtn.disabled = false;
+                return;
+            }
+
+            lastSearchData = data;
+            displayedCount = 0;
+            destroyAllViewers();
+            document.getElementById('results-list').innerHTML = '';
+            document.getElementById('query-preview-card').innerHTML = '';
+
+            // Show results container first so elements have layout
+            document.getElementById('results-container').classList.add('active');
+
+            // Render query preview
+            renderQueryPreview(data);
+
+            // Render first 5 results
+            renderResultCards(data, 5);
+
+            // Show load more if there could be more
+            updateLoadMoreBtn();
+
+            searchBtn.disabled = false;
+
+            // Auto-scroll to results
+            setTimeout(() => {
+                document.getElementById('results-container').scrollIntoView({
+                    behavior: 'smooth', block: 'start'
+                });
+            }, 100);
+
+        } catch (err) {
+            document.getElementById('loading-container').classList.remove('active');
+            alert('Network error. Please check your connection.');
+            searchBtn.disabled = false;
+        }
+    });
+
+    // ─── Query preview ──────────────────────────────────────────────────
+    function renderQueryPreview(data) {
+        const container = document.getElementById('query-preview-card');
+        container.innerHTML = '';
+
+        document.getElementById('queryLabel').textContent = 'Query: ' + data.query_file;
 
         const card = document.createElement('div');
-        card.className = 'result-card';
+        card.className = 'query-card';
         card.innerHTML = `
+        <div class="d-flex align-items-center">
+            <div class="query-preview-3d me-3" id="query-viewer-box"></div>
+            <div class="flex-grow-1">
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span style="background:#fef3c7;color:#92400e;font-weight:800;font-size:0.75rem;border-radius:6px;padding:0.15rem 0.6rem;">QUERY</span>
+                    <h5 style="font-weight: 700; color: var(--oasis-gray-900); margin: 0;">${data.query_stl}</h5>
+                </div>
+                <div style="font-size: 0.9rem; color: var(--oasis-gray-500);">
+                    This is the uploaded scan. Results below are sorted by similarity.
+                </div>
+                <div style="font-size: 0.85rem; color: var(--oasis-gray-500); margin-top: 0.5rem;">
+                    <i class="bi bi-arrows-move me-1"></i>Drag to rotate &bull; Scroll to zoom &bull; All previews are synchronized
+                </div>
+            </div>
+        </div>
+    `;
+        container.appendChild(card);
+
+        // Create 3D viewer for query — use explicit pixel sizes
+        requestAnimationFrame(() => {
+            const viewerBox = document.getElementById('query-viewer-box');
+            if (viewerBox) {
+                const viewer = createViewer(viewerBox, 280, 280);
+                allViewers.push(viewer);
+                loadIntoViewer(viewer, data.query_stl).catch(err => {
+                    console.error('Failed to load query 3D:', err);
+                });
+            }
+        });
+    }
+
+    // ─── Display result cards ───────────────────────────────────────────
+    function renderResultCards(data, count) {
+        const container = document.getElementById('results-list');
+
+        const start = displayedCount;
+        const end = Math.min(displayedCount + count, data.results.length);
+
+        for (let i = start; i < end; i++) {
+            const r = data.results[i];
+            const simPercent = (r.similarity * 100).toFixed(1);
+            const rankClass = 'rank-' + Math.min(r.rank, 10);
+            const iteroUrl = `https://bff.cloud.myitero.com/doctors/patients/${r.patient_uid}`;
+
+            const card = document.createElement('div');
+            card.className = 'result-card';
+            card.innerHTML = `
             <div class="d-flex align-items-center">
                 <div class="rank-badge ${rankClass} me-3">${r.rank}</div>
-                <img src="${frontImgUrl}" alt="Front view" class="result-preview me-3"
-                     onerror="this.outerHTML='<div class=\'result-preview-placeholder me-3\'><i class=\'bi bi-image\'></i></div>'">
+                <div class="result-preview-3d me-3" id="viewer-box-${i}"></div>
                 <div class="flex-grow-1">
                     <div class="d-flex align-items-center gap-2 mb-1">
                         <h6 style="font-weight: 700; color: var(--oasis-gray-900); margin: 0;">${r.filename}</h6>
@@ -323,7 +584,7 @@ function displayResults(data) {
                     </div>
                     <div style="font-size: 0.85rem; color: var(--oasis-gray-500);">
                         Patient: <strong>${r.patient_uid}</strong>
-                        ${r.serial_number ? ' &nbsp;|&nbsp; Serial: <strong>' + r.serial_number + '</strong>' : ''}
+                        ${r.serial_number ? ' &nbsp;|&nbsp; Scan: <strong>' + r.serial_number + '</strong>' : ''}
                     </div>
                     <div class="similarity-bar mt-2" style="max-width: 300px;">
                         <div class="similarity-bar-fill" style="width: ${simPercent}%;"></div>
@@ -334,10 +595,76 @@ function displayResults(data) {
                 </a>
             </div>
         `;
-        container.appendChild(card);
-    });
+            container.appendChild(card);
 
-    document.getElementById('results-container').classList.add('active');
-}
+            // Create Three.js viewer with explicit pixel sizes
+            const idx = i;
+            requestAnimationFrame(() => {
+                const viewerBox = document.getElementById(`viewer-box-${idx}`);
+                if (viewerBox) {
+                    const viewer = createViewer(viewerBox, 200, 200);
+                    allViewers.push(viewer);
+                    loadIntoViewer(viewer, data.results[idx].filename).catch(err => {
+                        console.error('Failed to load 3D for', data.results[idx].filename, err);
+                    });
+                }
+            });
+        }
+
+        displayedCount = end;
+    }
+
+    function updateLoadMoreBtn() {
+        const container = document.getElementById('loadMoreContainer');
+        // Always show the button — clicking will fetch more from backend
+        container.style.display = 'block';
+        document.getElementById('loadMoreBtn').disabled = false;
+    }
+
+    // ─── Load More ──────────────────────────────────────────────────────
+    document.getElementById('loadMoreBtn').addEventListener('click', () => {
+        if (!zipInput.files.length) return;
+
+        const newTopK = displayedCount + 5;
+
+        const formData = new FormData();
+        formData.append('zip_file', zipInput.files[0]);
+        formData.append('top_k', newTopK);
+
+        const btn = document.getElementById('loadMoreBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<div class="spinner-border spinner-border-sm me-2"></div>Loading...';
+
+        fetch('{{ url_for("search.query") }}', {
+            method: 'POST',
+            body: formData
+        })
+            .then(r => r.json())
+            .then(data => {
+                if (data.results) {
+                    lastSearchData = data;
+                    // Only render the new results (beyond what we've already displayed)
+                    const newResults = data.results.length - displayedCount;
+                    if (newResults > 0) {
+                        renderResultCards(data, newResults);
+                        // Auto-scroll to newly loaded results
+                        setTimeout(() => {
+                            document.getElementById('loadMoreContainer').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }, 150);
+                    }
+                    if (data.results.length < newTopK) {
+                        // No more results available
+                        document.getElementById('loadMoreContainer').style.display = 'none';
+                    }
+                }
+                btn.innerHTML = '<i class="bi bi-plus-circle"></i> Load 5 More Results';
+                btn.disabled = false;
+            })
+            .catch(err => {
+                alert('Failed to load more results.');
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-plus-circle"></i> Load 5 More Results';
+            });
+    });
 </script>
 {% endblock %}

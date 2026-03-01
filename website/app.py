@@ -23,14 +23,12 @@ def create_app():
     from routes.auth import auth_bp
     from routes.main import main_bp
     from routes.search import search_bp
-    from routes.upload import upload_bp
     from routes.collection import collection_bp
     from routes.validation import validation_bp
 
     app.register_blueprint(auth_bp)
     app.register_blueprint(main_bp)
     app.register_blueprint(search_bp)
-    app.register_blueprint(upload_bp)
     app.register_blueprint(collection_bp)
     app.register_blueprint(validation_bp)
 
