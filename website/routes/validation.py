@@ -25,6 +25,7 @@ validation_bp = Blueprint('validation', __name__, url_prefix='/validation')
 
 # ─── Supported models ────────────────────────────────────────────────
 SUPPORTED_MODELS = {
+    'random':  {'label': 'Random Baseline', 'dim': 512, 'desc': 'Random embeddings — baseline for doctor validation'},
     'dinov2': {'label': 'DINOv2',    'dim': 1024, 'desc': 'Vision Transformer (multi-view images)'},
     'simclr': {'label': 'SimCLR',    'dim': 512,  'desc': 'Contrastive learning (3D point cloud)'},
     'mae':    {'label': 'Point-MAE', 'dim': 384,  'desc': 'Masked autoencoder (3D point cloud + normals)'},
