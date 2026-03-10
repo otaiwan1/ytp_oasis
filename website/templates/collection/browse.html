@@ -16,7 +16,7 @@
 
     .patient-card:hover {
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        border-color: var(--oasis-green-300);
+        border-color: var(--oasis-blue-300);
         transform: translateY(-2px);
         color: inherit;
     }
@@ -25,8 +25,8 @@
         width: 44px;
         height: 44px;
         border-radius: 12px;
-        background: var(--oasis-green-100);
-        color: var(--oasis-green-700);
+        background: var(--oasis-blue-100);
+        color: var(--oasis-blue-700);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -62,7 +62,7 @@
     <div class="page-header">
         <div class="d-flex align-items-center justify-content-between flex-wrap gap-3">
             <div>
-                <h1><i class="bi bi-grid-3x3-gap me-2" style="color: var(--oasis-green-500);"></i>Scan Collection</h1>
+                <h1><i class="bi bi-grid-3x3-gap me-2" style="color: var(--oasis-blue-500);"></i>Scan Collection</h1>
                 <p>Browse all patient scans in the database.</p>
             </div>
             <a href="{{ url_for('search.search_page') }}" class="btn btn-oasis">

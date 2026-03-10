@@ -110,7 +110,7 @@
     .card-sim {
         font-weight: 700;
         font-size: 0.78rem;
-        color: var(--oasis-green-600);
+        color: var(--oasis-blue-600);
     }
 
     /* ── Section labels ──────────────────────────────────────── */
@@ -138,7 +138,7 @@
         padding: 0.2rem 0.6rem;
         margin-left: 0.5rem;
     }
-    .verdict-badge.pass { background: #dcfce7; color: #16a34a; }
+    .verdict-badge.pass { background: #dbeafe; color: #2563eb; }
     .verdict-badge.fail { background: #fee2e2; color: #dc2626; }
 
     /* ── Big verdict banner on query card ─────────────────────── */
@@ -156,9 +156,9 @@
         border: 2px solid #fca5a5;
     }
     .verdict-banner.pass-rank {
-        background: linear-gradient(135deg, #dcfce7, #bbf7d0);
-        color: #16a34a;
-        border: 2px solid #86efac;
+        background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+        color: #2563eb;
+        border: 2px solid #93c5fd;
     }
 
     /* ── Result navigation ───────────────────────────────────── */
@@ -184,11 +184,11 @@
         gap: 0.3rem;
     }
     .btn-rnav:hover:not(:disabled) {
-        background: var(--oasis-green-50);
-        border-color: var(--oasis-green-400);
-        color: var(--oasis-green-700);
+        background: var(--oasis-blue-50);
+        border-color: var(--oasis-blue-400);
+        color: var(--oasis-blue-700);
         transform: translateY(-1px);
-        box-shadow: 0 2px 8px rgba(34,197,94,0.12);
+        box-shadow: 0 2px 8px rgba(59,130,246,0.12);
     }
     .btn-rnav:disabled { opacity: 0.3; cursor: not-allowed; }
     .rnav-indicator {
@@ -207,7 +207,7 @@
         padding: 0.3rem 0;
     }
     .result-verdict-indicator.is-chosen {
-        color: #16a34a;
+        color: #2563eb;
     }
     .result-verdict-indicator.not-chosen {
         color: var(--oasis-gray-400);
@@ -238,9 +238,9 @@
         gap: 0.3rem;
     }
     .btn-qnav:hover:not(:disabled) {
-        background: var(--oasis-green-50);
-        border-color: var(--oasis-green-400);
-        color: var(--oasis-green-700);
+        background: var(--oasis-blue-50);
+        border-color: var(--oasis-blue-400);
+        color: var(--oasis-blue-700);
     }
     .btn-qnav:disabled { opacity: 0.3; cursor: not-allowed; }
     .qnav-indicator {
@@ -280,13 +280,13 @@
         font-size: 0.78rem;
     }
     .sidebar-item:hover {
-        border-color: var(--oasis-green-400);
-        background: var(--oasis-green-50);
+        border-color: var(--oasis-blue-400);
+        background: var(--oasis-blue-50);
     }
     .sidebar-item.active {
-        border-color: var(--oasis-green-500);
-        background: var(--oasis-green-50);
-        box-shadow: 0 2px 8px rgba(34,197,94,0.15);
+        border-color: var(--oasis-blue-500);
+        background: var(--oasis-blue-50);
+        box-shadow: 0 2px 8px rgba(59,130,246,0.15);
     }
     .sidebar-item .si-rank {
         font-weight: 800;
@@ -294,7 +294,7 @@
         text-align: center;
     }
     .sidebar-item .si-rank.rank-fail { color: #dc2626; }
-    .sidebar-item .si-rank.rank-pass { color: #16a34a; }
+    .sidebar-item .si-rank.rank-pass { color: #2563eb; }
     .sidebar-item .si-name {
         flex: 1;
         overflow: hidden;
@@ -309,7 +309,7 @@
         padding: 0.1rem 0.4rem;
     }
     .sidebar-item .si-badge.fail { background: #fee2e2; color: #dc2626; }
-    .sidebar-item .si-badge.pass { background: #dcfce7; color: #16a34a; }
+    .sidebar-item .si-badge.pass { background: #dbeafe; color: #2563eb; }
 
     /* ── Loading ─────────────────────────────────────────────── */
     .review-loading {
@@ -348,7 +348,7 @@
             </a>
             <div>
                 <h4 style="margin:0; font-weight:800;">
-                    <i class="bi bi-search me-2" style="color:var(--oasis-green-500)"></i>{{ model_label }}
+                    <i class="bi bi-search me-2" style="color:var(--oasis-blue-500)"></i>{{ model_label }}
                     <span style="font-size:0.75rem; font-weight:600; color:var(--oasis-gray-500); vertical-align:middle; margin-left:0.5rem;">Validation Review</span>
                 </h4>
             </div>
@@ -384,7 +384,7 @@
                         <div class="section-label">
                             <i class="bi bi-trophy"></i> <span id="resultLabel">Result #1</span>
                             <span class="sep"></span>
-                            <span id="resultSim" style="font-weight:700; font-size:0.82rem; color:var(--oasis-green-600)">&mdash;</span>
+                            <span id="resultSim" style="font-weight:700; font-size:0.82rem; color:var(--oasis-blue-600)">&mdash;</span>
                         </div>
                         <div class="viewer-box" id="resultViewerBox">
                             <canvas id="resultCanvas"></canvas>

@@ -20,16 +20,16 @@
 
     <style>
         :root {
-            --oasis-green-50: #f0fdf4;
-            --oasis-green-100: #dcfce7;
-            --oasis-green-200: #bbf7d0;
-            --oasis-green-300: #86efac;
-            --oasis-green-400: #4ade80;
-            --oasis-green-500: #22c55e;
-            --oasis-green-600: #16a34a;
-            --oasis-green-700: #15803d;
-            --oasis-green-800: #166534;
-            --oasis-green-900: #14532d;
+            --oasis-blue-50: #eff6ff;
+            --oasis-blue-100: #dbeafe;
+            --oasis-blue-200: #bfdbfe;
+            --oasis-blue-300: #93c5fd;
+            --oasis-blue-400: #60a5fa;
+            --oasis-blue-500: #3b82f6;
+            --oasis-blue-600: #2563eb;
+            --oasis-blue-700: #1d4ed8;
+            --oasis-blue-800: #1e40af;
+            --oasis-blue-900: #1e3a8a;
             --oasis-white: #ffffff;
             --oasis-gray-50: #f9fafb;
             --oasis-gray-100: #f3f4f6;
@@ -68,7 +68,7 @@
         .navbar-brand-oasis {
             font-weight: 800;
             font-size: 1.5rem;
-            color: var(--oasis-green-700) !important;
+            color: var(--oasis-blue-700) !important;
             letter-spacing: -0.5px;
             display: flex;
             align-items: center;
@@ -78,13 +78,17 @@
         .navbar-brand-oasis .brand-icon {
             width: 32px;
             height: 32px;
-            background: linear-gradient(135deg, var(--oasis-green-400), var(--oasis-green-600));
             border-radius: 8px;
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 1rem;
+        }
+
+        .navbar-brand-oasis .brand-icon img {
+            width: 130%;
+            height: 130%;
+            object-fit: contain;
         }
 
         .nav-link-oasis {
@@ -98,13 +102,13 @@
 
         .nav-link-oasis:hover,
         .nav-link-oasis.active {
-            color: var(--oasis-green-700) !important;
-            background: var(--oasis-green-50);
+            color: var(--oasis-blue-700) !important;
+            background: var(--oasis-blue-50);
         }
 
         /* Buttons */
         .btn-oasis {
-            background: linear-gradient(135deg, var(--oasis-green-500), var(--oasis-green-600));
+            background: linear-gradient(135deg, var(--oasis-blue-500), var(--oasis-blue-600));
             color: white;
             border: none;
             padding: 0.625rem 1.5rem;
@@ -112,20 +116,20 @@
             font-weight: 600;
             font-size: 0.95rem;
             transition: all 0.3s ease;
-            box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.25);
         }
 
         .btn-oasis:hover {
-            background: linear-gradient(135deg, var(--oasis-green-600), var(--oasis-green-700));
+            background: linear-gradient(135deg, var(--oasis-blue-600), var(--oasis-blue-700));
             color: white;
             transform: translateY(-1px);
-            box-shadow: 0 4px 16px rgba(34, 197, 94, 0.35);
+            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
         }
 
         .btn-oasis-outline {
             background: transparent;
-            color: var(--oasis-green-600);
-            border: 2px solid var(--oasis-green-300);
+            color: var(--oasis-blue-600);
+            border: 2px solid var(--oasis-blue-300);
             padding: 0.5rem 1.5rem;
             border-radius: 10px;
             font-weight: 600;
@@ -134,9 +138,9 @@
         }
 
         .btn-oasis-outline:hover {
-            background: var(--oasis-green-50);
-            border-color: var(--oasis-green-500);
-            color: var(--oasis-green-700);
+            background: var(--oasis-blue-50);
+            border-color: var(--oasis-blue-500);
+            color: var(--oasis-blue-700);
         }
 
         /* Cards */
@@ -164,8 +168,8 @@
         }
 
         .form-control-oasis:focus {
-            border-color: var(--oasis-green-400);
-            box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.15);
+            border-color: var(--oasis-blue-400);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
             outline: none;
         }
 
@@ -230,8 +234,8 @@
 
         .upload-zone:hover,
         .upload-zone.dragover {
-            border-color: var(--oasis-green-400);
-            background: var(--oasis-green-50);
+            border-color: var(--oasis-blue-400);
+            background: var(--oasis-blue-50);
         }
 
         .upload-zone .upload-icon {
@@ -242,13 +246,13 @@
 
         .upload-zone:hover .upload-icon,
         .upload-zone.dragover .upload-icon {
-            color: var(--oasis-green-400);
+            color: var(--oasis-blue-400);
         }
 
         /* Badge */
         .badge-oasis {
-            background: var(--oasis-green-100);
-            color: var(--oasis-green-700);
+            background: var(--oasis-blue-100);
+            color: var(--oasis-blue-700);
             padding: 0.35rem 0.75rem;
             border-radius: 20px;
             font-weight: 600;
@@ -260,7 +264,7 @@
             width: 3rem;
             height: 3rem;
             border: 3px solid var(--oasis-gray-200);
-            border-top-color: var(--oasis-green-500);
+            border-top-color: var(--oasis-blue-500);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
@@ -282,7 +286,7 @@
         .similarity-bar-fill {
             height: 100%;
             border-radius: 3px;
-            background: linear-gradient(90deg, var(--oasis-green-400), var(--oasis-green-600));
+            background: linear-gradient(90deg, var(--oasis-blue-400), var(--oasis-blue-600));
             transition: width 0.5s ease;
         }
 
@@ -301,7 +305,7 @@
     <nav class="navbar navbar-expand-lg navbar-oasis">
         <div class="container">
             <a class="navbar-brand navbar-brand-oasis" href="{{ url_for('main.home') }}">
-                <span class="brand-icon"><i class="bi bi-hexagon-fill"></i></span>
+                <span class="brand-icon"><img src="{{ url_for('static', filename='oasis_logo.png') }}" alt="OASIS Logo"></span>
                 OASIS
             </a>
             <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
